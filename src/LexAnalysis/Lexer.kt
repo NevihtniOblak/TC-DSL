@@ -5,6 +5,10 @@ import java.io.OutputStream
 
 
 class Lexer(private val automaton: DFA, private val stream: InputStream) {
+    val ERROR_STATE = 0
+    val EOF = -1
+    val NEWLINE = '\n'.code
+
     private var last: Int? = null
     private var row = 1
     private var column = 1
@@ -50,21 +54,16 @@ class Lexer(private val automaton: DFA, private val stream: InputStream) {
     }
 
 
-    fun printTokens(scanner: Lexer, output: OutputStream) {
+    fun printTokens(output: OutputStream) {
         val writer = output.writer(Charsets.UTF_8)
 
         var token = this.getToken()
         while (token.symbol != Symbol.EOF) {
-            writer.append("${token.symbol.name()}(\"${token.lexeme}\") ") // The output ends with a space!            token = this.getToken()
+            writer.append("${token.symbol.value()}(\"${token.lexeme}\") ") // The output ends with a space!
+            token = this.getToken()
         }
         writer.appendLine()
         writer.flush()
-    }
-
-    companion object{
-        const val ERROR_STATE = 0
-        const val EOF = -1
-        const val NEWLINE = '\n'.code
     }
 
 }

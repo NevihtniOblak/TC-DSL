@@ -7,7 +7,7 @@ enum class Symbol {
     FOREACH,
     FFF;
 
-    fun name(): String =
+    fun value(): String =
         when (this) {
             FOR -> "for"
             FOREACH -> "foreach"

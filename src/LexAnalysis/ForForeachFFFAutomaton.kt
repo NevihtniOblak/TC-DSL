@@ -1,6 +1,10 @@
 package LexAnalysis
 
 object ForForeachFFFAutomaton: DFA {
+    const val ERROR_STATE = 0
+    const val EOF = -1
+    const val NEWLINE = '\n'.code
+
     override val states = (1 .. 11).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
@@ -34,7 +38,7 @@ object ForForeachFFFAutomaton: DFA {
         return values[state]
     }
     init {
-        /*
+
         setTransition(1, 'f', 2)
         setTransition(2, 'f', 3)
         setTransition(3, 'f', 3)
@@ -47,12 +51,13 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(1, ' ', 10)
         setTransition(1, EOF, 11)
 
-        setSymbol(2, LexAnalysis.Symbol.FFF)
-        setSymbol(3, LexAnalysis.Symbol.FFF)
-        setSymbol(5, LexAnalysis.Symbol.FOR)
-        setSymbol(9, LexAnalysis.Symbol.FOREACH)
-        setSymbol(11, LexAnalysis.Symbol.EOF)
+        setSymbol(2, Symbol.FFF)
+        setSymbol(3, Symbol.FFF)
+        setSymbol(5, Symbol.FOR)
+        setSymbol(9, Symbol.FOREACH)
+        setSymbol(11, Symbol.EOF)
 
-         */
+
     }
+
 }
