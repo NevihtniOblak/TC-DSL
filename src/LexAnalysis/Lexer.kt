@@ -34,6 +34,9 @@ class Lexer(private val automaton: DFA, private val stream: InputStream) {
             if (nextState == ERROR_STATE) break // Longest match
 
             state = nextState
+
+            //println("State: $state")
+
             updatePosition(code)
             buffer.add(code.toChar())
             code = stream.read()
@@ -60,7 +63,7 @@ class Lexer(private val automaton: DFA, private val stream: InputStream) {
 
         var token = this.getToken()
         while (token.symbol != Symbol.EOF) {
-            writer.append("${token.symbol.value()}(\"${token.lexeme}\") ") // The output ends with a space!
+            writer.append("${token.symbol.value()}(\"${token.lexeme}\") \n") // The output ends with a space!
             token = this.getToken()
         }
         writer.appendLine()

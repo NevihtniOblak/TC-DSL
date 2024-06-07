@@ -8,15 +8,19 @@ object ForForeachFFFAutomaton: DFA {
     override val states = (1 .. 170).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
+
+    val variableStates = setOf(
+        4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 55, 56, 57,
+        59, 60, 61, 62, 63, 64, 65, 36, 67, 68, 69, 70, 71, 72, 73, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97, 98, 100, 101, 102, 103, 104, 106,
+        107, 108, 109, 110, 112, 114, 115, 116, 118, 119, 120, 121, 122, 124, 125, 126, 128, 129, 132, 133, 135, 136, 138, 139, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150,
+        151, 152, 153
+    )
+
+    val nonVariableStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170) +
+        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170)
 
-        setOf( 4,5,6,7,8,10,11,12,13,14,15,16,17,24,25,26,29,30,31,32,33,34,35,37,38,39,41,42,44,45,46,48,49,50,52,53,54,55,56,57,
-        59,60,61,62,63,64,65,36,67,68,69,70,71,72,73,79,80,81,82,83,84,85,86,87,88,91,92,93,94,95,96,97,98,100,101,102,103,104,106,
-        107,108,109,110,112,114,115,116,118,119,120,121,122,124,125,126,128,129,132,133,135,136,138,139,140,142,143,144,145,146,147,148,149,150,
-        151,152,153)
-
+    override val finalStates = variableStates + nonVariableStates
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -50,8 +54,8 @@ object ForForeachFFFAutomaton: DFA {
         val alphaNum = alpha + ('0'..'9')
         val alphaNumExtra = alphaNum + listOf('+', '-', '*', '/', '.', '-', '_', ' ', '!','?')
 
-        //vmesna stanja ki so lahko variable
-        val canBeVariable = listOf(
+        //vmesna stanja ki lahko grejo v variable (prvi znak je stanje in drugi znak, ki ga ne smemo srecati da postane variable)
+        val canGoToVariable = listOf(
             Pair(1,'S'), Pair(4,'C'), Pair(5,'H'), Pair(6,'E'), Pair(7,'M'), Pair(8,'A'), // schema(SCHEMA)
             Pair(1,'p'), Pair(10,'r'), Pair(11,'o'), Pair(12,'c'), Pair(13,'e'), Pair(14,'d'), Pair(15,'u'), Pair(16,'r'), Pair(17,'e'), // PROCEDURE(procedure)
             Pair(1,'C'), Pair(24,'i'), Pair(25,'t'), Pair(26,'y'), // CITY(City)
@@ -85,14 +89,13 @@ object ForForeachFFFAutomaton: DFA {
                 .map { Pair(it.key, it.value) }
         }
 
-        val canBeVariableMaps = groupPairs(canBeVariable)
+        val canBeVariableMaps = groupPairs(canGoToVariable)
 
-        /*
+
         for ( element in canBeVariableMaps){
             println(element)
         }
 
-         */
 
 
 
@@ -101,9 +104,12 @@ object ForForeachFFFAutomaton: DFA {
 
         //eof
         setTransition(1, EOF, 2)
+
         //skip
         setTransition(1, ' ', 3)
-
+        setTransition(1, '\t', 3)
+        setTransition(1, '\r', 3)
+        setTransition(1, '\n', 3)
 
         //schema(SCHEMA)
         setTransition(1,'S', 4)
@@ -624,7 +630,9 @@ object ForForeachFFFAutomaton: DFA {
 
         //zagotovimo da so ustrezna vmesna stanja tudi lahko spremenljivke
         for (map in canBeVariableMaps.drop(1)){
+            if(map.first !in nonVariableStates){
                 setSymbol(map.first, Symbol.VARIABLE)
+            }
         }
 
 
