@@ -25,7 +25,8 @@ enum class Symbol {
     RANGLE,
     SET_LOCATION,
     SEMICOL,
-    TRANSLATE
+    TRANSLATE,
+    ROTATE,
 
 
 
@@ -56,6 +57,7 @@ enum class Symbol {
             SET_LOCATION -> "SET_LOCATION"
             SEMICOL -> "SEMICOL"
             TRANSLATE -> "TRANSLATE"
+            ROTATE -> "ROTATE"
 
 
 

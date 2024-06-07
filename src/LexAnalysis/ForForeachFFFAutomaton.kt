@@ -5,11 +5,11 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 99).toSet()
+    override val states = (1 .. 105).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
     override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
-        40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99)
+        40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -194,6 +194,14 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(97,'t', 98)
         setTransition(98,'e', 99)
 
+        //ROTATE(rotate)
+        setTransition(1,'r', 100)
+        setTransition(100,'o', 101)
+        setTransition(101,'t', 102)
+        setTransition(102,'a', 103)
+        setTransition(103,'t', 104)
+        setTransition(104,'e', 105)
+
 
 
         //KONCNA STANJA
@@ -245,6 +253,8 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(90, Symbol.SEMICOL)
         //TRANSLATE(translate)
         setSymbol(99, Symbol.TRANSLATE)
+        //ROTATE(rotate)
+        setSymbol(105, Symbol.ROTATE)
 
 
 
