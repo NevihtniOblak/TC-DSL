@@ -47,6 +47,11 @@ enum class Symbol {
     INTEGER_DIVIDE,
     POW,
 
+    STRING,
+    REAL,
+    VARIABLE,
+
+
 
 
 
@@ -97,6 +102,10 @@ enum class Symbol {
             DIVIDE -> "DIVIDE"
             INTEGER_DIVIDE -> "INTEGER_DIVIDE"
             POW -> "POW"
+
+            STRING -> "STRING"
+            REAL -> "REAL"
+            VARIABLE -> "VARIABLE"
 
 
 

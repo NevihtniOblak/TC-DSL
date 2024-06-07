@@ -2,5 +2,5 @@ import LexAnalysis.ForForeachFFFAutomaton
 import LexAnalysis.Lexer
 
 fun main(args: Array<String>) {
-    Lexer(ForForeachFFFAutomaton, "+-*// / ^[]displayMarkerscallprint for=varCirclePolygonLineBoxsetMarker rotatetranslate;;setLocation<>ParkBuilding-ComplexShop-Mercator Shop-Tus Path Aqua Rail Road Building:City,{}(()SCHEMA) procedureSCHEMASCHEMA".byteInputStream()).printTokens(System.out)
+    Lexer(ForForeachFFFAutomaton, "+-*\"oo1!?\"// / ^[]displayMarkerscallprint for=varCirclePolygonLineBoxsetMarker rotatetranslate;;setLocation<>ParkBuilding-ComplexShop-Mercator Shop-Tus Path Aqua Rail Road Building:City,{}(()SCHEMA) procedureSCHEMASCHEMA".byteInputStream()).printTokens(System.out)
 }
