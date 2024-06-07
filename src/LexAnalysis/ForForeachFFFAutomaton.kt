@@ -5,10 +5,11 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 78).toSet()
+    override val states = (1 .. 89).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36, 40, 43, 47, 51, 58, 66, 74, 76, 77, 78)
+    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
+        40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -166,6 +167,21 @@ object ForForeachFFFAutomaton: DFA {
         //RANGLE(>)
         setTransition(1,'>', 78)
 
+        //SET_LOCATION(setLocation)
+        setTransition(1,'s', 79)
+        setTransition(79,'e', 80)
+        setTransition(80,'t', 81)
+        setTransition(81,'L', 82)
+        setTransition(82,'o', 83)
+        setTransition(83,'c', 84)
+        setTransition(84,'a', 85)
+        setTransition(85,'t', 86)
+        setTransition(86,'i', 87)
+        setTransition(87,'o', 88)
+        setTransition(88,'n', 89)
+
+
+
 
         //KONCNA STANJA
         //eof
@@ -210,6 +226,9 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(77, Symbol.LANGLE)
         //RANGLE(>)
         setSymbol(78, Symbol.RANGLE)
+        //SET_LOCATION(setLocation)
+        setSymbol(89, Symbol.SET_LOCATION)
+
 
 
 

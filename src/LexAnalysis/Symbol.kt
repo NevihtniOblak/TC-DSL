@@ -23,6 +23,7 @@ enum class Symbol {
     PARK,
     LANGLE,
     RANGLE,
+    SET_LOCATION,
 
 
 
@@ -50,6 +51,8 @@ enum class Symbol {
             PARK -> "PARK"
             LANGLE -> "LANGLE"
             RANGLE -> "RANGLE"
+            SET_LOCATION -> "SET_LOCATION"
+
 
 
             else -> throw Error("Invalid symbol")
