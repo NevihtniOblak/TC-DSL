@@ -33,7 +33,8 @@ enum class Symbol {
     POLYGON,
     CIRCLE,
     VAR,
-    EQUALS
+    EQUALS,
+    FOR,
 
 
 
@@ -72,6 +73,7 @@ enum class Symbol {
             CIRCLE -> "CIRCLE"
             VAR -> "VAR"
             EQUALS -> "EQUALS"
+            FOR -> "FOR"
 
 
 
