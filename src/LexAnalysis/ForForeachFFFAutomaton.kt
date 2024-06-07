@@ -5,10 +5,10 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 23).toSet()
+    override val states = (1 .. 27).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23)
+    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -77,8 +77,15 @@ object ForForeachFFFAutomaton: DFA {
         //RCURLY(})
         setTransition(1,'}', 22)
 
-        //COMMA
+        //COMMA(,)
         setTransition(1,',', 23)
+
+        //CITY(City)
+        setTransition(1,'C', 24)
+        setTransition(24,'i', 25)
+        setTransition(25,'t', 26)
+        setTransition(26,'y', 27)
+
 
 
         //KONCNA STANJA
@@ -98,6 +105,8 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(22, Symbol.RCURLY)
         //COMMA(:)
         setSymbol(23, Symbol.COMMA)
+        //CITY(City)
+        setSymbol(27, Symbol.CITY)
 
 
 

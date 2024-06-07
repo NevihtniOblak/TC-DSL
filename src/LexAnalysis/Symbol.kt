@@ -10,17 +10,19 @@ enum class Symbol {
     LCURLY,
     RCURLY,
     COMMA,
+    CITY,
     ;
 
     fun value(): String =
         when (this) {
             SCHEMA -> "SCHEMA"
-            PROCEDURE -> "procedure"
-            LPAREN -> "lparen"
+            PROCEDURE -> "PROCEDURE"
+            LPAREN -> "LPAREN"
             RPAREN -> "rparen"
-            LCURLY -> "lcurly"
-            RCURLY -> "rcurly"
-            COMMA -> "comma"
+            LCURLY -> "RPAREN"
+            RCURLY -> "RCURLY"
+            COMMA -> "COMMA"
+            CITY -> "CITY"
 
             else -> throw Error("Invalid symbol")
         }
