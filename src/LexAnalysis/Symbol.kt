@@ -30,6 +30,7 @@ enum class Symbol {
     SET_MARKER,
     BOX,
     LINE,
+    POLYGON
 
 
 
@@ -65,6 +66,7 @@ enum class Symbol {
             SET_MARKER -> "SET_MARKER"
             BOX -> "BOX"
             LINE -> "LINE"
+            POLYGON -> "POLYGON"
 
 
 
