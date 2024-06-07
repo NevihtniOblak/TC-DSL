@@ -14,6 +14,8 @@ enum class Symbol {
     COLON,
     BUILDING,
     ROAD,
+    RAIL,
+
 
     ;
 
@@ -30,6 +32,7 @@ enum class Symbol {
             COLON -> "COLON"
             BUILDING -> "BUILDING"
             ROAD -> "ROAD"
+            RAIL -> "RAIL"
 
             else -> throw Error("Invalid symbol")
         }
