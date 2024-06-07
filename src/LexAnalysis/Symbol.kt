@@ -19,6 +19,7 @@ enum class Symbol {
     PATH,
     SHOP_TUS,
     SHOP_MERCATOR,
+    BUILDING_COMPLEX,
 
 
 
@@ -42,6 +43,7 @@ enum class Symbol {
             PATH -> "PATH"
             SHOP_TUS -> "SHOP-TUS"
             SHOP_MERCATOR -> "SHOP-MERCATOR"
+            BUILDING_COMPLEX -> "BUILDING-COMPLEX"
 
 
             else -> throw Error("Invalid symbol")

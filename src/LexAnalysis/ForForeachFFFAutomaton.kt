@@ -5,10 +5,10 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 66).toSet()
+    override val states = (1 .. 74).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36, 40, 43, 47, 51, 58, 66)
+    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36, 40, 43, 47, 51, 58, 66,74)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -133,7 +133,6 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(56,'u', 57)
         setTransition(57,'s', 58)
 
-
         //SHOP-MERCATOR
         //Shop- dobi od SHOP-TUS
         setTransition(55,'M', 59)
@@ -144,6 +143,17 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(63,'t', 64)
         setTransition(64,'o', 65)
         setTransition(65,'r', 66)
+
+        //BUILDING-COMPLEX
+        //Building dobi od BUILDING
+        setTransition(36,'-', 67)
+        setTransition(67,'C', 68)
+        setTransition(68,'o', 69)
+        setTransition(69,'m', 70)
+        setTransition(70,'p', 71)
+        setTransition(71,'l', 72)
+        setTransition(72,'e', 73)
+        setTransition(73,'x', 74)
 
 
 
@@ -182,6 +192,8 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(58, Symbol.SHOP_TUS)
         //SHOP-MERCATOR(Shop-Mercator)
         setSymbol(66, Symbol.SHOP_MERCATOR)
+        //BUILDING-COMPLEX(Building-Complex)
+        setSymbol(74, Symbol.BUILDING_COMPLEX)
 
 
 
