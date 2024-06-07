@@ -28,6 +28,8 @@ enum class Symbol {
     TRANSLATE,
     ROTATE,
     SET_MARKER,
+    BOX,
+
 
 
 
@@ -60,6 +62,7 @@ enum class Symbol {
             TRANSLATE -> "TRANSLATE"
             ROTATE -> "ROTATE"
             SET_MARKER -> "SET_MARKER"
+            BOX -> "BOX"
 
 
 
