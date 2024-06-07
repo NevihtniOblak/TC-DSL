@@ -7,6 +7,8 @@ enum class Symbol {
     PROCEDURE,
     LPAREN,
     RPAREN,
+    LCURLY,
+    RCURLY,
     ;
 
     fun value(): String =
@@ -15,6 +17,8 @@ enum class Symbol {
             PROCEDURE -> "procedure"
             LPAREN -> "lparen"
             RPAREN -> "rparen"
+            LCURLY -> "lcurly"
+            RCURLY -> "rcurly"
 
             else -> throw Error("Invalid symbol")
         }
