@@ -2,5 +2,5 @@ import LexAnalysis.ForForeachFFFAutomaton
 import LexAnalysis.Lexer
 
 fun main(args: Array<String>) {
-    Lexer(ForForeachFFFAutomaton, "setMarker rotatetranslate;;setLocation<>ParkBuilding-ComplexShop-Mercator Shop-Tus Path Aqua Rail Road Building:City,{}(()SCHEMA) procedureSCHEMASCHEMA".byteInputStream()).printTokens(System.out)
+    Lexer(ForForeachFFFAutomaton, "LineBoxsetMarker rotatetranslate;;setLocation<>ParkBuilding-ComplexShop-Mercator Shop-Tus Path Aqua Rail Road Building:City,{}(()SCHEMA) procedureSCHEMASCHEMA".byteInputStream()).printTokens(System.out)
 }

@@ -29,6 +29,7 @@ enum class Symbol {
     ROTATE,
     SET_MARKER,
     BOX,
+    LINE,
 
 
 
@@ -63,6 +64,7 @@ enum class Symbol {
             ROTATE -> "ROTATE"
             SET_MARKER -> "SET_MARKER"
             BOX -> "BOX"
+            LINE -> "LINE"
 
 
 
