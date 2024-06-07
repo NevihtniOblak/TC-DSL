@@ -27,6 +27,7 @@ enum class Symbol {
     SEMICOL,
     TRANSLATE,
     ROTATE,
+    SET_MARKER,
 
 
 
@@ -58,6 +59,7 @@ enum class Symbol {
             SEMICOL -> "SEMICOL"
             TRANSLATE -> "TRANSLATE"
             ROTATE -> "ROTATE"
+            SET_MARKER -> "SET_MARKER"
 
 
 
