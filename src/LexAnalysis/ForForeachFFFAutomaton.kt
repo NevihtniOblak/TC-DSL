@@ -44,6 +44,33 @@ object ForForeachFFFAutomaton: DFA {
         val alphaNum = alpha + ('0'..'9')
         val alphaNumExtra = alphaNum + listOf('+', '-', '*', '/', '.', '-', '_', ' ', '!','?')
 
+        val canBeVariable = listOf(
+            Pair(1,'S'), Pair(4,'C'), Pair(5,'H'), Pair(6,'E'), Pair(7,'M'), // schema(SCHEMA)
+            Pair(1,'p'), Pair(10,'r'), Pair(11,'o'), Pair(12,'c'), Pair(13,'e'), Pair(14,'d'), Pair(15,'u'), Pair(16,'r'), // PROCEDURE(procedure)
+            Pair(1,'C'), Pair(24,'i'), Pair(25,'t'), Pair(26,'y'), // CITY(City)
+            Pair(1,'B'), Pair(29,'u'), Pair(30,'i'), Pair(31,'l'), Pair(32,'d'), Pair(33,'i'), Pair(34,'n'), // BUILDING(Building)
+            Pair(1,'R'), Pair(37,'o'), Pair(38,'a'), // ROAD(Road)
+            Pair(37,'a'), Pair(41,'i'), // RAIL(Rail)
+            Pair(1,'A'), Pair(44,'q'), Pair(45,'u'), // AQUA(Aqua)
+            Pair(1,'P'), Pair(48,'a'), Pair(49,'t'), // PATH(Path)
+            Pair(4,'h'), Pair(52,'o'), Pair(53,'p'), Pair(54,'-'), Pair(55,'T'), Pair(56,'u'), // SHOP-TUS(Shop-Tus)
+            Pair(55,'M'), Pair(59,'e'), Pair(60,'r'), Pair(61,'c'), Pair(62,'a'), Pair(63,'t'), Pair(64,'o'), // SHOP-MERCATOR(Shop-Mercator)
+            Pair(36,'-'), Pair(67,'C'), Pair(68,'o'), Pair(69,'m'), Pair(70,'p'), Pair(71,'l'), Pair(72,'e'), // BUILDING-COMPLEX(Building-Complex)
+            Pair(49,'r'), // PARK(Park)
+            Pair(1,'s'), Pair(79,'e'), Pair(80,'t'), Pair(81,'L'), Pair(82,'o'), Pair(83,'c'), Pair(84,'a'), Pair(85,'t'), Pair(86,'i'), Pair(87,'o'), // SET_LOCATION(setLocation)
+            Pair(1,'t'), Pair(91,'r'), Pair(92,'a'), Pair(93,'n'), Pair(94,'s'), Pair(95,'l'), Pair(96,'a'), // TRANSLATE(translate)
+            Pair(1,'r'), Pair(100,'o'), Pair(101,'t'), Pair(102,'a'), // ROTATE(rotate)
+            Pair(81,'M'), Pair(106,'a'), Pair(107,'r'), Pair(108,'k'), Pair(109,'e'), // SET_MARKER(setMarker)
+            Pair(29,'o'), // BOX(Box)
+            Pair(1,'L'), Pair(114,'i'), Pair(115,'n'), // LINE(Line)
+            Pair(48,'o'), Pair(118,'l'), Pair(119,'y'), Pair(120,'g'), Pair(121,'o'), // POLYGON(Polygon)
+            Pair(25,'r'), Pair(124,'c'), Pair(125,'l'), // CIRCLE(Circle)
+            Pair(1,'v'), Pair(128,'a'), // VAR(var)
+            Pair(1,'f'), Pair(132,'o'), // FOR(for)
+            Pair(11,'i'), Pair(135,'n'), // PRINT(print)
+            Pair(1,'c'), Pair(138,'a'), Pair(139,'l'), // CALL(call)
+            Pair(1,'d'), Pair(142,'i'), Pair(143,'s'), Pair(144,'p'), Pair(145,'l'), Pair(146,'a'), Pair(147,'y'), Pair(148,'M'), Pair(149,'a'), Pair(150,'r'), Pair(151,'k'), Pair(152,'e'), Pair(153,'r') // DISPLAY_MARKERS(displayMarkers)
+        )
 
         //TRANZICIJE
 
@@ -72,18 +99,23 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(16,'r', 17)
         setTransition(17,'e', 18)
 
+        //ignore
         //LPAREN(()
         setTransition(1,'(', 19)
 
+        //ignore
         //RPAREN ())
         setTransition(1,')', 20)
 
+        //ignore
         //LCURLY({)
         setTransition(1,'{', 21)
 
+        //ignore
         //RCURLY(})
         setTransition(1,'}', 22)
 
+        //ignore
         //COMMA(,)
         setTransition(1,',', 23)
 
@@ -93,6 +125,7 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(25,'t', 26)
         setTransition(26,'y', 27)
 
+        //ignore
         //COLON(:)
         setTransition(1,':', 28)
 
@@ -167,9 +200,11 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(49,'r', 75)
         setTransition(75,'k', 76)
 
+        //ignore
         //LANGLE(<)
         setTransition(1,'<', 77)
 
+        //ignore
         //RANGLE(>)
         setTransition(1,'>', 78)
 
@@ -186,6 +221,7 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(87,'o', 88)
         setTransition(88,'n', 89)
 
+        //ignore
         //SEMICOL(;)
         setTransition(1,';', 90)
 
@@ -249,6 +285,7 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(128,'a', 129)
         setTransition(129,'r', 130)
 
+        //ignore
         //EQUALS(=)
         setTransition(1,'=', 131)
 
@@ -286,30 +323,39 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(153,'r', 154)
         setTransition(154,'s', 155)
 
+        //ignore
         //LSQURE([)
         setTransition(1,'[', 156)
 
+        //ignore
         //RSQURE(])
         setTransition(1,']', 157)
 
+        //ignore
         //PLUS(+)
         setTransition(1,'+', 158)
 
+        //ignore
         //MINUS(-)
         setTransition(1,'-', 159)
 
+        //ignore
         //MULTIPLY(*)
         setTransition(1,'*', 160)
 
+        //ignore
         //DIVIDE(/)
         setTransition(1,'/', 161)
 
+        //ignore
         //INTEGER_DIVIDE(//)
         setTransition(161,'/', 162)
 
+        //ignore
         //POW(^)
         setTransition(1,'^', 163)
 
+        //ignore
         //STRING
         setTransition(1,'"', 164)
         for (char in alphaNumExtra) {
@@ -318,7 +364,7 @@ object ForForeachFFFAutomaton: DFA {
         }
         setTransition(165, '"', 166)
 
-
+        //ignore
         //REAL
         for(i in '0'..'9'){
             setTransition(1, i, 167)
@@ -330,6 +376,8 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(169, i, 169)
         }
 
+        /*
+        //ignore
         //VARIABLE
         val excludeCharsVariable = listOf('p', 'S', 'C', 'B', 'R', 'A', 'P', 's', 't', 'r', 'v', 'f', 'c', 'd', 'L')
         for(i in alpha){
@@ -340,6 +388,8 @@ object ForForeachFFFAutomaton: DFA {
         for(i in alphaNum){
             setTransition(170, i, 170)
         }
+
+         */
 
 
 
@@ -448,6 +498,11 @@ object ForForeachFFFAutomaton: DFA {
 
         //VARIABLE(alpha+alphaNumExtra)
         setSymbol(170, Symbol.VARIABLE)
+        //poskrbimo da ce se ustrezne koncajo v vmesnih stanjih so to potem variabli
+
+
+
+
 
 
 
