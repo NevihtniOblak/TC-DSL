@@ -16,6 +16,7 @@ enum class Symbol {
     ROAD,
     RAIL,
     AQUA,
+    PATH,
 
 
     ;
@@ -35,6 +36,7 @@ enum class Symbol {
             ROAD -> "ROAD"
             RAIL -> "RAIL"
             AQUA -> "AQUA"
+            PATH -> "PATH"
 
 
             else -> throw Error("Invalid symbol")
