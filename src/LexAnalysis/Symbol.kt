@@ -11,6 +11,7 @@ enum class Symbol {
     RCURLY,
     COMMA,
     CITY,
+    COLON
     ;
 
     fun value(): String =
@@ -23,6 +24,7 @@ enum class Symbol {
             RCURLY -> "RCURLY"
             COMMA -> "COMMA"
             CITY -> "CITY"
+            COLON -> "COLON"
 
             else -> throw Error("Invalid symbol")
         }
