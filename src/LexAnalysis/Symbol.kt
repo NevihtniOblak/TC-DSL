@@ -36,6 +36,8 @@ enum class Symbol {
     EQUALS,
     FOR,
     PRINT,
+    CALL,
+
 
 
 
@@ -76,6 +78,7 @@ enum class Symbol {
             EQUALS -> "EQUALS"
             FOR -> "FOR"
             PRINT -> "PRINT"
+            CALL -> "CALL"
 
 
 
