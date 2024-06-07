@@ -32,6 +32,7 @@ enum class Symbol {
     LINE,
     POLYGON,
     CIRCLE,
+    VAR,
 
 
 
@@ -68,6 +69,7 @@ enum class Symbol {
             LINE -> "LINE"
             POLYGON -> "POLYGON"
             CIRCLE -> "CIRCLE"
+            VAR -> "VAR"
 
 
 
