@@ -5,12 +5,12 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 169).toSet()
+    override val states = (1 .. 170).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
     override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169)
+        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -40,6 +40,11 @@ object ForForeachFFFAutomaton: DFA {
         return values[state]
     }
     init {
+        val alpha = ('A'..'Z') + ('a'..'z')
+        val alphaNum = alpha + ('0'..'9')
+        val alphaNumExtra = alphaNum + listOf('+', '-', '*', '/', '.', '-', '_', ' ', '!','?')
+
+
         //TRANZICIJE
 
         //eof
@@ -307,8 +312,7 @@ object ForForeachFFFAutomaton: DFA {
 
         //STRING
         setTransition(1,'"', 164)
-        val characters = ('A'..'Z') + ('a'..'z') + ('0'..'9') + listOf('+', '-', '*', '/', '.', '-', '_', ' ', '!','?')
-        for (char in characters) {
+        for (char in alphaNumExtra) {
             setTransition(164, char, 165)
             setTransition(165, char, 165)
         }
@@ -325,6 +329,18 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(168, i, 169)
             setTransition(169, i, 169)
         }
+
+        //VARIABLE
+        val excludeCharsVariable = listOf('p', 'S', 'C', 'B', 'R', 'A', 'P', 's', 't', 'r', 'v', 'f', 'c', 'd', 'L')
+        for(i in alpha){
+            if(i !in excludeCharsVariable){
+                setTransition(1, i, 170)
+            }
+        }
+        for(i in alphaNum){
+            setTransition(170, i, 170)
+        }
+
 
 
 
@@ -423,12 +439,15 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(162, Symbol.INTEGER_DIVIDE)
         //POW(^)
         setSymbol(163, Symbol.POW)
-        //STRING
+        //STRING("alphanumericExtra")
         setSymbol(166, Symbol.STRING)
 
-        //REAL
+        //REAL(num.num)
         setSymbol(167, Symbol.REAL)
         setSymbol(169, Symbol.REAL)
+
+        //VARIABLE(alpha+alphaNumExtra)
+        setSymbol(170, Symbol.VARIABLE)
 
 
 
