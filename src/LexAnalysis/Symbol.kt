@@ -30,8 +30,8 @@ enum class Symbol {
     SET_MARKER,
     BOX,
     LINE,
-    POLYGON
-
+    POLYGON,
+    CIRCLE,
 
 
 
@@ -67,6 +67,8 @@ enum class Symbol {
             BOX -> "BOX"
             LINE -> "LINE"
             POLYGON -> "POLYGON"
+            CIRCLE -> "CIRCLE"
+
 
 
 
