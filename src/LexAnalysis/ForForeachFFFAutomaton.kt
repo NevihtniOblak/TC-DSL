@@ -5,12 +5,12 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 141).toSet()
+    override val states = (1 .. 155).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
     override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141)
+        134, 137, 141, 155)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -265,6 +265,21 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(139,'l', 140)
         setTransition(140,'l', 141)
 
+        //DISPLAY_MARKERS(displayMarkers)
+        setTransition(1,'d', 142)
+        setTransition(142,'i', 143)
+        setTransition(143,'s', 144)
+        setTransition(144,'p', 145)
+        setTransition(145,'l', 146)
+        setTransition(146,'a', 147)
+        setTransition(147,'y', 148)
+        setTransition(148,'M', 149)
+        setTransition(149,'a', 150)
+        setTransition(150,'r', 151)
+        setTransition(151,'k', 152)
+        setTransition(152,'e', 153)
+        setTransition(153,'r', 154)
+        setTransition(154,'s', 155)
 
 
 
@@ -345,6 +360,8 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(137, Symbol.PRINT)
         //CALL(call)
         setSymbol(141, Symbol.CALL)
+        //DISPLAY_MARKERS(displayMarkers)
+        setSymbol(155, Symbol.DISPLAY_MARKERS)
 
 
 

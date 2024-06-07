@@ -37,6 +37,7 @@ enum class Symbol {
     FOR,
     PRINT,
     CALL,
+    DISPLAY_MARKERS,
 
 
 
@@ -79,6 +80,7 @@ enum class Symbol {
             FOR -> "FOR"
             PRINT -> "PRINT"
             CALL -> "CALL"
+            DISPLAY_MARKERS -> "DISPLAY_MARKERS"
 
 
 
