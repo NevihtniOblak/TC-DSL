@@ -3,15 +3,13 @@ package LexAnalysis
 enum class Symbol {
     EOF,
     SKIP,
-    FOR,
-    FOREACH,
-    FFF;
+    SCHEMA,
+    ;
 
     fun value(): String =
         when (this) {
-            FOR -> "for"
-            FOREACH -> "foreach"
-            FFF -> "fff"
+            SCHEMA -> "SCHEMA"
+
             else -> throw Error("Invalid symbol")
         }
 }

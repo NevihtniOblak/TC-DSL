@@ -5,10 +5,10 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 11).toSet()
+    override val states = (1 .. 9).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-    override val finalStates = setOf(2, 3, 5, 9, 10, 11)
+    override val finalStates = setOf(2,3, 9)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -38,24 +38,31 @@ object ForForeachFFFAutomaton: DFA {
         return values[state]
     }
     init {
+        //TRANZICIJE
 
-        setTransition(1, 'f', 2)
-        setTransition(2, 'f', 3)
-        setTransition(3, 'f', 3)
-        setTransition(2, 'o', 4)
-        setTransition(4, 'r', 5)
-        setTransition(5, 'e', 6)
-        setTransition(6, 'a', 7)
-        setTransition(7, 'c', 8)
-        setTransition(8, 'h', 9)
-        setTransition(1, ' ', 10)
-        setTransition(1, EOF, 11)
+        //eof
+        setTransition(1, EOF, 2)
+        //skip
+        setTransition(1, ' ', 3)
 
-        setSymbol(2, Symbol.FFF)
-        setSymbol(3, Symbol.FFF)
-        setSymbol(5, Symbol.FOR)
-        setSymbol(9, Symbol.FOREACH)
-        setSymbol(11, Symbol.EOF)
+
+        //schema(SCHEMA)
+        setTransition(1,'S', 4)
+        setTransition(4,'C', 5)
+        setTransition(5,'H', 6)
+        setTransition(6,'E', 7)
+        setTransition(7,'M', 8)
+        setTransition(8,'A', 9)
+
+
+
+        //KONCNA STANJA
+        //eof
+        setSymbol(2, Symbol.EOF)
+        //schema(SCHEMA)
+        setSymbol(9, Symbol.SCHEMA)
+
+
 
 
     }

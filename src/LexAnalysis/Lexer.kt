@@ -40,6 +40,7 @@ class Lexer(private val automaton: DFA, private val stream: InputStream) {
         }
         last = code // The code following the current lexeme is the first code of the next lexeme
 
+
         if (automaton.finalStates.contains(state)) {
             val symbol = automaton.symbol(state)
             return if (symbol == Symbol.SKIP) {
