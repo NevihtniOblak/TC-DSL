@@ -5,12 +5,12 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 155).toSet()
+    override val states = (1 .. 163).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
     override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155)
+        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -281,6 +281,30 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(153,'r', 154)
         setTransition(154,'s', 155)
 
+        //LSQURE([)
+        setTransition(1,'[', 156)
+
+        //RSQURE(])
+        setTransition(1,']', 157)
+
+        //PLUS(+)
+        setTransition(1,'+', 158)
+
+        //MINUS(-)
+        setTransition(1,'-', 159)
+
+        //MULTIPLY(*)
+        setTransition(1,'*', 160)
+
+        //DIVIDE(/)
+        setTransition(1,'/', 161)
+
+        //INTEGER_DIVIDE(//)
+        setTransition(161,'/', 162)
+
+        //POW(^)
+        setTransition(1,'^', 163)
+
 
 
 
@@ -362,6 +386,22 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(141, Symbol.CALL)
         //DISPLAY_MARKERS(displayMarkers)
         setSymbol(155, Symbol.DISPLAY_MARKERS)
+        //LSQURE([)
+        setSymbol(156, Symbol.LSQURE)
+        //RSQURE(])
+        setSymbol(157, Symbol.RSQURE)
+        //PLUS(+)
+        setSymbol(158, Symbol.PLUS)
+        //MINUS(-)
+        setSymbol(159, Symbol.MINUS)
+        //MULTIPLY(*)
+        setSymbol(160, Symbol.TIMES)
+        //DIVIDE(/)
+        setSymbol(161, Symbol.DIVIDE)
+        //INTEGER_DIVIDE(//)
+        setSymbol(162, Symbol.INTEGER_DIVIDE)
+        //POW(^)
+        setSymbol(163, Symbol.POW)
 
 
 

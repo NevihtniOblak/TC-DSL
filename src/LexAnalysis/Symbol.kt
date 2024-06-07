@@ -38,6 +38,14 @@ enum class Symbol {
     PRINT,
     CALL,
     DISPLAY_MARKERS,
+    LSQURE,
+    RSQURE,
+    PLUS,
+    MINUS,
+    TIMES,
+    DIVIDE,
+    INTEGER_DIVIDE,
+    POW,
 
 
 
@@ -81,6 +89,14 @@ enum class Symbol {
             PRINT -> "PRINT"
             CALL -> "CALL"
             DISPLAY_MARKERS -> "DISPLAY_MARKERS"
+            LSQURE -> "LSQURE"
+            RSQURE -> "RSQURE"
+            PLUS -> "PLUS"
+            MINUS -> "MINUS"
+            TIMES -> "TIMES"
+            DIVIDE -> "DIVIDE"
+            INTEGER_DIVIDE -> "INTEGER_DIVIDE"
+            POW -> "POW"
 
 
 
