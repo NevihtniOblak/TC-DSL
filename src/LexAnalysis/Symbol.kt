@@ -13,6 +13,8 @@ enum class Symbol {
     CITY,
     COLON,
     BUILDING,
+    ROAD,
+
     ;
 
     fun value(): String =
@@ -27,6 +29,7 @@ enum class Symbol {
             CITY -> "CITY"
             COLON -> "COLON"
             BUILDING -> "BUILDING"
+            ROAD -> "ROAD"
 
             else -> throw Error("Invalid symbol")
         }
