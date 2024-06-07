@@ -17,6 +17,9 @@ enum class Symbol {
     RAIL,
     AQUA,
     PATH,
+    SHOP_TUS,
+    SHOP_MERCATOR,
+
 
 
     ;
@@ -37,6 +40,8 @@ enum class Symbol {
             RAIL -> "RAIL"
             AQUA -> "AQUA"
             PATH -> "PATH"
+            SHOP_TUS -> "SHOP-TUS"
+            SHOP_MERCATOR -> "SHOP-MERCATOR"
 
 
             else -> throw Error("Invalid symbol")

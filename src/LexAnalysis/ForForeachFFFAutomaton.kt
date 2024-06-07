@@ -5,10 +5,10 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 51).toSet()
+    override val states = (1 .. 66).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36, 40, 43, 47, 51)
+    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36, 40, 43, 47, 51, 58, 66)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -123,7 +123,27 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(49,'t', 50)
         setTransition(50,'h', 51)
 
+        //SHOP-TUS
+        //S dobi od SCHEMA
+        setTransition(4,'h', 52)
+        setTransition(52,'o', 53)
+        setTransition(53,'p', 54)
+        setTransition(54,'-', 55)
+        setTransition(55,'T', 56)
+        setTransition(56,'u', 57)
+        setTransition(57,'s', 58)
 
+
+        //SHOP-MERCATOR
+        //Shop- dobi od SHOP-TUS
+        setTransition(55,'M', 59)
+        setTransition(59,'e', 60)
+        setTransition(60,'r', 61)
+        setTransition(61,'c', 62)
+        setTransition(62,'a', 63)
+        setTransition(63,'t', 64)
+        setTransition(64,'o', 65)
+        setTransition(65,'r', 66)
 
 
 
@@ -158,7 +178,10 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(47, Symbol.AQUA)
         //PATH(Path)
         setSymbol(51, Symbol.PATH)
-
+        //SHOP-TUS(Shop-Tus)
+        setSymbol(58, Symbol.SHOP_TUS)
+        //SHOP-MERCATOR(Shop-Mercator)
+        setSymbol(66, Symbol.SHOP_MERCATOR)
 
 
 
