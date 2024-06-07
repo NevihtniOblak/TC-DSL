@@ -9,6 +9,7 @@ enum class Symbol {
     RPAREN,
     LCURLY,
     RCURLY,
+    COMMA,
     ;
 
     fun value(): String =
@@ -19,6 +20,7 @@ enum class Symbol {
             RPAREN -> "rparen"
             LCURLY -> "lcurly"
             RCURLY -> "rcurly"
+            COMMA -> "comma"
 
             else -> throw Error("Invalid symbol")
         }
