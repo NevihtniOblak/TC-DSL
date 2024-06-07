@@ -5,10 +5,10 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 76).toSet()
+    override val states = (1 .. 78).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36, 40, 43, 47, 51, 58, 66, 74, 76)
+    override val finalStates = setOf(2,3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36, 40, 43, 47, 51, 58, 66, 74, 76, 77, 78)
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -123,7 +123,7 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(49,'t', 50)
         setTransition(50,'h', 51)
 
-        //SHOP-TUS
+        //SHOP-TUS(Shop-Tus)
         //S dobi od SCHEMA
         setTransition(4,'h', 52)
         setTransition(52,'o', 53)
@@ -133,7 +133,7 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(56,'u', 57)
         setTransition(57,'s', 58)
 
-        //SHOP-MERCATOR
+        //SHOP-MERCATOR(Shop-Mercator)
         //Shop- dobi od SHOP-TUS
         setTransition(55,'M', 59)
         setTransition(59,'e', 60)
@@ -144,7 +144,7 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(64,'o', 65)
         setTransition(65,'r', 66)
 
-        //BUILDING-COMPLEX
+        //BUILDING-COMPLEX(Building-Complex)
         //Building dobi od BUILDING
         setTransition(36,'-', 67)
         setTransition(67,'C', 68)
@@ -155,10 +155,16 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(72,'e', 73)
         setTransition(73,'x', 74)
 
-        //PARK
+        //PARK(Park)
         //Pa dobi od PATH
         setTransition(49,'r', 75)
         setTransition(75,'k', 76)
+
+        //LANGLE(<)
+        setTransition(1,'<', 77)
+
+        //RANGLE(>)
+        setTransition(1,'>', 78)
 
 
         //KONCNA STANJA
@@ -200,6 +206,10 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(74, Symbol.BUILDING_COMPLEX)
         //PARK(Park)
         setSymbol(76, Symbol.PARK)
+        //LANGLE(<)
+        setSymbol(77, Symbol.LANGLE)
+        //RANGLE(>)
+        setSymbol(78, Symbol.RANGLE)
 
 
 

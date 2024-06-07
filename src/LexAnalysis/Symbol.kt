@@ -20,7 +20,9 @@ enum class Symbol {
     SHOP_TUS,
     SHOP_MERCATOR,
     BUILDING_COMPLEX,
-    PARK
+    PARK,
+    LANGLE,
+    RANGLE,
 
 
 
@@ -46,6 +48,8 @@ enum class Symbol {
             SHOP_MERCATOR -> "SHOP-MERCATOR"
             BUILDING_COMPLEX -> "BUILDING-COMPLEX"
             PARK -> "PARK"
+            LANGLE -> "LANGLE"
+            RANGLE -> "RANGLE"
 
 
             else -> throw Error("Invalid symbol")
