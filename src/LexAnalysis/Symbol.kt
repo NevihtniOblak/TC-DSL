@@ -35,6 +35,7 @@ enum class Symbol {
     VAR,
     EQUALS,
     FOR,
+    PRINT,
 
 
 
@@ -74,6 +75,7 @@ enum class Symbol {
             VAR -> "VAR"
             EQUALS -> "EQUALS"
             FOR -> "FOR"
+            PRINT -> "PRINT"
 
 
 
