@@ -493,8 +493,22 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeASSIGNS(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.LSQURE)
+            val v2 = recognizeEXP()
+            val v3 = recognizeTerminal(Symbol.RSQURE)
+            val v4 = recognizeTerminal(Symbol.EQUALS)
+            val v5 = recognizeEXP()
+            return v1 && v2 && v3 && v4 && v5
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.EQUALS)
+            val v2 = recognizeDATA()
+            return v1 && v2
+        } else {
+            return false
+        }
     }
+
 
     fun recognizeCONSTRUCTNAMES(): Boolean {
         return true
