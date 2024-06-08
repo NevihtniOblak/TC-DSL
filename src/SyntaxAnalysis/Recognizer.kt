@@ -411,8 +411,15 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizePOLYARGS(): Boolean {
-        return true
+        val v1 = recognizeEXP()
+        val v2 = recognizeTerminal(Symbol.COMMA)
+        val v3 = recognizeEXP()
+        val v4 = recognizeTerminal(Symbol.COMMA)
+        val v5 = recognizeEXP()
+        val v6 = recognizePOLYARGS2()
+        return v1 && v2 && v3 && v4 && v5 && v6
     }
+
 
     fun recognizePOLYARGS2(): Boolean {
     return true
