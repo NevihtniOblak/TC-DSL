@@ -131,7 +131,29 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeCOMPONENTS(): Boolean {
-        return true
+
+        if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeINFRASTRUCTURE()
+            var v2 = recognizeCOMPONENTS()
+
+            return v1 && v2
+        }
+        else if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeCONTAINERS()
+            var v2 = recognizeCOMPONENTS()
+
+            return v1 && v2
+        }
+        else if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeSTMTS()
+            var v2 = recognizeCOMPONENTS()
+
+            return v1 && v2
+        }
+        else{
+            //epsilon
+            return true
+        }
     }
 
     fun recognizeINFRASTRUCTURE(): Boolean {
