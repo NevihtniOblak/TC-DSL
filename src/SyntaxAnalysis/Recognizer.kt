@@ -241,8 +241,20 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeRENDER(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeSTMTS()
+            val v2 = recognizeRENDER()
+            return v1 && v2
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeSPECS()
+            val v2 = recognizeRENDER()
+            return v1 && v2
+        } else {
+            // EPSILON case
+            return true
+        }
     }
+
 
     fun recognizeRENDERCONT(): Boolean {
         return true
