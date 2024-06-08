@@ -157,7 +157,18 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeINFRASTRUCTURE(): Boolean {
-        return true
+        var v1 = recognizeINFNAMES()
+        var v2 = recognizeTAG()
+        var v3 = recognizeTerminal(Symbol.COLON)
+        var v4 = recognizeTAG()
+        var v5 = recognizeTerminal(Symbol.LPAREN)
+        var v6 = recognizeRENDER()
+        var v7 = recognizeTerminal(Symbol.RPAREN)
+        var v8 = recognizeTerminal(Symbol.LCURLY)
+        var v9 = recognizeEFFECT()
+        var v10 = recognizeTerminal(Symbol.RCURLY)
+
+        return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10
     }
 
     fun recognizeINFNAMES(): Boolean {
