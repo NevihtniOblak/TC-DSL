@@ -277,8 +277,20 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeEFFECT(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeSTMTS()
+            val v2 = recognizeEFFECT()
+            return v1 && v2
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeCOMMANDS()
+            val v2 = recognizeEFFECT()
+            return v1 && v2
+        } else {
+            // EPSILON case
+            return true
+        }
     }
+
 
     fun recognizeCOMMANDS(): Boolean {
         return true
