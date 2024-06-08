@@ -434,8 +434,63 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeSTMTS(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.VAR)
+            val v2 = recognizeTerminal(Symbol.VARIABLE)
+            val v3 = recognizeTerminal(Symbol.EQUALS)
+            val v4 = recognizeDATA()
+            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.VARIABLE)
+            val v2 = recognizeASSIGNS()
+            val v3 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.FOR)
+            val v2 = recognizeTerminal(Symbol.LPAREN)
+            val v3 = recognizeTerminal(Symbol.VAR)
+            val v4 = recognizeTerminal(Symbol.VARIABLE)
+            val v5 = recognizeTerminal(Symbol.EQUALS)
+            val v6 = recognizeEXP()
+            val v7 = recognizeTerminal(Symbol.SEMICOL)
+            val v8 = recognizeEXP()
+            val v9 = recognizeTerminal(Symbol.RPAREN)
+            val v10 = recognizeTerminal(Symbol.LCURLY)
+            val v11 = recognizeCOMPONENTS()
+            val v12 = recognizeTerminal(Symbol.RCURLY)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.PRINT)
+            val v2 = recognizeTerminal(Symbol.LPAREN)
+            val v3 = recognizeEXP()
+            val v4 = recognizeTerminal(Symbol.RPAREN)
+            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.CALL)
+            val v2 = recognizeTerminal(Symbol.VARIABLE)
+            val v3 = recognizeTerminal(Symbol.LPAREN)
+            val v4 = recognizeARGUMENTS()
+            val v5 = recognizeTerminal(Symbol.RPAREN)
+            val v6 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5 && v6
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.DISPLAY_MARKERS)
+            val v2 = recognizeTerminal(Symbol.LPAREN)
+            val v3 = recognizeEXP()
+            val v4 = recognizeTerminal(Symbol.COMMA)
+            val v5 = recognizeEXP()
+            val v6 = recognizeTerminal(Symbol.COMMA)
+            val v7 = recognizeCONSTRUCTNAMES()
+            val v8 = recognizeTerminal(Symbol.RPAREN)
+            val v9 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9
+        } else {
+            return false
+        }
     }
+
 
     fun recognizeASSIGNS(): Boolean {
         return true
