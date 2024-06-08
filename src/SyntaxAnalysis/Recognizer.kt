@@ -521,28 +521,69 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeEXP(): Boolean {
-        return true
+        return recognizeADDITIVE()
     }
+
 
     fun recognizeADDITIVE(): Boolean {
-        return true
+        val v1 = recognizeMULTIPLICATIVE()
+        val v2 = recognizeADDITIVE2()
+        return v1 && v2
     }
+
 
     fun recognizeADDITIVE2(): Boolean {
-    return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.PLUS)
+            val v2 = recognizeMULTIPLICATIVE()
+            val v3 = recognizeADDITIVE2()
+            return v1 && v2 && v3
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.MINUS)
+            val v2 = recognizeMULTIPLICATIVE()
+            val v3 = recognizeADDITIVE2()
+            return v1 && v2 && v3
+        } else {
+            return true // EPSILON case
+        }
     }
+
 
     fun recognizeMULTIPLICATIVE(): Boolean {
-        return true
+        val v1 = recognizeEXPONENTIAL()
+        val v2 = recognizeMULTIPLICATIVE2()
+        return v1 && v2
     }
+
 
     fun recognizeMULTIPLICATIVE2(): Boolean {
-    return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.TIMES)
+            val v2 = recognizeEXPONENTIAL()
+            val v3 = recognizeMULTIPLICATIVE2()
+            return v1 && v2 && v3
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.DIVIDE)
+            val v2 = recognizeEXPONENTIAL()
+            val v3 = recognizeMULTIPLICATIVE2()
+            return v1 && v2 && v3
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.INTEGER_DIVIDE)
+            val v2 = recognizeEXPONENTIAL()
+            val v3 = recognizeMULTIPLICATIVE2()
+            return v1 && v2 && v3
+        } else {
+            return true // EPSILON case
+        }
     }
 
+
     fun recognizeEXPONENTIAL(): Boolean {
-        return true
+        val v1 = recognizeUNARY()
+        val v2 = recognizeEXPONENTIAL2()
+        return v1 && v2
     }
+
 
     fun recognizeEXPONENTIAL2(): Boolean {
     return true
