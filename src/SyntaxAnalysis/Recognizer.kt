@@ -92,7 +92,16 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeARGUMENTS(): Boolean {
-        return true
+
+        if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeTerminal(Symbol.VARIABLE)
+            var v2 = recognizeARGUMENTS2()
+            return v1 && v2
+        }
+        else{
+            //epsilon
+            return true
+        }
     }
 
     fun recognizeARGUMENTS2(): Boolean {
