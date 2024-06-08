@@ -105,11 +105,29 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeARGUMENTS2(): Boolean {
-    return true
+
+        if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeTerminal(Symbol.COMMA)
+            var v2 = recognizeTerminal(Symbol.VARIABLE)
+            var v3 = recognizeARGUMENTS2()
+            return v1 && v2 && v3
+        }
+        else{
+            //epsilon
+            return true
+        }
     }
 
+
     fun recognizeCITY(): Boolean {
-        return true
+        var v1 = recognizeTerminal(Symbol.CITY)
+        var v2 = recognizeTerminal(Symbol.COLON)
+        var v3 = recognizeTerminal(Symbol.STRING)
+        var v4 = recognizeTerminal(Symbol.LPAREN)
+        var v5 = recognizeCOMPONENTS()
+        var v6 = recognizeTerminal(Symbol.RPAREN)
+
+        return v1 && v2 && v3 && v4 && v5 && v6
     }
 
     fun recognizeCOMPONENTS(): Boolean {
