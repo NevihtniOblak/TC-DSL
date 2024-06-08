@@ -293,8 +293,41 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeCOMMANDS(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.SET_LOCATION)
+            val v2 = recognizeTerminal(Symbol.LPAREN)
+            val v3 = recognizeEXP()
+            val v4 = recognizeTerminal(Symbol.RPAREN)
+            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.TRANSLATE)
+            val v2 = recognizeTerminal(Symbol.LPAREN)
+            val v3 = recognizeEXP()
+            val v4 = recognizeTerminal(Symbol.COMMA)
+            val v5 = recognizeEXP()
+            val v6 = recognizeTerminal(Symbol.RPAREN)
+            val v7 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.ROTATE)
+            val v2 = recognizeTerminal(Symbol.LPAREN)
+            val v3 = recognizeEXP()
+            val v4 = recognizeTerminal(Symbol.RPAREN)
+            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.SET_MARKER)
+            val v2 = recognizeTerminal(Symbol.LPAREN)
+            val v3 = recognizeEXP()
+            val v4 = recognizeTerminal(Symbol.RPAREN)
+            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            return v1 && v2 && v3 && v4 && v5
+        } else {
+            return false
+        }
     }
+
 
     fun recognizeSPECS(): Boolean {
         return true
