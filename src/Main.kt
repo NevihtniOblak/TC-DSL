@@ -9,7 +9,7 @@ fun main(args: Array<String>) {
 
     //Lexer(ForForeachFFFAutomaton, "SCHEMA-for+for130+-*\"oo1!?\"// / ^[]displayMarkerscallprint for=varCirclePolygonLineBoxsetMarker rotatetranslate;;setLocation<>ParkBuilding-ComplexShop-Mercator Shop-Tus Path Aqua Rail Road Building:City,{}(()SCHEMA) procedureSCHEMASCHEMA".byteInputStream()).printTokens(System.out)
     //Lexer(ForForeachFFFAutomaton, "for".byteInputStream()).printTokens(System.out)
-    //Lexer(ForForeachFFFAutomaton,  input.byteInputStream()).printTokens(outputFile.outputStream())
+    //Lexer(ForForeachFFFAutomaton,  "print".byteInputStream()).printTokens(outputFile.outputStream())
 
     val result = Recognizer(Lexer(ForForeachFFFAutomaton,  input.byteInputStream())).recognizeStart()
 
@@ -19,5 +19,6 @@ fun main(args: Array<String>) {
     else{
         print("The input is NOT a valid program")
     }
+
 
 }

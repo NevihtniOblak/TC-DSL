@@ -22,6 +22,7 @@ class Recognizer(private val lexer: Lexer) {
     private fun recognizeTerminal(symbol: Symbol): Boolean {
 
         if (currentSymbol?.symbol == symbol) {
+            println("Recognized: $currentSymbol")
             currentSymbol = lexer.getToken()
             return true
         }
@@ -77,10 +78,9 @@ class Recognizer(private val lexer: Lexer) {
         var v1 = recognizeTerminal(Symbol.SCHEMA)
 
         var v2 = recognizeSCHEMAS2()
-        var v3 = recognizeSCHEMAS()
 
-        println("SCHEMAS RETURN: "+(v1 && v2 && v3))
-        return v1 && v2 && v3
+        println("SCHEMAS RETURN: "+(v1 && v2))
+        return v1 && v2
     }
 
     fun recognizeSCHEMAS2(): Boolean {
@@ -121,8 +121,8 @@ class Recognizer(private val lexer: Lexer) {
     fun recognizeARGUMENTS(): Boolean {
         println("Recognizing ARGUMENTS")
 
-        if(currentSymbol!!.symbol in setOf(Symbol.VARIABLE)){
-            var v1 = recognizeTerminal(Symbol.VARIABLE)
+        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+            var v1 = recognizeEXP()
             var v2 = recognizeARGUMENTS2()
 
             println("ARGUMENTS RETURN: "+(v1 && v2))
@@ -144,7 +144,8 @@ class Recognizer(private val lexer: Lexer) {
 
         if(currentSymbol!!.symbol in setOf(Symbol.COMMA)){
             var v1 = recognizeTerminal(Symbol.COMMA)
-            var v2 = recognizeTerminal(Symbol.VARIABLE)
+            //var v2 = recognizeTerminal(Symbol.VARIABLE)
+            var v2 = recognizeEXP()
             var v3 = recognizeARGUMENTS2()
 
             println("ARGUMENTS2 RETURN: "+(v1 && v2 && v3))
@@ -198,6 +199,13 @@ class Recognizer(private val lexer: Lexer) {
         else if(currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)){
             var v1 = recognizeSTMTS()
+            var v2 = recognizeCOMPONENTS()
+
+            println("COMPONENTS RETURN: "+(v1 && v2))
+            return v1 && v2
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.BOX, Symbol.LINE, Symbol.POLYGON, Symbol.CIRCLE, Symbol.CIRCLELINE)){
+            var v1 = recognizeSPECS()
             var v2 = recognizeCOMPONENTS()
 
             println("COMPONENTS RETURN: "+(v1 && v2))
@@ -314,9 +322,12 @@ class Recognizer(private val lexer: Lexer) {
             return v1 && v2 && v3
         } else if( currentSymbol!!.symbol in setOf( Symbol.LPAREN)){
             // EPSILON case
+
+            println("TAG RETURN: "+true)
             return true
         }
         else{
+            println("TAG RETURN: "+false)
             return false
         }
     }
@@ -685,7 +696,7 @@ class Recognizer(private val lexer: Lexer) {
 
     fun recognizeASSIGNS(): Boolean {
         println("Recognizing ASSIGNS")
-        if (currentSymbol!!.symbol in setOf( Symbol.EQUALS)) {
+        if (currentSymbol!!.symbol in setOf( Symbol.LSQURE)) {
             val v1 = recognizeTerminal(Symbol.LSQURE)
             val v2 = recognizeEXP()
             val v3 = recognizeTerminal(Symbol.RSQURE)
@@ -694,7 +705,7 @@ class Recognizer(private val lexer: Lexer) {
 
             println("ASSIGNS RETURN: "+(v1 && v2 && v3 && v4 && v5))
             return v1 && v2 && v3 && v4 && v5
-        } else if (currentSymbol!!.symbol in setOf( Symbol.LSQURE)) {
+        } else if (currentSymbol!!.symbol in setOf( Symbol.EQUALS)) {
             val v1 = recognizeTerminal(Symbol.EQUALS)
             val v2 = recognizeDATA()
 
@@ -896,10 +907,11 @@ class Recognizer(private val lexer: Lexer) {
             println("PRIMARY RETURN: "+(v1 && v2))
             return v1 && v2
         } else if (currentSymbol!!.symbol in setOf( Symbol.LPAREN)) {
-            val v1 = recognizeEXP()
-            val v2 = recognizePRIMARY2()
+            val v1 = recognizeTerminal(Symbol.LPAREN)
+            val v2 = recognizeEXP()
+            val v3 = recognizePRIMARY2()
 
-            println("PRIMARY RETURN: "+(v1 && v2))
+            println("PRIMARY RETURN: "+(v1 && v2 && v3))
             return v1 && v2
         } else if (currentSymbol!!.symbol in setOf( Symbol.STRING)) {
             val v1 = recognizeTerminal(Symbol.STRING)
