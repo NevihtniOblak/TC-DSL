@@ -330,8 +330,85 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeSPECS(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.BOX)
+            val v2 = recognizeTAG()
+            val v3 = recognizeTerminal(Symbol.COLON)
+            val v4 = recognizeTAG()
+            val v5 = recognizeTerminal(Symbol.LPAREN)
+            val v6 = recognizeEXP()
+            val v7 = recognizeTerminal(Symbol.COMMA)
+            val v8 = recognizeEXP()
+            val v9 = recognizeTerminal(Symbol.RPAREN)
+            val v10 = recognizeTerminal(Symbol.LCURLY)
+            val v11 = recognizeEFFECT()
+            val v12 = recognizeTerminal(Symbol.RCURLY)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.LINE)
+            val v2 = recognizeTAG()
+            val v3 = recognizeTerminal(Symbol.COLON)
+            val v4 = recognizeTAG()
+            val v5 = recognizeTerminal(Symbol.LPAREN)
+            val v6 = recognizeEXP()
+            val v7 = recognizeTerminal(Symbol.COMMA)
+            val v8 = recognizeEXP()
+            val v9 = recognizeTerminal(Symbol.COMMA)
+            val v10 = recognizeEXP()
+            val v11 = recognizeTerminal(Symbol.COMMA)
+            val v12 = recognizeEXP()
+            val v13 = recognizeTerminal(Symbol.RPAREN)
+            val v14 = recognizeTerminal(Symbol.LCURLY)
+            val v15 = recognizeEFFECT()
+            val v16 = recognizeTerminal(Symbol.RCURLY)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12 && v13 && v14 && v15 && v16
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.POLYGON)
+            val v2 = recognizeTAG()
+            val v3 = recognizeTerminal(Symbol.COLON)
+            val v4 = recognizeTAG()
+            val v5 = recognizeTerminal(Symbol.LPAREN)
+            val v6 = recognizePOLYARGS()
+            val v7 = recognizeTerminal(Symbol.RPAREN)
+            val v8 = recognizeTerminal(Symbol.LCURLY)
+            val v9 = recognizeEFFECT()
+            val v10 = recognizeTerminal(Symbol.RCURLY)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.CIRCLE)
+            val v2 = recognizeTAG()
+            val v3 = recognizeTerminal(Symbol.COLON)
+            val v4 = recognizeTAG()
+            val v5 = recognizeTerminal(Symbol.LPAREN)
+            val v6 = recognizeEXP()
+            val v7 = recognizeTerminal(Symbol.COMMA)
+            val v8 = recognizeEXP()
+            val v9 = recognizeTerminal(Symbol.RPAREN)
+            val v10 = recognizeTerminal(Symbol.LCURLY)
+            val v11 = recognizeEFFECT()
+            val v12 = recognizeTerminal(Symbol.RCURLY)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.CIRCLELINE)
+            val v2 = recognizeTAG()
+            val v3 = recognizeTerminal(Symbol.COLON)
+            val v4 = recognizeTAG()
+            val v5 = recognizeTerminal(Symbol.LPAREN)
+            val v6 = recognizeEXP()
+            val v7 = recognizeTerminal(Symbol.COMMA)
+            val v8 = recognizeEXP()
+            val v9 = recognizeTerminal(Symbol.COMMA)
+            val v10 = recognizeEXP()
+            val v11 = recognizeTerminal(Symbol.RPAREN)
+            val v12 = recognizeTerminal(Symbol.LCURLY)
+            val v13 = recognizeEFFECT()
+            val v14 = recognizeTerminal(Symbol.RCURLY)
+            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12 && v13 && v14
+        } else {
+            return false
+        }
     }
+
 
     fun recognizePOLYARGS(): Boolean {
         return true
