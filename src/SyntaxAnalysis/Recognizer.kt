@@ -201,7 +201,7 @@ class Recognizer(private val lexer: Lexer) {
 
     fun recognizeCONTAINERS(): Boolean {
         var v1 = recognizeCONTNAMES()
-        var v2 = recognizeREF()
+        var v2 = recognizeTAG()
         var v3 = recognizeTerminal(Symbol.COLON)
         var v4 = recognizeTAG()
         var v5 = recognizeTerminal(Symbol.LPAREN)
@@ -216,16 +216,29 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeCONTNAMES(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.BUILDING_COMPLEX)
+            return v1
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.PARK)
+            return v1
+        }
+        return false
     }
 
-    fun recognizeREF(): Boolean {
-        return true
-    }
 
     fun recognizeTAG(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.LANGLE)
+            val v2 = recognizeEXP()
+            val v3 = recognizeTerminal(Symbol.RANGLE)
+            return v1 && v2 && v3
+        } else {
+            // EPSILON case
+            return true
+        }
     }
+
 
     fun recognizeRENDER(): Boolean {
         return true
