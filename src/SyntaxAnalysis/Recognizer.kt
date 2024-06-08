@@ -653,12 +653,22 @@ class Recognizer(private val lexer: Lexer) {
             val v3 = recognizeTerminal(Symbol.RPAREN)
             return v1 && v2 && v3
         }
+        else{
+            return false
+        }
     }
 
 
     fun recognizeDATA(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeLIST()
+            return v1
+        } else if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeEXP()
+            return v1
+        }
     }
+
 
     fun recognizeLIST(): Boolean {
         return true
