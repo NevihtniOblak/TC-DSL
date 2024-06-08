@@ -586,24 +586,75 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeEXPONENTIAL2(): Boolean {
-    return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.POW)
+            val v2 = recognizeUNARY()
+            val v3 = recognizeEXPONENTIAL2()
+            return v1 && v2 && v3
+        } else {
+            return true // EPSILON case
+        }
     }
+
 
     fun recognizeUNARY(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.PLUS)
+            val v2 = recognizePRIMARY()
+            return v1 && v2
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.MINUS)
+            val v2 = recognizePRIMARY()
+            return v1 && v2
+        } else {
+            return recognizePRIMARY()
+        }
     }
+
 
     fun recognizePRIMARY(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            return recognizeTerminal(Symbol.REAL)
+        } else if (currentSymbol!!.symbol in setOf()) {
+                val v1 = recognizeTerminal(Symbol.VARIABLE)
+            val v2 = recognizePRIMARY1()
+            return v1 && v2
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeEXP()
+            val v2 = recognizePRIMARY2()
+            return v1 && v2
+        } else if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.STRING)
+            return v1
+        }
+        return false
     }
 
+
     fun recognizePRIMARY1(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.LSQURE)
+            val v2 = recognizeEXP()
+            val v3 = recognizeTerminal(Symbol.RSQURE)
+            return v1 && v2 && v3
+        } else {
+            return true // EPSILON case
+        }
     }
 
     fun recognizePRIMARY2(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.RPAREN)
+            return v1
+        }
+        else if(currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.COMMA)
+            val v2 = recognizeEXP()
+            val v3 = recognizeTerminal(Symbol.RPAREN)
+            return v1 && v2 && v3
+        }
     }
+
 
     fun recognizeDATA(): Boolean {
         return true
