@@ -5,7 +5,7 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 170).toSet()
+    override val states = (1 .. 174).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
 
@@ -17,7 +17,7 @@ object ForForeachFFFAutomaton: DFA {
 
     val normalStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170)
+        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174)
 
     //vmesna stanja ki lahko z nekim branjem grejo v variable (prvi znak je stanje in drugi znak je alphanum znak, ki ga ne smemo prebrati da gre v variable stanje)
     private val canGoToVariable = listOf(
@@ -41,6 +41,7 @@ object ForForeachFFFAutomaton: DFA {
         Pair(1,'L'), Pair(114,'i'), Pair(115,'n'), Pair(116,'e'),// LINE(Line)
         Pair(48,'o'), Pair(118,'l'), Pair(119,'y'), Pair(120,'g'), Pair(121,'o'),  Pair(122,'n'), // POLYGON(Polygon)
         Pair(25,'r'), Pair(124,'c'), Pair(125,'l'), Pair(126,'e'),// CIRCLE(Circle)
+        Pair(127,'L'), Pair(171,'i'), Pair(172,'n'), Pair(173,'e'), // CIRCLELINE(CircleLine)
         Pair(1,'v'), Pair(128,'a'), Pair(129,'r'),// VAR(var)
         Pair(1,'f'), Pair(132,'o'), Pair(133,'r'),// FOR(for)
         Pair(11,'i'), Pair(135,'n'), Pair(136,'t'),// PRINT(print)
@@ -388,6 +389,17 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(127, char, 170)
         }
 
+        //CIRCLELINE(CircleLine)
+        //CIRCLE dobi od CIRCLE
+        setTransition(127,'L', 171)
+        setTransition(171,'i', 172)
+        setTransition(172,'n', 173)
+        setTransition(173,'e', 174)
+
+        for(char in alphaNum){
+            setTransition(174, char, 170)
+        }
+
         //VAR(var)
         setTransition(1,'v', 128)
         setTransition(128,'a', 129)
@@ -640,6 +652,9 @@ object ForForeachFFFAutomaton: DFA {
         for (state in extraVariableStates){
             setSymbol(state, Symbol.VARIABLE)
         }
+
+        //CIRCLELINE(CircleLine)
+        setSymbol(174, Symbol.CIRCLELINE)
 
 
 

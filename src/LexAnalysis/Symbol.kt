@@ -51,6 +51,8 @@ enum class Symbol {
     REAL,
     VARIABLE,
 
+    CIRCLELINE
+
 
 
 
@@ -106,6 +108,8 @@ enum class Symbol {
             STRING -> "STRING"
             REAL -> "REAL"
             VARIABLE -> "VARIABLE"
+
+            CIRCLELINE -> "CIRCLELINE"
 
 
 
