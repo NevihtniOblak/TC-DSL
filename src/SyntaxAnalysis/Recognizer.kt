@@ -32,12 +32,27 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizePROGRAM(): Boolean {
-        return true
+        var v1 = recognizePREDEF()
+        var v2 = recognizeCITY()
+        return v1 && v2
     }
 
 
     fun recognizePREDEF(): Boolean {
-        return true
+        if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizePROCEDURE()
+            var v2 = recognizePREDEF()
+            return v1 && v2
+        }
+        else if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeSCHEMAS()
+            var v2 = recognizePREDEF()
+            return v1 && v2
+        }
+        else{
+            //epsilon
+            return true
+        }
     }
 
     fun recognizeSCHEMAS(): Boolean {
