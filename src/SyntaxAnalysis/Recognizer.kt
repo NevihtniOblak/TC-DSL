@@ -56,7 +56,11 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeSCHEMAS(): Boolean {
-        return true
+        var v1 = recognizeTerminal(Symbol.SCHEMA)
+        var v2 = recognizeSCHEMAS2()
+        var v3 = recognizeSCHEMAS()
+
+        return v1 && v2 && v3
     }
 
     fun recognizeSCHEMAS2(): Boolean {
