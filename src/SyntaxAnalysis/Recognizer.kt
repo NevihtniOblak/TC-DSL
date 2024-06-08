@@ -511,7 +511,13 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeCONSTRUCTNAMES(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            return recognizeINFNAMES()
+        } else if (currentSymbol!!.symbol in setOf()) {
+            return recognizeCONTNAMES()
+        } else {
+            return false
+        }
     }
 
     fun recognizeEXP(): Boolean {
