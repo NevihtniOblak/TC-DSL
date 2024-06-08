@@ -79,7 +79,16 @@ class Recognizer(private val lexer: Lexer) {
 }
 
     fun recognizePROCEDURE(): Boolean {
-        return true
+        var v1 = recognizeTerminal(Symbol.PROCEDURE)
+        var v2 = recognizeTerminal(Symbol.VARIABLE)
+        var v3 = recognizeTerminal(Symbol.LPAREN)
+        var v4 = recognizeARGUMENTS()
+        var v5 = recognizeTerminal(Symbol.RPAREN)
+        var v6 = recognizeTerminal(Symbol.LCURLY)
+        var v7 = recognizeCOMPONENTS()
+        var v8 = recognizeTerminal(Symbol.RCURLY)
+
+        return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8
     }
 
     fun recognizeARGUMENTS(): Boolean {
