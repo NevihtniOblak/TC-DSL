@@ -1,0 +1,35 @@
+	
+	SCHEMA Box:<"Shopping mall">((46.548152135931915, 15.673990233686592), (46.54753444907363, 15.674583606338302)){}
+	
+	
+	City: "Maribor" (
+	
+	
+		Building:(
+			Box<"Shopping mall">:((46.548152135931915, 15.673990233686592), (46.54753444907363, 15.674583606338302)){}
+		){
+			setLocation((46.54782992699168, 15.674271349129501));
+		}
+	
+		Shop-Mercator:(
+			Box<"Shopping mall">:((46.548152135931915, 15.673990233686592), (46.54753444907363, 15.674583606338302)){}
+		){
+			setLocation((46.54746872146694, 15.675691241379827));
+			
+		}
+		
+		Shop-Tus:(
+			Box<"Shopping mall">:((46.548152135931915, 15.673990233686592), (46.54753444907363, 15.674583606338302)){}
+		){
+			setLocation((46.54832065443288, 15.676153779219907));
+		}
+		
+		var distance = 2500;
+		
+		var pointOfInterest = (46.548842135993446, 15.67408248544949);
+		
+		
+		displayMarkers(pointOfInterest, distance, Shop-Mercator);
+		displayMarkers(pointOfInterest, distance, Shop-Tus);
+
+	)
