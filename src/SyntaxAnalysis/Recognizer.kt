@@ -422,8 +422,16 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizePOLYARGS2(): Boolean {
-    return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.COMMA)
+            val v2 = recognizeEXP()
+            val v3 = recognizePOLYARGS2()
+            return v1 && v2 && v3
+        } else {
+            return true // EPSILON case
+        }
     }
+
 
     fun recognizeSTMTS(): Boolean {
         return true
