@@ -63,6 +63,8 @@ class Lexer(private val automaton: DFA, private val stream: InputStream) {
 
         var token = this.getToken()
         while (token.symbol != Symbol.EOF) {
+            //println(token)
+
             writer.append("${token.symbol.value()}(\"${token.lexeme}\") \n") // The output ends with a space!
             token = this.getToken()
         }

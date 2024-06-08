@@ -9,18 +9,62 @@ object ForForeachFFFAutomaton: DFA {
     override val alphabet = 0 .. 255
     override val startState = 1
 
-    val variableStates = setOf(
-        4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 24, 25, 26, 29, 30, 31, 32, 33, 34, 35, 37, 38, 39, 41, 42, 44, 45, 46, 48, 49, 50, 52, 53, 54, 55, 56, 57,
-        59, 60, 61, 62, 63, 64, 65, 36, 67, 68, 69, 70, 71, 72, 73, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97, 98, 100, 101, 102, 103, 104, 106,
-        107, 108, 109, 110, 112, 114, 115, 116, 118, 119, 120, 121, 122, 124, 125, 126, 128, 129, 132, 133, 135, 136, 138, 139, 140, 142, 143, 144, 145, 146, 147, 148, 149, 150,
-        151, 152, 153
-    )
+    private val alpha = ('A'..'Z') + ('a'..'z')
+    private val alphaNum = alpha + ('0'..'9')
+    private val alphaNumExtra = alphaNum + listOf('+', '-', '*', '/', '.', '-', '_', ' ', '!','?')
 
-    val nonVariableStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
+    //DELO Z STANJII
+
+    val normalStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
         134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170)
 
-    override val finalStates = variableStates + nonVariableStates
+    //vmesna stanja ki lahko z nekim branjem grejo v variable (prvi znak je stanje in drugi znak je alphanum znak, ki ga ne smemo prebrati da gre v variable stanje)
+    private val canGoToVariable = listOf(
+        Pair(1,'S'), Pair(4,'C'), Pair(5,'H'), Pair(6,'E'), Pair(7,'M'), Pair(8,'A'), // schema(SCHEMA)
+        Pair(1,'p'), Pair(10,'r'), Pair(11,'o'), Pair(12,'c'), Pair(13,'e'), Pair(14,'d'), Pair(15,'u'), Pair(16,'r'), Pair(17,'e'), // PROCEDURE(procedure)
+        Pair(1,'C'), Pair(24,'i'), Pair(25,'t'), Pair(26,'y'), // CITY(City)
+        Pair(1,'B'), Pair(29,'u'), Pair(30,'i'), Pair(31,'l'), Pair(32,'d'), Pair(33,'i'), Pair(34,'n'), Pair(35,'g'), // BUILDING(Building)
+        Pair(1,'R'), Pair(37,'o'), Pair(38,'a'), Pair(39,'d'),// ROAD(Road)
+        Pair(37,'a'), Pair(41,'i'),Pair(42,'l'), // RAIL(Rail)
+        Pair(1,'A'), Pair(44,'q'), Pair(45,'u'), Pair(46,'a'), // AQUA(Aqua)
+        Pair(1,'P'), Pair(48,'a'), Pair(49,'t'), Pair(50,'h'), // PATH(Path)
+        Pair(4,'h'), Pair(52,'o'), Pair(53,'p'), Pair(54,'-'), Pair(55,'T'), Pair(56,'u'), Pair(57,'s'), // SHOP-TUS(Shop-Tus)
+        Pair(55,'M'), Pair(59,'e'), Pair(60,'r'), Pair(61,'c'), Pair(62,'a'), Pair(63,'t'), Pair(64,'o'), Pair(65, 'r'), // SHOP-MERCATOR(Shop-Mercator)
+        Pair(36,'-'), Pair(67,'C'), Pair(68,'o'), Pair(69,'m'), Pair(70,'p'), Pair(71,'l'), Pair(72,'e'),Pair(73,'x'), // BUILDING-COMPLEX(Building-Complex)
+        Pair(49,'r'), Pair(50,'k'), // PARK(Park)
+        Pair(1,'s'), Pair(79,'e'), Pair(80,'t'), Pair(81,'L'), Pair(82,'o'), Pair(83,'c'), Pair(84,'a'), Pair(85,'t'), Pair(86,'i'), Pair(87,'o'), Pair(88,'n'), // SET_LOCATION(setLocation)
+        Pair(1,'t'), Pair(91,'r'), Pair(92,'a'), Pair(93,'n'), Pair(94,'s'), Pair(95,'l'), Pair(96,'a'), Pair(97,'t'), Pair(98, 'e'),// TRANSLATE(translate)
+        Pair(1,'r'), Pair(100,'o'), Pair(101,'t'), Pair(102,'a'), Pair(103,'t') , Pair(104,'e'), // ROTATE(rotate)
+        Pair(81,'M'), Pair(106,'a'), Pair(107,'r'), Pair(108,'k'), Pair(109,'e'), Pair(110,'r'), // SET_MARKER(setMarker)
+        Pair(29,'o'), Pair(112,'x'),// BOX(Box)
+        Pair(1,'L'), Pair(114,'i'), Pair(115,'n'), Pair(116,'e'),// LINE(Line)
+        Pair(48,'o'), Pair(118,'l'), Pair(119,'y'), Pair(120,'g'), Pair(121,'o'),  Pair(122,'n'), // POLYGON(Polygon)
+        Pair(25,'r'), Pair(124,'c'), Pair(125,'l'), Pair(126,'e'),// CIRCLE(Circle)
+        Pair(1,'v'), Pair(128,'a'), Pair(129,'r'),// VAR(var)
+        Pair(1,'f'), Pair(132,'o'), Pair(133,'r'),// FOR(for)
+        Pair(11,'i'), Pair(135,'n'), Pair(136,'t'),// PRINT(print)
+        Pair(1,'c'), Pair(138,'a'), Pair(139,'l'), Pair(140,'l'), // CALL(call)
+        Pair(1,'d'), Pair(142,'i'), Pair(143,'s'), Pair(144,'p'), Pair(145,'l'), Pair(146,'a'), Pair(147,'y'), Pair(148,'M'), Pair(149,'a'), Pair(150,'r'), Pair(151,'k'), Pair(152,'e'), Pair(153,'r'), Pair(154,'s') // DISPLAY_MARKERS(displayMarkers)
+    )
+
+    //funkcija da lahko gorjni zapis pretvorimo v obliko mape kjer je kljuc stanje in vrednost seznam znakov ki jih lahko preberemo da gre v variable
+    private fun groupPairs(pairs: List<Pair<Int, Char>>): List<Pair<Int, List<Char>>> {
+        return pairs.groupBy({ it.first }, { it.second })
+            .map { Pair(it.key, it.value) }
+    }
+
+
+    //vsa stanja iz katerih lahko preidemo na variable z branjem ustreznega znaka -> set vseh stanj od canGoToVariable
+    val canGoToVatriableStates = canGoToVariable.map { it.first }.toSet()
+
+
+    //vsa stanja v katerih ce koncamo dobimo variable -> to so stanja ki lahko grejo v varibale in hkrati niso koncna stanja nekih drugih konstruktov ali zacetno stanje 1
+    val extraVariableStates = canGoToVatriableStates - normalStates - setOf(1)
+
+
+    //KONCNA STANJA
+    override val finalStates = normalStates + extraVariableStates
 
     private val numberOfStates = states.max() + 1 // plus the ERROR_STATE
     private val numberOfCodes = alphabet.max() + 1 // plus the EOF
@@ -49,55 +93,8 @@ object ForForeachFFFAutomaton: DFA {
         assert(states.contains(state))
         return values[state]
     }
+
     init {
-        val alpha = ('A'..'Z') + ('a'..'z')
-        val alphaNum = alpha + ('0'..'9')
-        val alphaNumExtra = alphaNum + listOf('+', '-', '*', '/', '.', '-', '_', ' ', '!','?')
-
-        //vmesna stanja ki lahko grejo v variable (prvi znak je stanje in drugi znak, ki ga ne smemo srecati da postane variable)
-        val canGoToVariable = listOf(
-            Pair(1,'S'), Pair(4,'C'), Pair(5,'H'), Pair(6,'E'), Pair(7,'M'), Pair(8,'A'), // schema(SCHEMA)
-            Pair(1,'p'), Pair(10,'r'), Pair(11,'o'), Pair(12,'c'), Pair(13,'e'), Pair(14,'d'), Pair(15,'u'), Pair(16,'r'), Pair(17,'e'), // PROCEDURE(procedure)
-            Pair(1,'C'), Pair(24,'i'), Pair(25,'t'), Pair(26,'y'), // CITY(City)
-            Pair(1,'B'), Pair(29,'u'), Pair(30,'i'), Pair(31,'l'), Pair(32,'d'), Pair(33,'i'), Pair(34,'n'), Pair(35,'g'), // BUILDING(Building)
-            Pair(1,'R'), Pair(37,'o'), Pair(38,'a'), Pair(39,'d'),// ROAD(Road)
-            Pair(37,'a'), Pair(41,'i'),Pair(42,'l'), // RAIL(Rail)
-            Pair(1,'A'), Pair(44,'q'), Pair(45,'u'), Pair(46,'a'), // AQUA(Aqua)
-            Pair(1,'P'), Pair(48,'a'), Pair(49,'t'), Pair(50,'h'), // PATH(Path)
-            Pair(4,'h'), Pair(52,'o'), Pair(53,'p'), Pair(54,'-'), Pair(55,'T'), Pair(56,'u'), Pair(57,'s'), // SHOP-TUS(Shop-Tus)
-            Pair(55,'M'), Pair(59,'e'), Pair(60,'r'), Pair(61,'c'), Pair(62,'a'), Pair(63,'t'), Pair(64,'o'), Pair(65, 'r'), // SHOP-MERCATOR(Shop-Mercator)
-            Pair(36,'-'), Pair(67,'C'), Pair(68,'o'), Pair(69,'m'), Pair(70,'p'), Pair(71,'l'), Pair(72,'e'),Pair(73,'x'), // BUILDING-COMPLEX(Building-Complex)
-            Pair(49,'r'), Pair(50,'k'), // PARK(Park)
-            Pair(1,'s'), Pair(79,'e'), Pair(80,'t'), Pair(81,'L'), Pair(82,'o'), Pair(83,'c'), Pair(84,'a'), Pair(85,'t'), Pair(86,'i'), Pair(87,'o'), Pair(88,'n'), // SET_LOCATION(setLocation)
-            Pair(1,'t'), Pair(91,'r'), Pair(92,'a'), Pair(93,'n'), Pair(94,'s'), Pair(95,'l'), Pair(96,'a'), Pair(97,'t'), Pair(98, 'e'),// TRANSLATE(translate)
-            Pair(1,'r'), Pair(100,'o'), Pair(101,'t'), Pair(102,'a'), Pair(103,'t') , Pair(104,'e'), // ROTATE(rotate)
-            Pair(81,'M'), Pair(106,'a'), Pair(107,'r'), Pair(108,'k'), Pair(109,'e'), Pair(110,'r'), // SET_MARKER(setMarker)
-            Pair(29,'o'), Pair(112,'x'),// BOX(Box)
-            Pair(1,'L'), Pair(114,'i'), Pair(115,'n'), Pair(116,'e'),// LINE(Line)
-            Pair(48,'o'), Pair(118,'l'), Pair(119,'y'), Pair(120,'g'), Pair(121,'o'),  Pair(122,'n'), // POLYGON(Polygon)
-            Pair(25,'r'), Pair(124,'c'), Pair(125,'l'), Pair(126,'e'),// CIRCLE(Circle)
-            Pair(1,'v'), Pair(128,'a'), Pair(129,'r'),// VAR(var)
-            Pair(1,'f'), Pair(132,'o'), Pair(133,'r'),// FOR(for)
-            Pair(11,'i'), Pair(135,'n'), Pair(136,'t'),// PRINT(print)
-            Pair(1,'c'), Pair(138,'a'), Pair(139,'l'), Pair(140,'l'), // CALL(call)
-            Pair(1,'d'), Pair(142,'i'), Pair(143,'s'), Pair(144,'p'), Pair(145,'l'), Pair(146,'a'), Pair(147,'y'), Pair(148,'M'), Pair(149,'a'), Pair(150,'r'), Pair(151,'k'), Pair(152,'e'), Pair(153,'r'), Pair(154,'s') // DISPLAY_MARKERS(displayMarkers)
-        )
-
-
-        fun groupPairs(pairs: List<Pair<Int, Char>>): List<Pair<Int, List<Char>>> {
-            return pairs.groupBy({ it.first }, { it.second })
-                .map { Pair(it.key, it.value) }
-        }
-
-        val canBeVariableMaps = groupPairs(canGoToVariable)
-
-
-        for ( element in canBeVariableMaps){
-            println(element)
-        }
-
-
-
 
 
         //TRANZICIJE
@@ -508,21 +505,32 @@ object ForForeachFFFAutomaton: DFA {
         }
 
         //VARIABLE
-        for(char in alpha-canBeVariableMaps[0].second){
-            setTransition(1, char, 170)
-        }
-        for(char in alphaNum){
-            setTransition(170, char, 170)
+        val canGoToVariableMaps = groupPairs(canGoToVariable)
+
+        /*
+        for ( element in canGoToVariableMaps){
+            println(element)
         }
 
-        //vmesna nekoncna stanja
-        for (map in canBeVariableMaps.drop(1)){
-            for (char in alphaNum-map.second){
-                setTransition(map.first, char, 170)
+         */
+
+        for(map in canGoToVariableMaps){
+            //pazimo na 1. stanje -> variable rabi vsaj neki alpha znak
+            if(map.first == 1){
+                for (char in alpha - map.second) {
+                    setTransition(map.first, char, 170)
+                }
+            }
+            else {
+                for (char in alphaNum - map.second) {
+                    setTransition(map.first, char, 170)
+                }
             }
         }
 
-
+        for(char in alphaNum){
+            setTransition(170, char, 170)
+        }
 
 
 
@@ -625,15 +633,14 @@ object ForForeachFFFAutomaton: DFA {
         setSymbol(167, Symbol.REAL)
         setSymbol(169, Symbol.REAL)
 
-        //VARIABLE
+        //VARIABLE(alpha+alphanum*)
         setSymbol(170, Symbol.VARIABLE)
 
         //zagotovimo da so ustrezna vmesna stanja tudi lahko spremenljivke
-        for (map in canBeVariableMaps.drop(1)){
-            if(map.first !in nonVariableStates){
-                setSymbol(map.first, Symbol.VARIABLE)
-            }
+        for (state in extraVariableStates){
+            setSymbol(state, Symbol.VARIABLE)
         }
+
 
 
     }
