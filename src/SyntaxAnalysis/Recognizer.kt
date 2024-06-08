@@ -57,6 +57,7 @@ class Recognizer(private val lexer: Lexer) {
 
     fun recognizeSCHEMAS(): Boolean {
         var v1 = recognizeTerminal(Symbol.SCHEMA)
+
         var v2 = recognizeSCHEMAS2()
         var v3 = recognizeSCHEMAS()
 
@@ -64,7 +65,17 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeSCHEMAS2(): Boolean {
-    return true
+        if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeINFRASTRUCTURE()
+            return v1
+        }
+        else if(currentSymbol!!.symbol in setOf()){
+            var v1 = recognizeSPECS()
+            return v1
+        }
+        else{
+            return false
+        }
 }
 
     fun recognizePROCEDURE(): Boolean {
