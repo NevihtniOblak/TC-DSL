@@ -679,8 +679,15 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeLISTITEM(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeEXP()
+            val v2 = recognizeLISTITEM2()
+            return v1 && v2
+        } else {
+            return true
+        }
     }
+
 
     fun recognizeLISTITEM2(): Boolean {
     return true
