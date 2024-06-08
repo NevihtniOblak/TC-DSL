@@ -172,12 +172,48 @@ class Recognizer(private val lexer: Lexer) {
     }
 
     fun recognizeINFNAMES(): Boolean {
-        return true
+        if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeTerminal(Symbol.BUILDING)
+            return v1
+        } else if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeTerminal(Symbol.ROAD)
+            return v1
+        } else if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeTerminal(Symbol.RAIL)
+            return v1
+        } else if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeTerminal(Symbol.AQUA)
+            return v1
+        } else if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeTerminal(Symbol.PATH)
+            return v1
+        } else if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeTerminal(Symbol.SHOP_TUS)
+            return v1
+        } else if (currentSymbol!!.symbol in setOf()) {
+            var v1 = recognizeTerminal(Symbol.SHOP_MERCATOR)
+            return v1
+        } else {
+            return false
+        }
     }
 
+
     fun recognizeCONTAINERS(): Boolean {
-        return true
+        var v1 = recognizeCONTNAMES()
+        var v2 = recognizeREF()
+        var v3 = recognizeTerminal(Symbol.COLON)
+        var v4 = recognizeTAG()
+        var v5 = recognizeTerminal(Symbol.LPAREN)
+        var v6 = recognizeRENDERCONT()
+        var v7 = recognizeTerminal(Symbol.RPAREN)
+        var v8 = recognizeTerminal(Symbol.LCURLY)
+        var v9 = recognizeEFFECT()
+        var v10 = recognizeTerminal(Symbol.RCURLY)
+        return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10
+
     }
+
 
     fun recognizeCONTNAMES(): Boolean {
         return true
