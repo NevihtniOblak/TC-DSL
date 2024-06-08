@@ -671,8 +671,12 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeLIST(): Boolean {
-        return true
+        val v1 = recognizeTerminal(Symbol.LSQURE)
+        val v2 = recognizeLISTITEM()
+        val v3 = recognizeTerminal(Symbol.RSQURE)
+        return v1 && v2 && v3
     }
+
 
     fun recognizeLISTITEM(): Boolean {
         return true
