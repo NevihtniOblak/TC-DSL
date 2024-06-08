@@ -176,7 +176,7 @@ class Recognizer(private val lexer: Lexer) {
 
     fun recognizeINFRASTRUCTURE(): Boolean {
         var v1 = recognizeINFNAMES()
-        var v2 = recognizeTAG()
+        var v2 = recognizeREF()
         var v3 = recognizeTerminal(Symbol.COLON)
         var v4 = recognizeTAG()
         var v5 = recognizeTerminal(Symbol.LPAREN)
@@ -219,7 +219,7 @@ class Recognizer(private val lexer: Lexer) {
 
     fun recognizeCONTAINERS(): Boolean {
         var v1 = recognizeCONTNAMES()
-        var v2 = recognizeTAG()
+        var v2 = recognizeREF()
         var v3 = recognizeTerminal(Symbol.COLON)
         var v4 = recognizeTAG()
         var v5 = recognizeTerminal(Symbol.LPAREN)
@@ -387,7 +387,7 @@ class Recognizer(private val lexer: Lexer) {
     fun recognizeSPECS(): Boolean {
         if (currentSymbol!!.symbol in setOf(Symbol.BOX)) {
             val v1 = recognizeTerminal(Symbol.BOX)
-            val v2 = recognizeTAG()
+            val v2 = recognizeREF()
             val v3 = recognizeTerminal(Symbol.COLON)
             val v4 = recognizeTAG()
             val v5 = recognizeTerminal(Symbol.LPAREN)
@@ -401,7 +401,7 @@ class Recognizer(private val lexer: Lexer) {
             return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12
         } else if (currentSymbol!!.symbol in setOf(Symbol.LINE)) {
             val v1 = recognizeTerminal(Symbol.LINE)
-            val v2 = recognizeTAG()
+            val v2 = recognizeREF()
             val v3 = recognizeTerminal(Symbol.COLON)
             val v4 = recognizeTAG()
             val v5 = recognizeTerminal(Symbol.LPAREN)
@@ -419,7 +419,7 @@ class Recognizer(private val lexer: Lexer) {
             return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12 && v13 && v14 && v15 && v16
         } else if (currentSymbol!!.symbol in setOf( Symbol.POLYGON)) {
             val v1 = recognizeTerminal(Symbol.POLYGON)
-            val v2 = recognizeTAG()
+            val v2 = recognizeREF()
             val v3 = recognizeTerminal(Symbol.COLON)
             val v4 = recognizeTAG()
             val v5 = recognizeTerminal(Symbol.LPAREN)
@@ -431,7 +431,7 @@ class Recognizer(private val lexer: Lexer) {
             return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10
         } else if (currentSymbol!!.symbol in setOf( Symbol.CIRCLE)) {
             val v1 = recognizeTerminal(Symbol.CIRCLE)
-            val v2 = recognizeTAG()
+            val v2 = recognizeREF()
             val v3 = recognizeTerminal(Symbol.COLON)
             val v4 = recognizeTAG()
             val v5 = recognizeTerminal(Symbol.LPAREN)
@@ -445,7 +445,7 @@ class Recognizer(private val lexer: Lexer) {
             return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12
         } else if (currentSymbol!!.symbol in setOf( Symbol.CIRCLELINE)) {
             val v1 = recognizeTerminal(Symbol.CIRCLELINE)
-            val v2 = recognizeTAG()
+            val v2 = recognizeREF()
             val v3 = recognizeTerminal(Symbol.COLON)
             val v4 = recognizeTAG()
             val v5 = recognizeTerminal(Symbol.LPAREN)
