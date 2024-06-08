@@ -31,6 +31,9 @@ class Recognizer(private val lexer: Lexer) {
     }
 
 
+    //RAZPOZNAVALNE FUNKCIJE
+
+
     fun recognizePROGRAM(): Boolean {
         var v1 = recognizePREDEF()
         var v2 = recognizeCITY()
@@ -210,6 +213,7 @@ class Recognizer(private val lexer: Lexer) {
         var v8 = recognizeTerminal(Symbol.LCURLY)
         var v9 = recognizeEFFECT()
         var v10 = recognizeTerminal(Symbol.RCURLY)
+
         return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10
 
     }
@@ -223,7 +227,9 @@ class Recognizer(private val lexer: Lexer) {
             val v1 = recognizeTerminal(Symbol.PARK)
             return v1
         }
-        return false
+        else{
+            return false
+        }
     }
 
 
@@ -606,8 +612,12 @@ class Recognizer(private val lexer: Lexer) {
             val v1 = recognizeTerminal(Symbol.MINUS)
             val v2 = recognizePRIMARY()
             return v1 && v2
-        } else {
-            return recognizePRIMARY()
+        } else if(currentSymbol!!.symbol in setOf(){
+            val v1 = recognizePRIMARY()
+            return v1
+        }
+        else{
+            return false
         }
     }
 
@@ -627,7 +637,9 @@ class Recognizer(private val lexer: Lexer) {
             val v1 = recognizeTerminal(Symbol.STRING)
             return v1
         }
-        return false
+        else{
+            return false
+        }
     }
 
 
@@ -667,6 +679,9 @@ class Recognizer(private val lexer: Lexer) {
             var v1 = recognizeEXP()
             return v1
         }
+        else{
+            return false
+        }
     }
 
 
@@ -690,7 +705,15 @@ class Recognizer(private val lexer: Lexer) {
 
 
     fun recognizeLISTITEM2(): Boolean {
-    return true
+        if (currentSymbol!!.symbol in setOf()) {
+            val v1 = recognizeTerminal(Symbol.COMMA)
+            val v2 = recognizeEXP()
+            val v3 = recognizeLISTITEM2()
+            return v1 && v2 && v3
+        } else {
+            return true
+        }
     }
+
 
 }
