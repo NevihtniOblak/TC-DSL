@@ -1,40 +1,74 @@
 package AST
 
-interface Program {}
+interface Program {
+    fun eval(): String
+}
 
-interface Predef {}
+interface Predef {
+    fun eval(): String
+}
 
 interface Arguments {}
 
-interface City {}
+interface City {
+    fun eval(): String
+}
 
-interface Components {}
+interface Components {
+    fun eval(): String
+}
 
-interface Infnames {}
+interface Infnames {
+    fun eval(): String
+}
 
-interface Contnames {}
+interface Contnames {
+    fun eval(): String
+}
 
-interface Ref {}
+interface Ref {
+    fun eval(): String
+}
 
-interface Tag {}
+interface Tag {
+    fun eval(): String
+}
 
-interface Render {}
+interface Render {
+    fun eval(): String
+}
 
-interface Rendercont {}
+interface Rendercont {
+    fun eval(): String
+}
 
-interface Effect {}
+interface Effect {
+    fun eval(): Unit
+}
 
-interface Commands {}
+interface Commands {
+    fun eval(): Unit
+}
 
-interface Specs {}
+interface Specs {
+    fun eval(): String
+}
 
 interface Polyargs {}
 
-interface Stmts {}
+interface Stmts {
+    fun eval(): Unit
+}
 
-interface Constructnames {}
+interface Constructnames {
+    fun eval(): String
+}
 
-interface Exp {}
+
+interface Exp {
+
+    fun eval(): Value
+}
 
 interface Data {}
 
@@ -138,7 +172,20 @@ class InfName(val infnames: Infnames) : Constructnames {}
 class ContName(val contnames: Contnames) : Constructnames {}
 
 // Exp
-class Plus(val exp1: Exp, val exp2: Exp) : Exp {}
+class Plus(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(): Value {
+
+        val value1 = exp1.eval()
+        val value2 = exp2.eval()
+        if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
+            throw Exception("Type mismatch in Plus operation")
+        }
+        var res = value1.value.toDouble() + value2.value.toDouble()
+
+        return Value(Type.REAL, res.toString())
+    }
+}
 class Minus(val exp1: Exp, val exp2: Exp) : Exp {}
 class Times(val exp1: Exp, val exp2: Exp) : Exp {}
 class Divides(val exp1: Exp, val exp2: Exp) : Exp {}
