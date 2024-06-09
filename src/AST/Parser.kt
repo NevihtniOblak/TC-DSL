@@ -23,6 +23,16 @@ class Parser(private val lexer: Lexer) {
             panic()
         }
 
+    fun parseStart(): Program {
+        currentSymbol = lexer.getToken()
+        val result = parsePROGRAM();
+
+        return when (currentSymbol?.symbol) {
+            Symbol.EOF -> result
+            else -> panic()
+        }
+    }
+
 
 
     //PARSING FUNKCIJE

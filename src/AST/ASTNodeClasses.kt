@@ -151,7 +151,6 @@ class Variable(val string: String) : Exp {}
 class Point(val exp1: Exp, val exp2: Exp) : Exp {}
 class StringExp(val string: String) : Exp {}
 class ListIndex(val variable: String, val exp: Exp): Exp {}
-class ListExp(val listitems: Listitems) : Exp {}
 
 // Data
 class ListData(val listitems: Listitems) : Data {}

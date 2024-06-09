@@ -1,3 +1,4 @@
+import AST.Parser
 import LexAnalysis.ForForeachFFFAutomaton
 import LexAnalysis.Lexer
 import SyntaxAnalysis.Recognizer
@@ -11,14 +12,19 @@ fun main(args: Array<String>) {
     //Lexer(ForForeachFFFAutomaton, "for".byteInputStream()).printTokens(System.out)
     //Lexer(ForForeachFFFAutomaton,  "print".byteInputStream()).printTokens(outputFile.outputStream())
 
-    val result = Recognizer(Lexer(ForForeachFFFAutomaton,  input.byteInputStream())).recognizeStart()
+    //val result = Recognizer(Lexer(ForForeachFFFAutomaton,  input.byteInputStream())).recognizeStart()
 
+    val result = Parser(Lexer(ForForeachFFFAutomaton,  input.byteInputStream())).parseStart()
+
+    /*
     if(result){
         print("The input is a valid program")
     }
     else{
         print("The input is NOT a valid program")
     }
+
+     */
 
 
 }
