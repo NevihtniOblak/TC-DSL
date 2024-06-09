@@ -170,16 +170,17 @@ class Parser(private val lexer: Lexer) {
     //INH-CITY
     fun parseCITY(): City {
         println("Recognizing CITY")
-        var v1 = recognizeTerminal(Symbol.CITY)
-        var v2 = recognizeTerminal(Symbol.COLON)
-        var v3 = recognizeTerminal(Symbol.STRING)
-        var v4 = recognizeTerminal(Symbol.LPAREN)
-        var v5 = recognizeCOMPONENTS()
-        var v6 = recognizeTerminal(Symbol.RPAREN)
+        var t1 = parseTerminal(Symbol.CITY)
+        var t2 = parseTerminal(Symbol.COLON)
+        var t3 = parseTerminal(Symbol.STRING)
+        var t4 = parseTerminal(Symbol.LPAREN)
+        var components = parseCOMPONENTS()
+        var t5 = parseTerminal(Symbol.RPAREN)
 
+        var res = CityComponents(components)
 
-        println("CITY RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6))
-        return v1 && v2 && v3 && v4 && v5 && v6
+        println("CITY RETURN: "+res)
+        return res
     }
 
     //INH-COMPONENTS
