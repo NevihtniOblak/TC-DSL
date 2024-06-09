@@ -323,38 +323,44 @@ class Parser(private val lexer: Lexer) {
     //INH COMPONENTS
     fun parseCONTAINERS(): Components {
         println("Recognizing CONTAINERS")
-        var v1 = recognizeCONTNAMES()
-        var v2 = recognizeREF()
-        var v3 = recognizeTerminal(Symbol.COLON)
-        var v4 = recognizeTAG()
-        var v5 = recognizeTerminal(Symbol.LPAREN)
-        var v6 = recognizeRENDERCONT()
-        var v7 = recognizeTerminal(Symbol.RPAREN)
-        var v8 = recognizeTerminal(Symbol.LCURLY)
-        var v9 = recognizeEFFECT()
-        var v10 = recognizeTerminal(Symbol.RCURLY)
+        var contname = parseCONTNAMES()
+        var ref = parseREF()
+        var t1 = parseTerminal(Symbol.COLON)
+        var tag = parseTAG()
+        var t2 = parseTerminal(Symbol.LPAREN)
+        var rendercont = parseRENDERCONT()
+        var t3 = parseTerminal(Symbol.RPAREN)
+        var t4 = parseTerminal(Symbol.LCURLY)
+        var effect = parseEFFECT()
+        var t5 = parseTerminal(Symbol.RCURLY)
 
-        println("CONTAINERS RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10))
-        return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10
+        var res = Containers(contname, ref, tag, rendercont, effect)
 
+        println("CONTAINERS RETURN: "+res)
+        return res
     }
 
 
     //INH-CONTNAMES
     fun parseCONTNAMES(): Contnames {
-        println("Recognizing CONTNAMES")
+        println("Parse CONTNAMES")
         if (currentSymbol!!.symbol in setOf( Symbol.BUILDING_COMPLEX)) {
-            val v1 = recognizeTerminal(Symbol.BUILDING_COMPLEX)
-            println("CONTNAMES RETURN: "+v1)
-            return v1
+            val t1 = parseTerminal(Symbol.BUILDING_COMPLEX)
+
+            var res = BuildingComplex()
+            println("CONTNAMES RETURN: "+res)
+            return res
         } else if (currentSymbol!!.symbol in setOf( Symbol.PARK)) {
-            val v1 = recognizeTerminal(Symbol.PARK)
-            println("CONTNAMES RETURN: "+v1)
-            return v1
+            val t1 = parseTerminal(Symbol.PARK)
+
+            var res = Park()
+            println("CONTNAMES RETURN: "+res)
+            return res
         }
         else{
-            println("CONTNAMES RETURN: "+false)
-            return false
+            println("CONTNAMES RETURN: "+ "panic")
+
+            return panic()
         }
     }
 
