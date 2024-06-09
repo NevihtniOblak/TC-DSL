@@ -66,17 +66,17 @@ class Specifications(val specs: Specs) : Components {}
 class EndComponents : Components {}
 
 // Infnames
-class Building(val string: String) : Infnames {}
-class Road(val string: String) : Infnames {}
-class Rail(val string: String) : Infnames {}
-class Aqua(val string: String) : Infnames {}
-class Path(val string: String) : Infnames {}
-class ShopTus(val string: String) : Infnames {}
-class ShopMercator(val string: String) : Infnames {}
+class Building() : Infnames {}
+class Road() : Infnames {}
+class Rail() : Infnames {}
+class Aqua() : Infnames {}
+class Path() : Infnames {}
+class ShopTus() : Infnames {}
+class ShopMercator() : Infnames {}
 
 // Contnames
-class BuildingComplex(val string: String) : Contnames {}
-class Park(val string: String) : Contnames {}
+class BuildingComplex() : Contnames {}
+class Park() : Contnames {}
 
 // Ref
 class Reffrence(val exp: Exp) : Ref {}

@@ -265,36 +265,57 @@ class Parser(private val lexer: Lexer) {
     fun parseINFNAMES(): Infnames {
         println("Recognizing INFNAMES")
         if (currentSymbol!!.symbol in setOf( Symbol.BUILDING)) {
-            var v1 = recognizeTerminal(Symbol.BUILDING)
-            println("INFNAMES RETURN: "+v1)
-            return v1
+            var t = parseTerminal(Symbol.BUILDING)
+
+            var res = Building()
+            println("INFNAMES RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.ROAD)) {
-            var v1 = recognizeTerminal(Symbol.ROAD)
-            println("INFNAMES RETURN: "+v1)
-            return v1
+            var t = parseTerminal(Symbol.ROAD)
+
+            var res = Road()
+            println("INFNAMES RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.RAIL)) {
-            var v1 = recognizeTerminal(Symbol.RAIL)
-            println("INFNAMES RETURN: "+v1)
-            return v1
+            var t = parseTerminal(Symbol.RAIL)
+
+            var res = Rail()
+            println("INFNAMES RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.AQUA)) {
-            var v1 = recognizeTerminal(Symbol.AQUA)
-            println("INFNAMES RETURN: "+v1)
-            return v1
+            var t = parseTerminal(Symbol.AQUA)
+
+            var res = Aqua()
+            println("INFNAMES RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.PATH)) {
-            var v1 = recognizeTerminal(Symbol.PATH)
-            println("INFNAMES RETURN: "+v1)
-            return v1
+            var t = parseTerminal(Symbol.PATH)
+
+            var res = Path()
+            println("INFNAMES RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.SHOP_TUS)) {
-            var v1 = recognizeTerminal(Symbol.SHOP_TUS)
-            println("INFNAMES RETURN: "+v1)
-            return v1
+            var t = parseTerminal(Symbol.SHOP_TUS)
+
+            var res = ShopTus()
+            println("INFNAMES RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.SHOP_MERCATOR)) {
-            var v1 = recognizeTerminal(Symbol.SHOP_MERCATOR)
-            println("INFNAMES RETURN: "+v1)
-            return v1
+            var t = parseTerminal(Symbol.SHOP_MERCATOR)
+
+            var res = ShopMercator()
+            println("INFNAMES RETURN: "+res)
+            return res
+
         } else {
-            println("INFNAMES RETURN: "+false)
-            return false
+            println("INFNAMES RETURN: "+ "panic")
+            return panic()
         }
     }
 
