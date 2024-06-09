@@ -77,12 +77,15 @@ class Recognizer(private val lexer: Lexer) {
         println("Recognizing SCHEMAS")
         var v1 = recognizeTerminal(Symbol.SCHEMA)
 
-        var v2 = recognizeSCHEMAS2()
+        //var v2 = recognizeSCHEMAS2()
+        var v2 = recognizeINFRASTRUCTURE()
 
         println("SCHEMAS RETURN: "+(v1 && v2))
         return v1 && v2
     }
 
+
+/*
     fun recognizeSCHEMAS2(): Boolean {
         println("Recognizing SCHEMAS2")
         if(currentSymbol!!.symbol in setOf(Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA,
@@ -101,7 +104,10 @@ class Recognizer(private val lexer: Lexer) {
             println("SCHEMAS2 RETURN: "+false)
             return false
         }
-}
+    }
+
+ */
+
 
     fun recognizePROCEDURE(): Boolean {
         println( "Recognizing PROCEDURE")
