@@ -158,5 +158,5 @@ class ListData(val listitems: Listitems) : Data {}
 class ExpData(val exp: Exp) : Data {}
 
 // Listitems
-class ListItems(val exp: Exp, val listitems: Listitems) : Listitems {}
+class SeqListItems(val exp: Exp, val listitems: Listitems) : Listitems {}
 class EndListitems : Listitems {}

@@ -1239,20 +1239,23 @@ class Parser(private val lexer: Lexer) {
         println("Recognizing LISTITEM")
         if (currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE,
                 Symbol.LPAREN, Symbol.STRING)) {
-            val v1 = recognizeEXP()
-            val v2 = recognizeLISTITEM2()
+            val exp1 = parseEXP()
+            val listitem2 = parseLISTITEM2()
 
-            println("LISTITEM RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqListItems(exp1, listitem2)
+            println("LISTITEM RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.RSQURE)){
 
-            println("LISTITEM RETURN: "+true)
-            return true
+            var res = EndListitems()
+            println("LISTITEM RETURN: "+res)
+            return res
         }
         else{
 
-            println("LISTITEM RETURN: "+false)
-            return false
+            println("LISTITEM RETURN: "+ "panic")
+            return panic()
         }
     }
 
@@ -1261,23 +1264,25 @@ class Parser(private val lexer: Lexer) {
     fun parseLISTITEM2(): Listitems {
         println("Recognizing LISTITEM2")
         if (currentSymbol!!.symbol in setOf( Symbol.COMMA)) {
-            val v1 = recognizeTerminal(Symbol.COMMA)
-            val v2 = recognizeEXP()
-            val v3 = recognizeLISTITEM2()
+            val t1 = parseTerminal(Symbol.COMMA)
+            val exp = parseEXP()
+            val listitems2 = parseLISTITEM2()
 
-            println("LISTITEM2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var res = SeqListItems(exp, listitems2)
+            println("LISTITEM2 RETURN: "+res)
+            return res
+
+
         } else if( currentSymbol!!.symbol in setOf(Symbol.RSQURE)){
 
-            println("LISTITEM2 RETURN: "+true)
-            return true
+            var res = EndListitems()
+            println("LISTITEM2 RETURN: "+ res)
+            return res
         }
         else{
 
-            println("LISTITEM2 RETURN: "+false)
-            return false
+            println("LISTITEM2 RETURN: "+ "panic")
+            return panic()
         }
     }
-
-
 }
