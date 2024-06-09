@@ -70,9 +70,13 @@ interface Exp {
     fun eval(environment: MutableMap<String, Value>): Value
 }
 
-interface Data {}
+interface Data {
+    fun eval(environment: MutableMap<String, Value>): Value
+}
 
-interface Listitems {}
+interface Listitems {
+    fun eval(environment: MutableMap<String, Value>): MutableList<String>
+}
 
 class Start(val predef: Predef, val city: City) : Program {}
 
@@ -307,7 +311,6 @@ class Point(val exp1: Exp, val exp2: Exp) : Exp {
         return Value(Type.POINT, mutableListOf(res))
     }
 }
-
 class StringExp(val string: String) : Exp {
 
     override fun eval(environment: MutableMap<String, Value>): Value {
@@ -331,9 +334,35 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
 }
 
 // Data
-class ListData(val listitems: Listitems) : Data {}
-class ExpData(val exp: Exp) : Data {}
+class ListData(val listitems: Listitems) : Data {
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        var list = listitems.eval(environment)
+
+        return Value(Type.LIST, list)
+
+    }
+}
+class ExpData(val exp: Exp) : Data {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+        return exp.eval(environment)
+    }
+
+}
 
 // Listitems
-class SeqListItems(val exp: Exp, val listitems: Listitems) : Listitems {}
-class EndListitems : Listitems {}
+class SeqListItems(val exp: Exp, val listitems: Listitems) : Listitems {
+    override fun eval(environment: MutableMap<String, Value>): MutableList<String> {
+        var firstItem = exp.eval(environment).value
+
+         firstItem += listitems.eval(environment)
+
+        return firstItem
+    }
+}
+class EndListitems : Listitems {
+    override fun eval(environment: MutableMap<String, Value>): MutableList<String> {
+        return mutableListOf()
+    }
+}
