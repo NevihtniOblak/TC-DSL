@@ -126,12 +126,12 @@ class EndPolyargs : Polyargs {}
 
 // Stmts
 class Define(val variable: String, val data: Data) : Stmts {}
-class Assign(val variable: String, val data: Data) : Stmts {}
+class Assign(val variable: String, val exp: Data) : Stmts {}
 class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components: Components) : Stmts {}
 class Print(val exp: Exp) : Stmts {}
 class Call(val variable: String, val arguments: Arguments) : Stmts {}
 class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Constructnames) : Stmts {}
-class ListItemAssign(val variable: String, val exp: Exp, val data: Data) : Stmts {}
+class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts {}
 
 // Constructnames
 class InfName(val infnames: Infnames) : Constructnames {}

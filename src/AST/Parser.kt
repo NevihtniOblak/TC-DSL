@@ -739,99 +739,125 @@ class Parser(private val lexer: Lexer) {
     fun parseSTMTS(): Stmts {
         println("Recognizing STMTS")
         if (currentSymbol!!.symbol in setOf( Symbol.VAR)) {
-            val v1 = recognizeTerminal(Symbol.VAR)
-            val v2 = recognizeTerminal(Symbol.VARIABLE)
-            val v3 = recognizeTerminal(Symbol.EQUALS)
-            val v4 = recognizeDATA()
-            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.VAR)
+            val variable = parseTerminal(Symbol.VARIABLE)
+            val t2 = parseTerminal(Symbol.EQUALS)
+            val data = parseDATA()
+            val t3 = parseTerminal(Symbol.SEMICOL)
 
-            println("STMTS RETURN: "+(v1 && v2 && v3 && v4 && v5))
-            return v1 && v2 && v3 && v4 && v5
+            var res = Define(variable, data)
+            println("STMTS RETURN: "+res)
+            return res
+
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.VARIABLE)) {
-            val v1 = recognizeTerminal(Symbol.VARIABLE)
-            val v2 = recognizeASSIGNS()
-            val v3 = recognizeTerminal(Symbol.SEMICOL)
+            val variable = parseTerminal(Symbol.VARIABLE)
+            val assigns = parseASSIGNS(variable)
+            val t1 = parseTerminal(Symbol.SEMICOL)
 
-            println("STMTS RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var res = assigns
+            println("STMTS RETURN: "+res)
+            return res
+
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.FOR)) {
-            val v1 = recognizeTerminal(Symbol.FOR)
-            val v2 = recognizeTerminal(Symbol.LPAREN)
-            val v3 = recognizeTerminal(Symbol.VAR)
-            val v4 = recognizeTerminal(Symbol.VARIABLE)
-            val v5 = recognizeTerminal(Symbol.EQUALS)
-            val v6 = recognizeEXP()
-            val v7 = recognizeTerminal(Symbol.SEMICOL)
-            val v8 = recognizeEXP()
-            val v9 = recognizeTerminal(Symbol.RPAREN)
-            val v10 = recognizeTerminal(Symbol.LCURLY)
-            val v11 = recognizeCOMPONENTS()
-            val v12 = recognizeTerminal(Symbol.RCURLY)
+            val t1 = parseTerminal(Symbol.FOR)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val t3 = parseTerminal(Symbol.VAR)
+            val variable = parseTerminal(Symbol.VARIABLE)
+            val t4 = parseTerminal(Symbol.EQUALS)
+            val exp1 = parseEXP()
+            val t5 = parseTerminal(Symbol.SEMICOL)
+            val exp2 = parseEXP()
+            val t6 = parseTerminal(Symbol.RPAREN)
+            val t7 = parseTerminal(Symbol.LCURLY)
+            val components = parseCOMPONENTS()
+            val t8 = parseTerminal(Symbol.RCURLY)
 
-            println("STMTS RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12))
-            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10 && v11 && v12
+            var res = Forloop(variable, exp1, exp2, components)
+
+            println("STMTS RETURN: "+res)
+            return res
+
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.PRINT)) {
-            val v1 = recognizeTerminal(Symbol.PRINT)
-            val v2 = recognizeTerminal(Symbol.LPAREN)
-            val v3 = recognizeEXP()
-            val v4 = recognizeTerminal(Symbol.RPAREN)
-            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.PRINT)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.SEMICOL)
 
-            println("STMTS RETURN: "+(v1 && v2 && v3 && v4 && v5))
-            return v1 && v2 && v3 && v4 && v5
+            var res = Print(exp)
+            println("STMTS RETURN: "+res)
+
+            return res
+
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.CALL)) {
-            val v1 = recognizeTerminal(Symbol.CALL)
-            val v2 = recognizeTerminal(Symbol.VARIABLE)
-            val v3 = recognizeTerminal(Symbol.LPAREN)
-            val v4 = recognizeARGUMENTS()
-            val v5 = recognizeTerminal(Symbol.RPAREN)
-            val v6 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.CALL)
+            val variable = parseTerminal(Symbol.VARIABLE)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val arguments = parseARGUMENTS()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.SEMICOL)
 
-            println("STMTS RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6))
-            return v1 && v2 && v3 && v4 && v5 && v6
+            var res = Call(variable, arguments)
+            println("STMTS RETURN: "+res)
+            return res
+
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.DISPLAY_MARKERS)) {
-            val v1 = recognizeTerminal(Symbol.DISPLAY_MARKERS)
-            val v2 = recognizeTerminal(Symbol.LPAREN)
-            val v3 = recognizeEXP()
-            val v4 = recognizeTerminal(Symbol.COMMA)
-            val v5 = recognizeEXP()
-            val v6 = recognizeTerminal(Symbol.COMMA)
-            val v7 = recognizeCONSTRUCTNAMES()
-            val v8 = recognizeTerminal(Symbol.RPAREN)
-            val v9 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.DISPLAY_MARKERS)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp1 = parseEXP()
+            val t3 = parseTerminal(Symbol.COMMA)
+            val exp2 = parseEXP()
+            val t4 = parseTerminal(Symbol.COMMA)
+            val constructnames = parseCONSTRUCTNAMES()
+            val t5 = parseTerminal(Symbol.RPAREN)
+            val t6 = parseTerminal(Symbol.SEMICOL)
 
-            println("STMTS RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9))
-            return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9
+            var res = DisplayMarkers(exp1, exp2, constructnames)
+            println("STMTS RETURN: "+res)
+            return res
+
+
         } else {
 
-            println("STMTS RETURN: "+false)
-            return false
+            println("STMTS RETURN: "+ "panic")
+            return panic()
         }
     }
 
 
     //INH-STMNTS
-    fun parseASSIGNS(): Stmts {
+    fun parseASSIGNS(variable: String): Stmts {
         println("Recognizing ASSIGNS")
         if (currentSymbol!!.symbol in setOf( Symbol.LSQURE)) {
-            val v1 = recognizeTerminal(Symbol.LSQURE)
-            val v2 = recognizeEXP()
-            val v3 = recognizeTerminal(Symbol.RSQURE)
-            val v4 = recognizeTerminal(Symbol.EQUALS)
-            val v5 = recognizeEXP()
+            val t1 = parseTerminal(Symbol.LSQURE)
+            val exp1 = parseEXP()
+            val t2 = parseTerminal(Symbol.RSQURE)
+            val t3 = parseTerminal(Symbol.EQUALS)
+            val exp2 = parseEXP()
 
-            println("ASSIGNS RETURN: "+(v1 && v2 && v3 && v4 && v5))
-            return v1 && v2 && v3 && v4 && v5
+            var res = ListItemAssign(variable, exp1, exp2)
+
+            println("ASSIGNS RETURN: "+res)
+            return res
+
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.EQUALS)) {
-            val v1 = recognizeTerminal(Symbol.EQUALS)
-            val v2 = recognizeDATA()
+            val t1 = parseTerminal(Symbol.EQUALS)
+            val data = parseDATA()
 
-            println("ASSIGNS RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = Assign(variable, data)
+
+            println("ASSIGNS RETURN: "+res)
+            return res
         } else {
 
-            println("ASSIGNS RETURN: "+false)
-            return false
+            println("ASSIGNS RETURN: "+ "panic")
+            return panic()
         }
     }
 
