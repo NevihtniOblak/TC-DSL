@@ -67,7 +67,7 @@ interface Constructnames {
 
 interface Exp {
 
-    fun eval(): Value
+    fun eval(environment: MutableMap<String, Value>): Value
 }
 
 interface Data {}
@@ -174,30 +174,161 @@ class ContName(val contnames: Contnames) : Constructnames {}
 // Exp
 class Plus(val exp1: Exp, val exp2: Exp) : Exp {
 
-    override fun eval(): Value {
+    override fun eval(environment: MutableMap<String, Value>): Value {
 
-        val value1 = exp1.eval()
-        val value2 = exp2.eval()
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
         if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
             throw Exception("Type mismatch in Plus operation")
         }
-        var res = value1.value.toDouble() + value2.value.toDouble()
+        var res = value1.value[0].toDouble() + value2.value[0].toDouble()
 
-        return Value(Type.REAL, res.toString())
+        return Value(Type.REAL, mutableListOf(res.toString()))
     }
 }
-class Minus(val exp1: Exp, val exp2: Exp) : Exp {}
-class Times(val exp1: Exp, val exp2: Exp) : Exp {}
-class Divides(val exp1: Exp, val exp2: Exp) : Exp {}
-class IntegerDivides(val exp1: Exp, val exp2: Exp) : Exp {}
-class Pow(val exp1: Exp, val exp2: Exp) : Exp {}
-class UnaryPlus(val exp: Exp) : Exp {}
-class UnaryMinus(val exp: Exp) : Exp {}
-class Real(val double: Double) : Exp {}
-class Variable(val string: String) : Exp {}
-class Point(val exp1: Exp, val exp2: Exp) : Exp {}
-class StringExp(val string: String) : Exp {}
-class ListIndex(val variable: String, val exp: Exp): Exp {}
+class Minus(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+        if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
+            throw Exception("Type mismatch in Minus operation")
+        }
+        var res = value1.value[0].toDouble() - value2.value[0].toDouble()
+
+        return Value(Type.REAL, mutableListOf(res.toString()))
+    }
+}
+class Times(val exp1: Exp, val exp2: Exp) : Exp {
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+        if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
+            throw Exception("Type mismatch in Times operation")
+        }
+        var res = value1.value[0].toDouble() * value2.value[0].toDouble()
+
+        return Value(Type.REAL, mutableListOf(res.toString()))
+    }
+}
+class Divides(val exp1: Exp, val exp2: Exp) : Exp {
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+        if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
+            throw Exception("Type mismatch in Divides operation")
+        }
+        var res = value1.value[0].toDouble() / value2.value[0].toDouble()
+
+        return Value(Type.REAL, mutableListOf(res.toString()))
+    }
+}
+class IntegerDivides(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+        if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
+            throw Exception("Type mismatch in IntegerDivides operation")
+        }
+        var res = value1.value[0].toInt() / value2.value[0].toInt()
+
+        return Value(Type.REAL, mutableListOf(res.toString()))
+    }
+}
+class Pow(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+        if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
+            throw Exception("Type mismatch in Pow operation")
+        }
+        var res = Math.pow(value1.value[0].toDouble(), value2.value[0].toDouble())
+        return Value(Type.REAL, mutableListOf(res.toString()))
+    }
+
+}
+class UnaryPlus(val exp: Exp) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        val value = exp.eval(environment)
+        if(!(value.type == Type.REAL)){
+            throw Exception("Type mismatch in UnaryPlus operation")
+        }
+        var res = value.value[0].toDouble()
+
+        return Value(Type.REAL, mutableListOf(res.toString()))
+    }
+
+}
+class UnaryMinus(val exp: Exp) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+
+        val value = exp.eval(environment)
+        if(!(value.type == Type.REAL)){
+            throw Exception("Type mismatch in UnaryMinus operation")
+        }
+        var res = value.value[0].toDouble()*-1
+
+        return Value(Type.REAL, mutableListOf(res.toString()))
+    }
+
+}
+class Real(val double: Double) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+        return Value(Type.REAL, mutableListOf(double.toString()))
+    }
+}
+class Variable(val string: String) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+        return environment[string] ?: throw Exception("Variable $string not found")
+    }
+}
+class Point(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+
+        if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
+            throw Exception("Type mismatch in Point operation")
+        }
+        var res = "("+value1.value[0]+","+value2.value[0]+")"
+        return Value(Type.POINT, mutableListOf(res))
+    }
+}
+
+class StringExp(val string: String) : Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+        return Value(Type.STRING, mutableListOf(string))
+    }
+}
+class ListIndex(val variable: String, val exp: Exp): Exp {
+
+    override fun eval(environment: MutableMap<String, Value>): Value {
+        var index = exp.eval(environment)
+        var listItem = environment[variable] ?: throw Exception("Listitem at $variable not found")
+
+        if(!(index.type == Type.REAL)){
+            throw Exception("Type mismatch in ListIndex operation")
+        }
+        var resValue = listItem.value[index.value[0].toInt()]
+        var resType = listItem.type
+
+        return Value(resType, mutableListOf(resValue))
+    }
+}
 
 // Data
 class ListData(val listitems: Listitems) : Data {}
