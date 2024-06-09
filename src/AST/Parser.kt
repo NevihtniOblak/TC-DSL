@@ -1022,34 +1022,44 @@ class Parser(private val lexer: Lexer) {
     //INH-EXP
     fun parseEXPONENTIAL(): Exp {
         println("Recognizing EXPONENTIAL")
-        val v1 = recognizeUNARY()
-        val v2 = recognizeEXPONENTIAL2()
+        val unary = parseUNARY()
 
-        println("EXPONENTIAL RETURN: "+(v1 && v2))
-        return v1 && v2
+        val expo2 = parseEXPONENTIAL2(unary)
+
+        var res = expo2
+        println("EXPONENTIAL RETURN: "+expo2)
+        return expo2
+
     }
 
 
     //INH-EXP
-    fun parseEXPONENTIAL2(): Exp {
+    fun parseEXPONENTIAL2(iexp: Exp): Exp {
         println("Recognizing EXPONENTIAL2")
         if (currentSymbol!!.symbol in setOf( Symbol.POW)) {
-            val v1 = recognizeTerminal(Symbol.POW)
-            val v2 = recognizeUNARY()
-            val v3 = recognizeEXPONENTIAL2()
+            val t1 = parseTerminal(Symbol.POW)
 
-            println("EXPONENTIAL2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            val unary = parseUNARY()
+            val rhs = parseEXPONENTIAL2(unary)
+
+            var subres = Pow(iexp, rhs)
+
+            var res = parseEXPONENTIAL2(subres)
+            println("EXPONENTIAL2 RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS,
                 Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
 
-            println("EXPONENTIAL2 RETURN: "+true)
-            return true // EPSILON case
+            var res = iexp
+            println("EXPONENTIAL2 RETURN: "+res)
+
+            return res // EPSILON case
         }
         else{
 
-            println("EXPONENTIAL2 RETURN: "+false)
-            return false
+            println("EXPONENTIAL2 RETURN: "+ "panic")
+            return panic()
         }
     }
 
