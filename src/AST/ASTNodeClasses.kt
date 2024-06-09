@@ -120,7 +120,8 @@ class Circle(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effec
 class CircleLine(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {}
 
 // Polyargs
-class PolyargsExp(val exp1: Exp, val exp2: Exp, val exp3: Exp, val polyargs: Polyargs) : Polyargs {}
+class SeqPolyargs(val polyargs: Polyargs, val polyargs1: Polyargs) : Polyargs {}
+class PolyargsExp(val exp: Exp) : Polyargs {}
 class EndPolyargs : Polyargs {}
 
 // Stmts

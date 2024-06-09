@@ -697,15 +697,16 @@ class Parser(private val lexer: Lexer) {
     //INH-POLYARGS
     fun parsePOLYARGS(): Polyargs {
         println("Recognizing POLYARGS")
-        val v1 = recognizeEXP()
-        val v2 = recognizeTerminal(Symbol.COMMA)
-        val v3 = recognizeEXP()
-        val v4 = recognizeTerminal(Symbol.COMMA)
-        val v5 = recognizeEXP()
-        val v6 = recognizePOLYARGS2()
+        val exp1 = parseEXP()
+        val t1 = parseTerminal(Symbol.COMMA)
+        val exp2 = parseEXP()
+        val t2 = parseTerminal(Symbol.COMMA)
+        val exp3 = parseEXP()
+        val polyargsExtra = parsePOLYARGS2()
 
-        println("POLYARGS RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6))
-        return v1 && v2 && v3 && v4 && v5 && v6
+        var res = SeqPolyargs(PolyargsExp(exp1), SeqPolyargs(PolyargsExp(exp2), SeqPolyargs(PolyargsExp(exp3), polyargsExtra)))
+        println("POLYARGS RETURN: "+res)
+        return res
     }
 
 
