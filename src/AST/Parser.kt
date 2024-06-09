@@ -242,19 +242,23 @@ class Parser(private val lexer: Lexer) {
     //INH-COMPONENTS
     fun parseINFRASTRUCTURE(): Components {
         println("Recognizing INFRASTRUCTURE")
-        var v1 = recognizeINFNAMES()
-        var v2 = recognizeREF()
-        var v3 = recognizeTerminal(Symbol.COLON)
-        var v4 = recognizeTAG()
-        var v5 = recognizeTerminal(Symbol.LPAREN)
-        var v6 = recognizeRENDER()
-        var v7 = recognizeTerminal(Symbol.RPAREN)
-        var v8 = recognizeTerminal(Symbol.LCURLY)
-        var v9 = recognizeEFFECT()
-        var v10 = recognizeTerminal(Symbol.RCURLY)
+        var infnames = parseINFNAMES()
+        var ref = parseREF()
+        var t1 = parseTerminal(Symbol.COLON)
+        var tag = parseTAG()
+        var t2 = parseTerminal(Symbol.LPAREN)
+        var render = parseRENDER()
+        var t3 = parseTerminal(Symbol.RPAREN)
+        var t4 = parseTerminal(Symbol.LCURLY)
+        var effect = parseEFFECT()
+        var t5 = parseTerminal(Symbol.RCURLY)
 
-        println("INFRASTRUCTURE RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10))
-        return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8 && v9 && v10
+        var res = Infrastructure(infnames, ref, tag, render, effect)
+
+        println("INFRASTRUCTURE RETURN: "+res)
+
+        return res
+
     }
 
     //INH-INFNAMES
