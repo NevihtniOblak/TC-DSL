@@ -868,17 +868,23 @@ class Parser(private val lexer: Lexer) {
         if (currentSymbol!!.symbol in setOf(Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA,
                 Symbol.PATH, Symbol.SHOP_TUS, Symbol.SHOP_MERCATOR)) {
 
-            var v1 = recognizeINFNAMES()
-            println("CONSTRUCTNAMES RETURN: "+v1)
-            return v1
+            var infnames = parseINFNAMES()
+
+            var res = InfName(infnames)
+            println("CONSTRUCTNAMES RETURN: "+res)
+            return res
+
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.BUILDING_COMPLEX, Symbol.PARK)) {
-            var v1 = recognizeCONTNAMES()
-            println("CONSTRUCTNAMES RETURN: "+v1)
-            return v1
+            var contNames = parseCONTNAMES()
+
+            var res = ContName(contNames)
+            println("CONSTRUCTNAMES RETURN: "+res)
+            return res
 
         } else {
-            println("CONSTRUCTNAMES RETURN: "+false)
-            return false
+            println("CONSTRUCTNAMES RETURN: "+ "panic")
+            return panic()
         }
     }
 
