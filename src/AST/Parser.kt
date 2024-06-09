@@ -1200,21 +1200,24 @@ class Parser(private val lexer: Lexer) {
     fun parseDATA(): Data {
         println("Recognizing DATA")
         if (currentSymbol!!.symbol in setOf(Symbol.LSQURE)) {
-            var v1 = recognizeLIST()
+            var list = parseLIST()
 
-            println("DATA RETURN: "+v1)
-            return v1
+            var res = list
+            println("DATA RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS,
                 Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
-            var v1 = recognizeEXP()
+            var exp = parseEXP()
 
-            println("DATA RETURN: "+v1)
-            return v1
+            var res = ExpData(exp)
+            println("DATA RETURN: "+res)
+            return res
         }
         else{
 
-            println("DATA RETURN: "+false)
-            return false
+            println("DATA RETURN: "+ "panic")
+            return panic()
         }
     }
 
