@@ -3,6 +3,7 @@ package AST
 import LexAnalysis.Lexer
 import LexAnalysis.Symbol
 import LexAnalysis.Token
+import java.sql.Time
 
 
 class Parser(private val lexer: Lexer) {
@@ -891,50 +892,63 @@ class Parser(private val lexer: Lexer) {
     //INH-EXP
     fun parseEXP(): Exp {
         println("Recognizing EXP")
-        val v1 = recognizeADDITIVE()
+        val add = parseADDITIVE()
 
-        println("EXP RETURN: "+v1)
-        return v1
+        var res = add
+        println("EXP RETURN: "+add)
+        return add
     }
 
 
     //INH-EXP
     fun parseADDITIVE(): Exp {
         println("Recognizing ADDITIVE")
-        val v1 = recognizeMULTIPLICATIVE()
-        val v2 = recognizeADDITIVE2()
 
-        println("ADDITIVE RETURN: "+(v1 && v2))
-        return v1 && v2
+        val multi = parseMULTIPLICATIVE()
+        val add = parseADDITIVE2(multi)
+
+        var res = add
+        println("ADDITIVE RETURN: "+add)
+        return add
+
     }
 
 
     //INH EXP
-    fun parseADDITIVE2(): Exp {
+    fun parseADDITIVE2(iexp: Exp): Exp {
         println("Recognizing ADDITIVE2")
         if (currentSymbol!!.symbol in setOf( Symbol.PLUS)) {
-            val v1 = recognizeTerminal(Symbol.PLUS)
-            val v2 = recognizeMULTIPLICATIVE()
-            val v3 = recognizeADDITIVE2()
+            val t1 = parseTerminal(Symbol.PLUS)
+            val multi = parseMULTIPLICATIVE()
 
-            println("ADDITIVE2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var subres = Plus(iexp, multi)
+            val add2 = parseADDITIVE2(subres)
+
+            var res = add2
+            println("ADDITIVE2 RETURN: "+add2)
+            return add2
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.MINUS)) {
-            val v1 = recognizeTerminal(Symbol.MINUS)
-            val v2 = recognizeMULTIPLICATIVE()
-            val v3 = recognizeADDITIVE2()
+            val t1 = parseTerminal(Symbol.MINUS)
+            val multi = parseMULTIPLICATIVE()
 
-            println("ADDITIVE2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var subres = Minus(iexp, multi)
+            val add2 = parseADDITIVE2(subres)
+
+            var res = add2
+            println("ADDITIVE2 RETURN: "+add2)
+            return add2
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
 
-            println("ADDITIVE2 RETURN: "+true)
-            return true // EPSILON case
+            var res = iexp
+            println("ADDITIVE2 RETURN: "+ res)
+            return res // EPSILON case
         }
         else{
 
-            println("ADDITIVE2 RETURN: "+false)
-            return false
+            println("ADDITIVE2 RETURN: "+ "panic")
+            return panic()
         }
     }
 
@@ -954,9 +968,11 @@ class Parser(private val lexer: Lexer) {
     fun parseMULTIPLICATIVE2(): Exp {
         println("Recognizing MULTIPLICATIVE2")
         if (currentSymbol!!.symbol in setOf(Symbol.TIMES)) {
-            val v1 = recognizeTerminal(Symbol.TIMES)
-            val v2 = recognizeEXPONENTIAL()
-            val v3 = recognizeMULTIPLICATIVE2()
+            val v1 = parseTerminal(Symbol.TIMES)
+            val expon = parseEXPONENTIAL()
+            val multi = parseMULTIPLICATIVE2()
+
+            var res = Times(expon, multi)
 
             println("MULTIPLICATIVE2 RETURN: "+(v1 && v2 && v3))
             return v1 && v2 && v3
