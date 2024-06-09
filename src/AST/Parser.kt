@@ -537,47 +537,55 @@ class Parser(private val lexer: Lexer) {
     fun parseCOMMANDS(): Commands {
         println("Recognizing COMMANDS")
         if (currentSymbol!!.symbol in setOf(Symbol.SET_LOCATION)) {
-            val v1 = recognizeTerminal(Symbol.SET_LOCATION)
-            val v2 = recognizeTerminal(Symbol.LPAREN)
-            val v3 = recognizeEXP()
-            val v4 = recognizeTerminal(Symbol.RPAREN)
-            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.SET_LOCATION)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.SEMICOL)
 
-            println("COMMANDS RETURN: "+(v1 && v2 && v3 && v4 && v5))
-            return v1 && v2 && v3 && v4 && v5
+            var res = SetLocation(exp)
+            println("COMMANDS RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.TRANSLATE)) {
-            val v1 = recognizeTerminal(Symbol.TRANSLATE)
-            val v2 = recognizeTerminal(Symbol.LPAREN)
-            val v3 = recognizeEXP()
-            val v4 = recognizeTerminal(Symbol.COMMA)
-            val v5 = recognizeEXP()
-            val v6 = recognizeTerminal(Symbol.RPAREN)
-            val v7 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.TRANSLATE)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp1 = parseEXP()
+            val t3 = parseTerminal(Symbol.COMMA)
+            val exp2 = parseEXP()
+            val t4 = parseTerminal(Symbol.RPAREN)
+            val t5 = parseTerminal(Symbol.SEMICOL)
 
-            println("COMMANDS RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6 && v7))
-            return v1 && v2 && v3 && v4 && v5 && v6 && v7
+            var res = Translate(exp1, exp2)
+            println("COMMANDS RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.ROTATE)) {
-            val v1 = recognizeTerminal(Symbol.ROTATE)
-            val v2 = recognizeTerminal(Symbol.LPAREN)
-            val v3 = recognizeEXP()
-            val v4 = recognizeTerminal(Symbol.RPAREN)
-            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.ROTATE)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.SEMICOL)
 
-            println("COMMANDS RETURN: "+(v1 && v2 && v3 && v4 && v5))
-            return v1 && v2 && v3 && v4 && v5
+            var res = Rotate(exp)
+            println("COMMANDS RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.SET_MARKER)) {
-            val v1 = recognizeTerminal(Symbol.SET_MARKER)
-            val v2 = recognizeTerminal(Symbol.LPAREN)
-            val v3 = recognizeEXP()
-            val v4 = recognizeTerminal(Symbol.RPAREN)
-            val v5 = recognizeTerminal(Symbol.SEMICOL)
+            val t1 = parseTerminal(Symbol.SET_MARKER)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.SEMICOL)
 
-            println("COMMANDS RETURN: "+(v1 && v2 && v3 && v4 && v5))
-            return v1 && v2 && v3 && v4 && v5
+            var res = SetMarker(exp)
+            println("COMMANDS RETURN: "+res)
+            return res
+
         } else {
 
-            println("COMMANDS RETURN: "+false)
-            return false
+            println("COMMANDS RETURN: "+ "panic")
+            return panic()
         }
     }
 
