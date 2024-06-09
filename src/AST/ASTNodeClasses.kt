@@ -1,21 +1,28 @@
 package AST
 
+enum class EnvType {
+    VARIABLE, PROCEDURE, SCHEMA
+}
+
+typealias Environment = MutableMap<EnvType, MutableMap<String, Any>>
+
 interface Program {
     fun eval(): String
 }
 
 interface Predef {
-    fun eval(): String
+    fun eval(): MutableList<Any>
 }
+
 
 interface Arguments {}
 
 interface City {
-    fun eval(): String
+    fun eval(env: Environment): String
 }
 
 interface Components {
-    fun eval(): String
+    fun eval(env: Environment): String
 }
 
 interface Infnames {
@@ -27,37 +34,37 @@ interface Contnames {
 }
 
 interface Ref {
-    fun eval(environment: MutableMap<String, Value>): String
+    fun eval(env: Environment): String
 }
 
 interface Tag {
-    fun eval(environment: MutableMap<String, Value>): String
+    fun eval(env: Environment): String
 }
 
 interface Render {
-    fun eval(): String
+    fun eval(env: Environment): String
 }
 
 interface Rendercont {
-    fun eval(): String
+    fun eval(env: Environment): String
 }
 
 interface Effect {
-    fun eval(): Unit
+    fun eval(env: Environment): Unit
 }
 
 interface Commands {
-    fun eval(): Unit
+    fun eval(env: Environment): Unit
 }
 
 interface Specs {
-    fun eval(): String
+    fun eval(env: Environment): String
 }
 
 interface Polyargs {}
 
 interface Stmts {
-    fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>): Unit
+    fun eval(env: Environment): Unit
 }
 
 interface Constructnames {
@@ -67,24 +74,41 @@ interface Constructnames {
 
 interface Exp {
 
-    fun eval(environment: MutableMap<String, Value>): Value
+    fun eval(env: Environment): Value
 }
 
 interface Data {
-    fun eval(environment: MutableMap<String, Value>): Value
+    fun eval(env: Environment): Value
 }
 
 interface Listitems {
-    fun eval(environment: MutableMap<String, Value>): MutableList<String>
+    fun eval(env: Environment): MutableList<String>
 }
 
-class Start(val predef: Predef, val city: City) : Program {}
+class Start(val predef: Predef, val city: City) : Program {
+    override fun eval(): String {
+        val predefined = predef.eval()
+
+        return city.eval(predefined)
+    }
+}
 
 // Predef
-class SeqPredef(val predef: Predef, val predef1: Predef) : Predef {}
-class Procedure(val arguments: Arguments, val components: Components) : Predef {}
-class Schema(val infrastructure: Infrastructure) : Predef {}
-class EndPredef : Predef {}
+class SeqPredef(val predef: Predef, val predef1: Predef) : Predef {
+
+}
+class Procedure(val arguments: Arguments, val components: Components) : Predef {
+
+    override fun eval(): Environment {
+
+    }
+}
+class Schema(val infrastructure: Infrastructure) : Predef {
+
+}
+class EndPredef : Predef {
+
+}
 
 // Arguments
 
@@ -206,10 +230,26 @@ class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {}
 class EndRendercont : Rendercont {}
 
 // Effect
-class SeqEffect(val effect: Effect, val effect1: Effect) : Effect {}
-class EffectSmts(val stmts: Stmts) : Effect {}
-class EffectCommands(val commands: Commands) : Effect {}
-class EndEffect : Effect {}
+class SeqEffect(val effect: Effect, val effect1: Effect) : Effect {
+    override fun eval() {
+        effect.eval()
+        effect1.eval()
+    }
+}
+class EffectSmts(val stmts: Stmts) : Effect {
+    override fun eval() {
+        stmts.eval(mutableMapOf(), mutableMapOf())
+    }
+}
+class EffectCommands(val commands: Commands) : Effect {
+    override fun eval() {
+        commands.eval()
+    }
+}
+class EndEffect : Effect {
+    override fun eval() {
+    }
+}
 
 // Commands
 class SetLocation(val exp: Exp) : Commands {}
@@ -313,7 +353,7 @@ class ContName(val contnames: Contnames) : Constructnames {
 // Exp
 class Plus(val exp1: Exp, val exp2: Exp) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value1 = exp1.eval(environment)
         val value2 = exp2.eval(environment)
@@ -327,7 +367,7 @@ class Plus(val exp1: Exp, val exp2: Exp) : Exp {
 }
 class Minus(val exp1: Exp, val exp2: Exp) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value1 = exp1.eval(environment)
         val value2 = exp2.eval(environment)
@@ -340,7 +380,7 @@ class Minus(val exp1: Exp, val exp2: Exp) : Exp {
     }
 }
 class Times(val exp1: Exp, val exp2: Exp) : Exp {
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value1 = exp1.eval(environment)
         val value2 = exp2.eval(environment)
@@ -353,7 +393,7 @@ class Times(val exp1: Exp, val exp2: Exp) : Exp {
     }
 }
 class Divides(val exp1: Exp, val exp2: Exp) : Exp {
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value1 = exp1.eval(environment)
         val value2 = exp2.eval(environment)
@@ -367,7 +407,7 @@ class Divides(val exp1: Exp, val exp2: Exp) : Exp {
 }
 class IntegerDivides(val exp1: Exp, val exp2: Exp) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value1 = exp1.eval(environment)
         val value2 = exp2.eval(environment)
@@ -381,7 +421,7 @@ class IntegerDivides(val exp1: Exp, val exp2: Exp) : Exp {
 }
 class Pow(val exp1: Exp, val exp2: Exp) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value1 = exp1.eval(environment)
         val value2 = exp2.eval(environment)
@@ -395,7 +435,7 @@ class Pow(val exp1: Exp, val exp2: Exp) : Exp {
 }
 class UnaryPlus(val exp: Exp) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value = exp.eval(environment)
         if(!(value.type == Type.REAL)){
@@ -409,7 +449,7 @@ class UnaryPlus(val exp: Exp) : Exp {
 }
 class UnaryMinus(val exp: Exp) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
 
         val value = exp.eval(environment)
         if(!(value.type == Type.REAL)){
@@ -423,19 +463,23 @@ class UnaryMinus(val exp: Exp) : Exp {
 }
 class Real(val double: Double) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
         return Value(Type.REAL, mutableListOf(double.toString()))
     }
 }
 class Variable(val string: String) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
-        return environment[string] ?: throw Exception("Variable $string not found")
+    override fun eval(environment: Environment): Value {
+        try {
+            return environment[EnvType.VARIABLE]?.get(string) as Value
+        } catch (e: Exception) {
+            throw Exception("Variable $string not found")
+        }
     }
 }
 class Point(val exp1: Exp, val exp2: Exp) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
         val value1 = exp1.eval(environment)
         val value2 = exp2.eval(environment)
 
@@ -448,19 +492,21 @@ class Point(val exp1: Exp, val exp2: Exp) : Exp {
 }
 class StringExp(val string: String) : Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
         return Value(Type.STRING, mutableListOf(string))
     }
 }
 class ListIndex(val variable: String, val exp: Exp): Exp {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
         var index = exp.eval(environment)
-        var listItem = environment[variable] ?: throw Exception("Listitem at $variable not found")
+
+        var listItem = environment[EnvType.VARIABLE]?.get(variable) as Value
 
         if(!(index.type == Type.REAL)){
             throw Exception("Type mismatch in ListIndex operation")
         }
+
         var resValue = listItem.value[index.value[0].toInt()]
         var resType = listItem.type
 
@@ -470,7 +516,7 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
 
 // Data
 class ListData(val listitems: Listitems) : Data {
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment:Environment): Value {
 
         var list = listitems.eval(environment)
 
@@ -480,7 +526,7 @@ class ListData(val listitems: Listitems) : Data {
 }
 class ExpData(val exp: Exp) : Data {
 
-    override fun eval(environment: MutableMap<String, Value>): Value {
+    override fun eval(environment: Environment): Value {
         return exp.eval(environment)
     }
 
@@ -488,7 +534,7 @@ class ExpData(val exp: Exp) : Data {
 
 // Listitems
 class SeqListItems(val exp: Exp, val listitems: Listitems) : Listitems {
-    override fun eval(environment: MutableMap<String, Value>): MutableList<String> {
+    override fun eval(environment: Environment): MutableList<String> {
         var firstItem = exp.eval(environment).value
 
          firstItem += listitems.eval(environment)
@@ -497,7 +543,7 @@ class SeqListItems(val exp: Exp, val listitems: Listitems) : Listitems {
     }
 }
 class EndListitems : Listitems {
-    override fun eval(environment: MutableMap<String, Value>): MutableList<String> {
+    override fun eval(environment: Environment): MutableList<String> {
         return mutableListOf()
     }
 }
