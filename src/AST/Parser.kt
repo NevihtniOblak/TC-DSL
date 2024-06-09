@@ -96,17 +96,21 @@ class Parser(private val lexer: Lexer) {
     //INH-PREDEF
     fun parsePROCEDURE(): Predef {
         println( "Recognizing PROCEDURE")
-        var v1 = recognizeTerminal(Symbol.PROCEDURE)
-        var v2 = recognizeTerminal(Symbol.VARIABLE)
-        var v3 = recognizeTerminal(Symbol.LPAREN)
-        var v4 = recognizeARGUMENTS()
-        var v5 = recognizeTerminal(Symbol.RPAREN)
-        var v6 = recognizeTerminal(Symbol.LCURLY)
-        var v7 = recognizeCOMPONENTS()
-        var v8 = recognizeTerminal(Symbol.RCURLY)
+        var v1 = parseTerminal(Symbol.PROCEDURE)
+        var v2 = parseTerminal(Symbol.VARIABLE)
+        var v3 = parseTerminal(Symbol.LPAREN)
+        var arguments = parseARGUMENTS()
+        var v5 = parseTerminal(Symbol.RPAREN)
+        var v6 = parseTerminal(Symbol.LCURLY)
+        var components = parseCOMPONENTS()
+        var v8 = parseTerminal(Symbol.RCURLY)
 
-        println("PROCEDURE RETURN: "+(v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8))
-        return v1 && v2 && v3 && v4 && v5 && v6 && v7 && v8
+        var res = Procedure(arguments, components)
+
+        println("POCEDURE return:" + res)
+
+        return res
+
     }
 
     //INH-ARGUMENTS
