@@ -27,11 +27,11 @@ interface Contnames {
 }
 
 interface Ref {
-    fun eval(): String
+    fun eval(environment: MutableMap<String, Value>): String
 }
 
 interface Tag {
-    fun eval(): String
+    fun eval(environment: MutableMap<String, Value>): String
 }
 
 interface Render {
@@ -104,25 +104,92 @@ class Specifications(val specs: Specs) : Components {}
 class EndComponents : Components {}
 
 // Infnames
-class Building() : Infnames {}
-class Road() : Infnames {}
-class Rail() : Infnames {}
-class Aqua() : Infnames {}
-class Path() : Infnames {}
-class ShopTus() : Infnames {}
-class ShopMercator() : Infnames {}
+class Building() : Infnames {
+    override fun eval(): String {
+        return "Building"
+    }
+}
+class Road() : Infnames {
+    override fun eval(): String {
+        return "Road"
+    }
+}
+class Rail() : Infnames {
+
+    override fun eval(): String {
+        return "Rail"
+    }
+}
+class Aqua() : Infnames {
+    override fun eval(): String {
+        return "Aqua"
+    }
+}
+class Path() : Infnames {
+
+    override fun eval(): String {
+        return "Path"
+    }
+}
+class ShopTus() : Infnames {
+
+    override fun eval(): String {
+        return "Shop-Tus"
+    }
+}
+class ShopMercator() : Infnames {
+
+    override fun eval(): String {
+        return "Shop-Mercator"
+    }
+}
 
 // Contnames
-class BuildingComplex() : Contnames {}
-class Park() : Contnames {}
+class BuildingComplex() : Contnames {
+
+    override fun eval(): String {
+        return "BuildingComplex"
+    }
+}
+class Park() : Contnames {
+
+    override fun eval(): String {
+        return "Park"
+    }
+}
 
 // Ref
-class Reffrence(val exp: Exp) : Ref {}
-class EndRef : Ref {}
+class Reffrence(val exp: Exp) : Ref {
+
+    override fun eval(environment: MutableMap<String, Value>): String {
+        var value = exp.eval(environment)
+        if(value.type != Type.STRING){
+            throw Exception("Type mismatch in Ref operation")
+        }
+        return value.value[0]
+    }
+}
+class EndRef : Ref {
+    override fun eval(environment: MutableMap<String, Value>): String {
+        return ""
+    }
+}
 
 // Tag
-class TagExp(val exp: Exp) : Tag {}
-class EndTag : Tag {}
+class TagExp(val exp: Exp) : Tag {
+    override fun eval(environment: MutableMap<String, Value>): String {
+        var value = exp.eval(environment)
+        if (value.type != Type.STRING) {
+            throw Exception("Type mismatch in Ref operation")
+        }
+        return value.value[0]
+    }
+}
+class EndTag : Tag {
+    override fun eval(environment: MutableMap<String, Value>): String {
+        return ""
+    }
+}
 
 // Render
 class SeqRender(val render: Render, val render1: Render) : Render {}
@@ -172,8 +239,16 @@ class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Construct
 class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts {}
 
 // Constructnames
-class InfName(val infnames: Infnames) : Constructnames {}
-class ContName(val contnames: Contnames) : Constructnames {}
+class InfName(val infnames: Infnames) : Constructnames {
+    override fun eval(): String {
+        return infnames.eval()
+    }
+}
+class ContName(val contnames: Contnames) : Constructnames {
+    override fun eval(): String {
+        return contnames.eval()
+    }
+}
 
 // Exp
 class Plus(val exp1: Exp, val exp2: Exp) : Exp {
