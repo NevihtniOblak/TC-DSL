@@ -189,42 +189,53 @@ class Parser(private val lexer: Lexer) {
 
         if(currentSymbol!!.symbol in setOf(Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA, Symbol.PATH,
                 Symbol.SHOP_TUS, Symbol.SHOP_MERCATOR)){
-            var v1 = recognizeINFRASTRUCTURE()
-            var v2 = recognizeCOMPONENTS()
+            var infra = parseINFRASTRUCTURE()
+            var components = parseCOMPONENTS()
 
-            println("COMPONENTS RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqComponents(infra, components)
+
+            println("COMPONENTS RETURN: "+res)
+            return res
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.BUILDING_COMPLEX, Symbol.PARK)){
-            var v1 = recognizeCONTAINERS()
-            var v2 = recognizeCOMPONENTS()
+            var containers = parseCONTAINERS()
+            var components = parseCOMPONENTS()
 
-            println("COMPONENTS RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqComponents(containers, components)
+
+            println("COMPONENTS RETURN: "+res)
+            return res
+
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)){
-            var v1 = recognizeSTMTS()
-            var v2 = recognizeCOMPONENTS()
+            var stmts = parseSTMTS()
+            var components = parseCOMPONENTS()
 
-            println("COMPONENTS RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqComponents(Statements(stmts), components)
+
+            println("COMPONENTS RETURN: "+res)
+            return res
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.BOX, Symbol.LINE, Symbol.POLYGON, Symbol.CIRCLE, Symbol.CIRCLELINE)){
-            var v1 = recognizeSPECS()
-            var v2 = recognizeCOMPONENTS()
+            var specs = parseSPECS()
+            var components = parseCOMPONENTS()
 
-            println("COMPONENTS RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqComponents(Specifications(specs), components)
+
+            println("COMPONENTS RETURN: "+res)
+            return res
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.RCURLY, Symbol.RPAREN)){
             //epsilon
-            println("COMPONENTS RETURN: "+true)
-            return true
+            var res = EndComponents()
+
+            println("COMPONENTS RETURN: "+res)
+            return res
         }
         else{
-            println("COMPONENTS RETURN: "+false)
-            return false
+            println("COMPONENTS RETURN: "+ "panic")
+            return panic()
         }
     }
 

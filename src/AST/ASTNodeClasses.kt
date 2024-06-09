@@ -58,10 +58,11 @@ class EndArguments : Arguments {}
 class CityComponents(val components: Components) : City {}
 
 // Components
-class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect, val components: Components) : Components {}
-class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rendercont: Rendercont, val effect: Effect, val components: Components) : Components {}
-class Statements(val stmts: Stmts, val components: Components) : Components {}
-class Specifications(val specs: Specs, val components: Components) : Components {}
+class SeqComponents(val components: Components, val components1: Components) : Components {}
+class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {}
+class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rendercont: Rendercont, val effect: Effect) : Components {}
+class Statements(val stmts: Stmts) : Components {}
+class Specifications(val specs: Specs) : Components {}
 class EndComponents : Components {}
 
 // Infnames
