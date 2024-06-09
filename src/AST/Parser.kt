@@ -143,23 +143,26 @@ class Parser(private val lexer: Lexer) {
         println("Recognizing ARGUMENTS2")
 
         if(currentSymbol!!.symbol in setOf(Symbol.COMMA)){
-            var v1 = recognizeTerminal(Symbol.COMMA)
-            //var v2 = recognizeTerminal(Symbol.VARIABLE)
-            var v2 = recognizeEXP()
-            var v3 = recognizeARGUMENTS2()
+            var t1 = parseTerminal(Symbol.COMMA)
+            var exp = parseEXP()
+            var arguments = parseARGUMENTS2()
 
-            println("ARGUMENTS2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var res = SeqArguments(ArgumentsExp(exp), arguments)
+
+            println("ARGUMENTS2 RETURN: "+res)
+            return res
+
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
             //epsilon
+            var res = EndArguments()
 
-            println("ARGUMENTS2 RETURN: "+true)
-            return true
+            println("ARGUMENTS2 RETURN: "+ res)
+            return res
         }
         else{
-            println( "ARGUMENTS2 RETURN: "+false)
-            return false
+            println( "ARGUMENTS2 RETURN: " + "panic")
+            return panic()
         }
     }
 
