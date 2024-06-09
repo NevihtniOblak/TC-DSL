@@ -28,21 +28,22 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-PROGRAM
-    fun recognizePROGRAM(): Program {
-        /*
+    fun parsePROGRAM(): Program {
         println("Recognizing PROGRAM")
-        var v1 = recognizePREDEF()
-        var v2 = recognizeCITY()
+        //var v1 = recognizePREDEF()
+        //var v2 = recognizeCITY()
+        var predef = parsePREDEF()
+        var city = parseCITY()
 
-        println("PROGRAM RETURN: "+(v1 && v2))
-        return v1 && v2
+        var v1 = Start(predef, city)
+        println("PROGRAM RETURN: "+(v1))
+        return v1
 
-         */
     }
 
 
     //INH-PREDEF
-    fun recognizePREDEF(): Predef {
+    fun parsePREDEF(): Predef {
         println("Recognizing PREDEF")
         if(currentSymbol!!.symbol in setOf(Symbol.PROCEDURE)){
             var v1 = recognizePROCEDURE()
@@ -71,7 +72,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-PREDEF
-    fun recognizeSCHEMAS(): Predef {
+    fun parseSCHEMAS(): Predef {
         println("Recognizing SCHEMAS")
         var v1 = recognizeTerminal(Symbol.SCHEMA)
 
@@ -84,7 +85,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-PREDEF
-    fun recognizePROCEDURE(): Predef {
+    fun parsePROCEDURE(): Predef {
         println( "Recognizing PROCEDURE")
         var v1 = recognizeTerminal(Symbol.PROCEDURE)
         var v2 = recognizeTerminal(Symbol.VARIABLE)
@@ -100,7 +101,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-ARGUMENTS
-    fun recognizeARGUMENTS(): Arguments {
+    fun parseARGUMENTS(): Arguments {
         println("Recognizing ARGUMENTS")
 
         if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
@@ -122,7 +123,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-ARGUMENTS
-    fun recognizeARGUMENTS2(): Arguments {
+    fun parseARGUMENTS2(): Arguments {
         println("Recognizing ARGUMENTS2")
 
         if(currentSymbol!!.symbol in setOf(Symbol.COMMA)){
@@ -148,7 +149,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-CITY
-    fun recognizeCITY(): City {
+    fun parseCITY(): City {
         println("Recognizing CITY")
         var v1 = recognizeTerminal(Symbol.CITY)
         var v2 = recognizeTerminal(Symbol.COLON)
@@ -163,7 +164,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-COMPONENTS
-    fun recognizeCOMPONENTS(): Components {
+    fun parseCOMPONENTS(): Components {
         println("Recognizing COMPONENTS")
 
         if(currentSymbol!!.symbol in setOf(Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA, Symbol.PATH,
@@ -208,7 +209,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-COMPONENTS
-    fun recognizeINFRASTRUCTURE(): Components {
+    fun parseINFRASTRUCTURE(): Components {
         println("Recognizing INFRASTRUCTURE")
         var v1 = recognizeINFNAMES()
         var v2 = recognizeREF()
@@ -226,7 +227,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-INFNAMES
-    fun recognizeINFNAMES(): Infnames {
+    fun parseINFNAMES(): Infnames {
         println("Recognizing INFNAMES")
         if (currentSymbol!!.symbol in setOf( Symbol.BUILDING)) {
             var v1 = recognizeTerminal(Symbol.BUILDING)
@@ -264,7 +265,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH COMPONENTS
-    fun recognizeCONTAINERS(): Components {
+    fun parseCONTAINERS(): Components {
         println("Recognizing CONTAINERS")
         var v1 = recognizeCONTNAMES()
         var v2 = recognizeREF()
@@ -284,7 +285,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-CONTNAMES
-    fun recognizeCONTNAMES(): Contnames {
+    fun parseCONTNAMES(): Contnames {
         println("Recognizing CONTNAMES")
         if (currentSymbol!!.symbol in setOf( Symbol.BUILDING_COMPLEX)) {
             val v1 = recognizeTerminal(Symbol.BUILDING_COMPLEX)
@@ -303,7 +304,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-TAG
-    fun recognizeTAG(): Tag {
+    fun parseTAG(): Tag {
         println("Recognizing TAG")
         if (currentSymbol!!.symbol in setOf( Symbol.LANGLE)) {
             val v1 = recognizeTerminal(Symbol.LANGLE)
@@ -323,7 +324,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-REF
-    fun recognizeREF(): Ref {
+    fun parseREF(): Ref {
         println("Recognizing REF")
         if (currentSymbol!!.symbol in setOf( Symbol.LANGLE)) {
             val v1 = recognizeTerminal(Symbol.LANGLE)
@@ -344,7 +345,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-RENDER
-    fun recognizeRENDER(): Render {
+    fun parseRENDER(): Render {
         println("Recognizing RENDER")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
@@ -372,7 +373,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-RENDERCONT
-    fun recognizeRENDERCONT(): Rendercont {
+    fun parseRENDERCONT(): Rendercont {
         println("Recognizing RENDERCONT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
@@ -408,7 +409,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EFFECT
-    fun recognizeEFFECT(): Effect {
+    fun parseEFFECT(): Effect {
         println("Recognizing EFFECT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
@@ -436,7 +437,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //ING-COMMANDS
-    fun recognizeCOMMANDS(): Commands {
+    fun parseCOMMANDS(): Commands {
         println("Recognizing COMMANDS")
         if (currentSymbol!!.symbol in setOf(Symbol.SET_LOCATION)) {
             val v1 = recognizeTerminal(Symbol.SET_LOCATION)
@@ -484,7 +485,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-SPECS
-    fun recognizeSPECS(): Specs {
+    fun parseSPECS(): Specs {
         println("Recognizing SPECS")
         if (currentSymbol!!.symbol in setOf(Symbol.BOX)) {
             val v1 = recognizeTerminal(Symbol.BOX)
@@ -579,7 +580,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-POLYARGS
-    fun recognizePOLYARGS(): Polyargs {
+    fun parsePOLYARGS(): Polyargs {
         println("Recognizing POLYARGS")
         val v1 = recognizeEXP()
         val v2 = recognizeTerminal(Symbol.COMMA)
@@ -594,7 +595,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-POLYARGS
-    fun recognizePOLYARGS2(): Polyargs {
+    fun parsePOLYARGS2(): Polyargs {
         println("Recognizing POLYARGS2")
         if (currentSymbol!!.symbol in setOf( Symbol.COMMA)) {
             val v1 = recognizeTerminal(Symbol.COMMA)
@@ -617,7 +618,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-STMTS
-    fun recognizeSTMTS(): Stmts {
+    fun parseSTMTS(): Stmts {
         println("Recognizing STMTS")
         if (currentSymbol!!.symbol in setOf( Symbol.VAR)) {
             val v1 = recognizeTerminal(Symbol.VAR)
@@ -692,7 +693,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-STMNTS
-    fun recognizeASSIGNS(): Stmts {
+    fun parseASSIGNS(): Stmts {
         println("Recognizing ASSIGNS")
         if (currentSymbol!!.symbol in setOf( Symbol.LSQURE)) {
             val v1 = recognizeTerminal(Symbol.LSQURE)
@@ -718,7 +719,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-CONSTRUCTNAMES
-    fun recognizeCONSTRUCTNAMES(): Constructnames {
+    fun parseCONSTRUCTNAMES(): Constructnames {
         println("Recognizing CONSTRUCTNAMES")
         if (currentSymbol!!.symbol in setOf(Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA,
                 Symbol.PATH, Symbol.SHOP_TUS, Symbol.SHOP_MERCATOR)) {
@@ -738,7 +739,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-EXP
-    fun recognizeEXP(): Exp {
+    fun parseEXP(): Exp {
         println("Recognizing EXP")
         val v1 = recognizeADDITIVE()
 
@@ -748,7 +749,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizeADDITIVE(): Exp {
+    fun parseADDITIVE(): Exp {
         println("Recognizing ADDITIVE")
         val v1 = recognizeMULTIPLICATIVE()
         val v2 = recognizeADDITIVE2()
@@ -759,7 +760,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH EXP
-    fun recognizeADDITIVE2(): Exp {
+    fun parseADDITIVE2(): Exp {
         println("Recognizing ADDITIVE2")
         if (currentSymbol!!.symbol in setOf( Symbol.PLUS)) {
             val v1 = recognizeTerminal(Symbol.PLUS)
@@ -789,7 +790,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizeMULTIPLICATIVE(): Exp {
+    fun parseMULTIPLICATIVE(): Exp {
         println("Recognizing MULTIPLICATIVE")
         val v1 = recognizeEXPONENTIAL()
         val v2 = recognizeMULTIPLICATIVE2()
@@ -800,7 +801,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizeMULTIPLICATIVE2(): Exp {
+    fun parseMULTIPLICATIVE2(): Exp {
         println("Recognizing MULTIPLICATIVE2")
         if (currentSymbol!!.symbol in setOf(Symbol.TIMES)) {
             val v1 = recognizeTerminal(Symbol.TIMES)
@@ -837,7 +838,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizeEXPONENTIAL(): Exp {
+    fun parseEXPONENTIAL(): Exp {
         println("Recognizing EXPONENTIAL")
         val v1 = recognizeUNARY()
         val v2 = recognizeEXPONENTIAL2()
@@ -848,7 +849,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizeEXPONENTIAL2(): Exp {
+    fun parseEXPONENTIAL2(): Exp {
         println("Recognizing EXPONENTIAL2")
         if (currentSymbol!!.symbol in setOf( Symbol.POW)) {
             val v1 = recognizeTerminal(Symbol.POW)
@@ -872,7 +873,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizeUNARY(): Exp {
+    fun parseUNARY(): Exp {
         println("Unary: "+currentSymbol!!.symbol + " "+currentSymbol!!.lexeme)
         if (currentSymbol!!.symbol in setOf( Symbol.PLUS)) {
             val v1 = recognizeTerminal(Symbol.PLUS)
@@ -901,7 +902,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizePRIMARY(): Exp {
+    fun parsePRIMARY(): Exp {
         println("Recognizing PRIMARY")
         if (currentSymbol!!.symbol in setOf( Symbol.REAL)) {
             var v1 = recognizeTerminal(Symbol.REAL)
@@ -936,7 +937,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-EXP
-    fun recognizePRIMARY1(): Exp {
+    fun parsePRIMARY1(): Exp {
         println("Recognizing PRIMARY1")
         if (currentSymbol!!.symbol in setOf( Symbol.LSQURE)) {
             val v1 = recognizeTerminal(Symbol.LSQURE)
@@ -959,7 +960,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-EXP
-    fun recognizePRIMARY2(): Exp {
+    fun parsePRIMARY2(): Exp {
         println("Recognizing PRIMARY2")
         if (currentSymbol!!.symbol in setOf( Symbol.RPAREN)) {
             val v1 = recognizeTerminal(Symbol.RPAREN)
@@ -983,7 +984,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-DATA
-    fun recognizeDATA(): Data {
+    fun parseDATA(): Data {
         println("Recognizing DATA")
         if (currentSymbol!!.symbol in setOf(Symbol.LSQURE)) {
             var v1 = recognizeLIST()
@@ -1005,7 +1006,7 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-DATA
-    fun recognizeLIST(): Data {
+    fun parseLIST(): Data {
         println("Recognizing LIST")
         val v1 = recognizeTerminal(Symbol.LSQURE)
         val v2 = recognizeLISTITEM()
@@ -1017,7 +1018,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-LISTITEMS
-    fun recognizeLISTITEM(): Listitems {
+    fun parseLISTITEM(): Listitems {
         println("Recognizing LISTITEM")
         if (currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE,
                 Symbol.LPAREN, Symbol.STRING)) {
@@ -1040,7 +1041,7 @@ class Parser(private val lexer: Lexer) {
 
 
     //INH-LISTITEMS
-    fun recognizeLISTITEM2(): Listitems {
+    fun parseLISTITEM2(): Listitems {
         println("Recognizing LISTITEM2")
         if (currentSymbol!!.symbol in setOf( Symbol.COMMA)) {
             val v1 = recognizeTerminal(Symbol.COMMA)
