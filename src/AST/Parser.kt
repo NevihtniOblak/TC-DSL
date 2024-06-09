@@ -1,10 +1,10 @@
-package SyntaxAnalysis
+package AST
 
 import LexAnalysis.Lexer
 import LexAnalysis.Symbol
 import LexAnalysis.Token
 
-class Recognizer(private val lexer: Lexer) {
+class Parser(private val lexer: Lexer) {
     private var currentSymbol: Token? = null
 
 
@@ -83,30 +83,6 @@ class Recognizer(private val lexer: Lexer) {
         println("SCHEMAS RETURN: "+(v1 && v2))
         return v1 && v2
     }
-
-
-/*
-    fun recognizeSCHEMAS2(): Boolean {
-        println("Recognizing SCHEMAS2")
-        if(currentSymbol!!.symbol in setOf(Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA,
-                Symbol.PATH, Symbol.SHOP_TUS, Symbol.SHOP_MERCATOR)){
-
-            var v1 = recognizeINFRASTRUCTURE()
-            println("SCHEMAS2 RETURN: "+v1)
-            return v1
-        }
-        else if(currentSymbol!!.symbol in setOf(Symbol.BOX, Symbol.LINE, Symbol.POLYGON, Symbol.CIRCLE, Symbol.CIRCLELINE)){
-            var v1 = recognizeSPECS()
-            println("SCHEMAS2 RETURN: "+v1)
-            return v1
-        }
-        else{
-            println("SCHEMAS2 RETURN: "+false)
-            return false
-        }
-    }
-
- */
 
 
     fun recognizePROCEDURE(): Boolean {
