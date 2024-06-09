@@ -1224,12 +1224,13 @@ class Parser(private val lexer: Lexer) {
     //INH-DATA
     fun parseLIST(): Data {
         println("Recognizing LIST")
-        val v1 = recognizeTerminal(Symbol.LSQURE)
-        val v2 = recognizeLISTITEM()
-        val v3 = recognizeTerminal(Symbol.RSQURE)
+        val t1 = parseTerminal(Symbol.LSQURE)
+        val listitems = parseLISTITEM()
+        val t2 = parseTerminal(Symbol.RSQURE)
 
-        println("LIST RETURN: "+(v1 && v2 && v3))
-        return v1 && v2 && v3
+        var res = ListData(listitems)
+        println("LIST RETURN: "+res)
+        return res
     }
 
 
