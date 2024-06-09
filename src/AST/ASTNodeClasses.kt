@@ -57,7 +57,7 @@ interface Specs {
 interface Polyargs {}
 
 interface Stmts {
-    fun eval(): Unit
+    fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>): Unit
 }
 
 interface Constructnames {
@@ -230,13 +230,73 @@ class PolyargsExp(val exp: Exp) : Polyargs {}
 class EndPolyargs : Polyargs {}
 
 // Stmts
-class Define(val variable: String, val data: Data) : Stmts {}
-class Assign(val variable: String, val exp: Data) : Stmts {}
-class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components: Components) : Stmts {}
-class Print(val exp: Exp) : Stmts {}
-class Call(val variable: String, val arguments: Arguments) : Stmts {}
-class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Constructnames) : Stmts {}
-class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts {}
+class Define(val variable: String, val data: Data) : Stmts {
+    override fun eval( environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+        environment[variable] = data.eval(environment)
+    }
+}
+class Assign(val variable: String, val exp: Data) : Stmts {
+
+    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+        if(environment[variable] == null){
+            throw Exception("Variable $variable not found")
+        }
+        environment[variable] = exp.eval(environment)
+    }
+}
+class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components: Components) : Stmts {
+    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+        var itertorValue = exp1.eval(environment).value[0].toInt()
+        environment[variable] = Value(Type.REAL, mutableListOf(itertorValue.toString()))
+
+        var end = exp2.eval(environment).value[0].toInt()
+        for(i in itertorValue..end){
+            environment[variable] = Value(Type.REAL, mutableListOf(i.toString()))
+
+            components.eval(environment, procedures)
+        }
+    }
+}
+class Print(val exp: Exp) : Stmts {
+    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+        println(exp.eval(environment).value[0])
+    }
+}
+class Call(val variable: String, val arguments: Arguments) : Stmts {
+    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+        var procedure = procedures[variable] ?: throw Exception("Procedure $variable not found")
+        procedure.eval(arguments, environment)
+    }
+}
+class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Constructnames) : Stmts {
+    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+        var value1 = exp1.eval(environment)
+        if(value1.type != Type.POINT){
+            throw Exception("Type mismatch in DisplayMarkers operation")
+        }
+        var value2 = exp2.eval(environment)
+        if(value2.type != Type.REAL){
+            throw Exception("Type mismatch in DisplayMarkers operation")
+        }
+        var constructName = constructnames.eval()
+
+        //TODO
+
+    }
+}
+class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts {
+    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+        var index = exp1.eval(environment)
+        var listItem = environment[variable] ?: throw Exception("Listitem at $variable not found")
+
+        if(listItem.type != Type.LIST){
+            throw Exception("Type mismatch in ListItemAssign operation")
+        }
+
+        listItem.value[index.value[0].toInt()] = exp2.eval(environment).value[0]
+    }
+
+}
 
 // Constructnames
 class InfName(val infnames: Infnames) : Constructnames {
