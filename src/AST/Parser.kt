@@ -1068,27 +1068,35 @@ class Parser(private val lexer: Lexer) {
     fun parseUNARY(): Exp {
         println("Unary: "+currentSymbol!!.symbol + " "+currentSymbol!!.lexeme)
         if (currentSymbol!!.symbol in setOf( Symbol.PLUS)) {
-            val v1 = recognizeTerminal(Symbol.PLUS)
-            val v2 = recognizePRIMARY()
+            val t1 = parseTerminal(Symbol.PLUS)
 
-            println("UNARY RETURN: "+(v1 && v2))
-            return v1 && v2
+            val primary = parsePRIMARY()
+
+            var res = UnaryPlus(primary)
+            println("UNARY RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.MINUS)) {
-            val v1 = recognizeTerminal(Symbol.MINUS)
-            val v2 = recognizePRIMARY()
+            val t1 = parseTerminal(Symbol.MINUS)
 
-            println("UNARY RETURN: "+(v1 && v2))
-            return v1 && v2
+            val primary = parsePRIMARY()
+
+            var res = UnaryMinus(primary)
+            println("UNARY RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf( Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
-            val v1 = recognizePRIMARY()
+            val primary = parsePRIMARY()
 
-            println("UNARY RETURN: "+v1)
-            return v1
+            var res = primary
+            println("UNARY RETURN: "+res)
+            return res
+
         }
         else{
 
-            println("UNARY RETURN: "+false)
-            return false
+            println("UNARY RETURN: "+ "panic")
+            return panic()
         }
     }
 
@@ -1097,81 +1105,94 @@ class Parser(private val lexer: Lexer) {
     fun parsePRIMARY(): Exp {
         println("Recognizing PRIMARY")
         if (currentSymbol!!.symbol in setOf( Symbol.REAL)) {
-            var v1 = recognizeTerminal(Symbol.REAL)
+            var real = parseTerminal(Symbol.REAL)
 
-            println("PRIMARY RETURN: "+v1)
-            return v1
+            var res = Real(real.toDouble())
+            println("PRIMARY RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.VARIABLE)) {
-            var v1 = recognizeTerminal(Symbol.VARIABLE)
-            val v2 = recognizePRIMARY1()
+            var variable = parseTerminal(Symbol.VARIABLE)
+            val primary1 = parsePRIMARY1(variable)
 
-            println("PRIMARY RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = primary1
+            println("PRIMARY RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.LPAREN)) {
-            val v1 = recognizeTerminal(Symbol.LPAREN)
-            val v2 = recognizeEXP()
-            val v3 = recognizePRIMARY2()
+            val t1 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val primary2 = parsePRIMARY2(exp)
 
-            println("PRIMARY RETURN: "+(v1 && v2 && v3))
-            return v1 && v2
+            var res = primary2
+            println( "PRIMARY RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.STRING)) {
-            val v1 = recognizeTerminal(Symbol.STRING)
+            val string = parseTerminal(Symbol.STRING)
 
-            println("PRIMARY RETURN: "+v1)
-            return v1
+            var res = StringExp(string)
+            println("PRIMARY RETURN: "+res)
+            return res
+
         }
         else{
 
-            println("PRIMARY RETURN: "+false)
-            return false
+            println("PRIMARY RETURN: "+ "panic")
+            return panic()
         }
     }
 
 
     //INH-EXP
-    fun parsePRIMARY1(): Exp {
+    fun parsePRIMARY1(ivariable: String): Exp {
         println("Recognizing PRIMARY1")
         if (currentSymbol!!.symbol in setOf( Symbol.LSQURE)) {
-            val v1 = recognizeTerminal(Symbol.LSQURE)
-            val v2 = recognizeEXP()
-            val v3 = recognizeTerminal(Symbol.RSQURE)
+            val t1 = parseTerminal(Symbol.LSQURE)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RSQURE)
 
-            println("PRIMARY1 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var res = ListIndex(ivariable, exp)
+            println("PRIMARY1 RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.POW, Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS, Symbol.COMMA,
                 Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
 
-            println("PRIMARY1 RETURN: "+true)
-            return true // EPSILON case
+            var res = Variable(ivariable)
+            println("PRIMARY1 RETURN: "+ res)
+            return res // EPSILON case
         }
         else{
 
-            println("PRIMARY1 RETURN: "+false)
-            return false
+            println("PRIMARY1 RETURN: "+ "panic")
+            return panic()
         }
     }
 
     //INH-EXP
-    fun parsePRIMARY2(): Exp {
+    fun parsePRIMARY2(iexp: Exp): Exp {
         println("Recognizing PRIMARY2")
         if (currentSymbol!!.symbol in setOf( Symbol.RPAREN)) {
-            val v1 = recognizeTerminal(Symbol.RPAREN)
+            val t1 = parseTerminal(Symbol.RPAREN)
 
-            println("PRIMARY2 RETURN: "+v1)
-            return v1
+            var res = iexp
+            println( "PRIMARY2 RETURN: "+res)
+            return res
         }
         else if(currentSymbol!!.symbol in setOf( Symbol.COMMA)){
-            val v1 = recognizeTerminal(Symbol.COMMA)
-            val v2 = recognizeEXP()
-            val v3 = recognizeTerminal(Symbol.RPAREN)
+            val t1 = parseTerminal(Symbol.COMMA)
+            val exp = parseEXP()
+            val t2 = parseTerminal(Symbol.RPAREN)
 
-            println("PRIMARY2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var res = Point(iexp, exp)
+            println("PRIMARY2 RETURN: "+res)
+            return res
         }
         else{
 
-            println("PRIMARY2 RETURN: "+false)
-            return false
+            println("PRIMARY2 RETURN: "+ "panic")
+            return panic()
         }
     }
 
