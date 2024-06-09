@@ -455,33 +455,44 @@ class Parser(private val lexer: Lexer) {
         println("Recognizing RENDERCONT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
-            val v1 = recognizeSTMTS()
-            val v2 = recognizeRENDERCONT()
+            val stmts = parseSTMTS()
+            val rendercont = parseRENDERCONT()
 
-            println("RENDERCONT RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqRendercont(RenderContStmts(stmts), rendercont)
+            println("RENDERCONT RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.BOX, Symbol.LINE, Symbol.POLYGON,
                 Symbol.CIRCLE, Symbol.CIRCLELINE)) {
-            val v1 = recognizeSPECS()
-            val v2 = recognizeRENDERCONT()
 
-            println("RENDERCONT RETURN: "+(v1 && v2))
-            return v1 && v2
+            val specs = parseSPECS()
+            val rendercont = parseRENDERCONT()
+
+            var res = SeqRendercont(RenderContSpecs(specs), rendercont)
+            println("RENDERCONT RETURN: "+res)
+
+            return res
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA,
                 Symbol.PATH, Symbol.SHOP_TUS, Symbol.SHOP_MERCATOR)) {
-            val v1 = recognizeINFRASTRUCTURE()
-            val v2 = recognizeRENDERCONT()
 
-            println("RENDERCONT RETURN: "+(v1 && v2))
-            return v1 && v2
+            val infra = parseINFRASTRUCTURE()
+            val rendercont = parseRENDERCONT()
+
+            if(infra !is Infrastructure){
+                throw IllegalArgumentException("Expected Infrastructure object, but got ${infra::class.simpleName}")
+            }
+            var res = SeqRendercont(RenderContInfra(infra), rendercont)
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
             // EPSILON case
-            println("RENDERCONT RETURN: "+true)
-            return true
+            var res = EndRendercont()
+            println("RENDERCONT RETURN: "+res)
+            return res
         }
         else{
-            println("RENDERCONT RETURN: "+false)
-            return false
+            println("RENDERCONT RETURN: "+ "panic")
+            return panic()
         }
     }
 

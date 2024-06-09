@@ -93,9 +93,11 @@ class RenderSpecs(val specs: Specs) : Render {}
 class EndRender : Render {}
 
 // Rendercont
-class RenderContStmts(val stmts: Stmts, val rendercont: Rendercont) : Rendercont {}
-class RenderContSpecs(val specs: Specs, val rendercont: Rendercont) : Rendercont {}
-class RenderContInfra(val infrastructure: Infrastructure, val rendercont: Rendercont) : Rendercont {}
+
+class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : Rendercont {}
+class RenderContStmts(val stmts: Stmts) : Rendercont {}
+class RenderContSpecs(val specs: Specs) : Rendercont {}
+class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {}
 class EndRendercont : Rendercont {}
 
 // Effect
