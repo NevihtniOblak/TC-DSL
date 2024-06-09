@@ -483,6 +483,9 @@ class Parser(private val lexer: Lexer) {
                 throw IllegalArgumentException("Expected Infrastructure object, but got ${infra::class.simpleName}")
             }
             var res = SeqRendercont(RenderContInfra(infra), rendercont)
+            println("RENDERCONT RETURN: "+res)
+
+            return res
 
         } else if(currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
             // EPSILON case
@@ -502,26 +505,31 @@ class Parser(private val lexer: Lexer) {
         println("Recognizing EFFECT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
-            val v1 = recognizeSTMTS()
-            val v2 = recognizeEFFECT()
+            val stmts = parseSTMTS()
+            val effect = parseEFFECT()
 
-            println("EFFECT RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqEffect(EffectSmts(stmts), effect)
+            println("EFFECT RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.SET_LOCATION, Symbol.TRANSLATE, Symbol.ROTATE,
                 Symbol.SET_MARKER)) {
-            val v1 = recognizeCOMMANDS()
-            val v2 = recognizeEFFECT()
+            val commands = parseCOMMANDS()
+            val effect = parseEFFECT()
 
-            println("EFFECT RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqEffect(EffectCommands(commands), effect)
+            println("EFFECT RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.RCURLY)){
             // EPSILON case
-            println("EFFECT RETURN: "+true)
-            return true
+            var res = EndEffect()
+            println("EFFECT RETURN: "+res)
+            return res
         }
         else{
-            println("EFFECT RETURN: "+false)
-            return false
+            println("EFFECT RETURN: "+ "panic")
+            return panic()
         }
     }
 

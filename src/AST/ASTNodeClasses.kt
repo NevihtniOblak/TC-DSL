@@ -101,8 +101,9 @@ class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {}
 class EndRendercont : Rendercont {}
 
 // Effect
-class EffectSmts(val stmts: Stmts, val effect: Effect) : Effect {}
-class EffectCommands(val commands: Commands, val effect: Effect) : Effect {}
+class SeqEffect(val effect: Effect, val effect1: Effect) : Effect {}
+class EffectSmts(val stmts: Stmts) : Effect {}
+class EffectCommands(val commands: Commands) : Effect {}
 class EndEffect : Effect {}
 
 // Commands
