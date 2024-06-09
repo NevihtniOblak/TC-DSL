@@ -44,8 +44,8 @@ class Start(val predef: Predef, val city: City) : Program {}
 
 // Predef
 class SeqPredef(val predef: Predef, val predef1: Predef) : Predef {}
-class Procedure(val arguments: Arguments, val components: Components, val predef: Predef) : Predef {}
-class Schema(val infrastructure: Infrastructure, val predef: Predef) : Predef {}
+class Procedure(val arguments: Arguments, val components: Components) : Predef {}
+class Schema(val infrastructure: Infrastructure) : Predef {}
 class EndPredef : Predef {}
 
 // Arguments

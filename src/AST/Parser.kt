@@ -78,14 +78,18 @@ class Parser(private val lexer: Lexer) {
 
     //INH-PREDEF
     fun parseSCHEMAS(): Predef {
-        println("Recognizing SCHEMAS")
-        var v1 = recognizeTerminal(Symbol.SCHEMA)
+        println("Parsing SCHEMAS")
+        var t1 = parseTerminal(Symbol.SCHEMA)
+        var infra = parseINFRASTRUCTURE()
 
-        //var v2 = recognizeSCHEMAS2()
-        var v2 = recognizeINFRASTRUCTURE()
+        if (infra !is Infrastructure) {
+            throw IllegalArgumentException("Expected Infrastructure object, but got ${infra::class.simpleName}")
+        }
 
-        println("SCHEMAS RETURN: "+(v1 && v2))
-        return v1 && v2
+        var v1 = Schema(infra)
+
+        println("SCHEMAS RETURN: "+(v1))
+        return v1
     }
 
 
