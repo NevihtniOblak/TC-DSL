@@ -714,21 +714,23 @@ class Parser(private val lexer: Lexer) {
     fun parsePOLYARGS2(): Polyargs {
         println("Recognizing POLYARGS2")
         if (currentSymbol!!.symbol in setOf( Symbol.COMMA)) {
-            val v1 = recognizeTerminal(Symbol.COMMA)
-            val v2 = recognizeEXP()
-            val v3 = recognizePOLYARGS2()
+            val t1 = parseTerminal(Symbol.COMMA)
+            val exp = parseEXP()
+            val polyargsExtra = parsePOLYARGS2()
 
-            println("POLYARGS2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            var res = SeqPolyargs(PolyargsExp(exp), polyargsExtra)
+            println("POLYARGS2 RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf( Symbol.RPAREN)){
 
-            println("POLYARGS2 RETURN: "+true)
-            return true // EPSILON case
+            var res = EndPolyargs()
+            println("POLYARGS2 RETURN: "+ res)
+            return res // EPSILON case
         }
         else{
-
-            println("POLYARGS2 RETURN: "+false)
-            return false
+            println("POLYARGS2 RETURN: "+ "panic")
+            return panic()
         }
     }
 
