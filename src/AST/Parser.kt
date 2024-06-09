@@ -420,25 +420,32 @@ class Parser(private val lexer: Lexer) {
         println("Recognizing RENDER")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
                 Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
-            val v1 = recognizeSTMTS()
-            val v2 = recognizeRENDER()
+            val stmts = parseSTMTS()
+            val render = parseRENDER()
 
-            println("RENDER RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqRender(RenderStmts(stmts), render)
+            println("RENDER RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf(Symbol.BOX, Symbol.LINE, Symbol.POLYGON,
                 Symbol.CIRCLE, Symbol.CIRCLELINE)) {
-            val v1 = recognizeSPECS()
-            val v2 = recognizeRENDER()
-            println("RENDER RETURN: "+(v1 && v2))
-            return v1 && v2
+            val specs = parseSPECS()
+            val render = parseRENDER()
+
+            var res = SeqRender(RenderSpecs(specs), render)
+            println("RENDER RETURN: "+res)
+            return res
+
         } else if(currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
             // EPSILON case
-            println("RENDER RETURN: "+true)
-            return true
+
+            var res = EndRender()
+            println("RENDER RETURN: "+ res)
+            return res
         }
         else{
-            println("RENDER RETURN: "+false)
-            return false
+            println("RENDER RETURN: "+ "panic")
+            return panic()
         }
     }
 

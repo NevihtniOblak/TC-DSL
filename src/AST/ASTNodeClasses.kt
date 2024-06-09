@@ -87,8 +87,9 @@ class TagExp(val exp: Exp) : Tag {}
 class EndTag : Tag {}
 
 // Render
-class RenderStmts(val stmts: Stmts, val render: Render) : Render {}
-class RenderSpecs(val specs: Specs, val render: Render) : Render {}
+class SeqRender(val render: Render, val render1: Render) : Render {}
+class RenderStmts(val stmts: Stmts) : Render {}
+class RenderSpecs(val specs: Specs) : Render {}
 class EndRender : Render {}
 
 // Rendercont
