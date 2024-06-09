@@ -956,49 +956,65 @@ class Parser(private val lexer: Lexer) {
     //INH-EXP
     fun parseMULTIPLICATIVE(): Exp {
         println("Recognizing MULTIPLICATIVE")
-        val v1 = recognizeEXPONENTIAL()
-        val v2 = recognizeMULTIPLICATIVE2()
+        var expo = parseEXPONENTIAL()
 
-        println("MULTIPLICATIVE RETURN: "+(v1 && v2))
-        return v1 && v2
+        val multi2 = parseMULTIPLICATIVE2(expo)
+
+        var res = multi2
+        println("MULTIPLICATIVE RETURN: "+multi2)
+        return multi2
+
     }
 
 
     //INH-EXP
-    fun parseMULTIPLICATIVE2(): Exp {
+    fun parseMULTIPLICATIVE2(iexp : Exp): Exp {
         println("Recognizing MULTIPLICATIVE2")
         if (currentSymbol!!.symbol in setOf(Symbol.TIMES)) {
-            val v1 = parseTerminal(Symbol.TIMES)
+
+            val t1 = parseTerminal(Symbol.TIMES)
             val expon = parseEXPONENTIAL()
-            val multi = parseMULTIPLICATIVE2()
 
-            var res = Times(expon, multi)
+            val subres = Times(iexp, expon)
 
-            println("MULTIPLICATIVE2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            val multi2 = parseMULTIPLICATIVE2(subres)
+            var res = multi2
+
+            println("MULTIPLICATIVE2 RETURN: "+res)
+            return res
+
         } else if (currentSymbol!!.symbol in setOf( Symbol.DIVIDE)) {
-            val v1 = recognizeTerminal(Symbol.DIVIDE)
-            val v2 = recognizeEXPONENTIAL()
-            val v3 = recognizeMULTIPLICATIVE2()
+            val t1 = parseTerminal(Symbol.DIVIDE)
+            val expon = parseEXPONENTIAL()
 
-            println("MULTIPLICATIVE2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            val subres = Divides(iexp, expon)
+
+            val multi2 = parseMULTIPLICATIVE2(subres)
+            var res = multi2
+
+            println("MULTIPLICATIVE2 RETURN: "+multi2)
+            return multi2
         } else if (currentSymbol!!.symbol in setOf( Symbol.INTEGER_DIVIDE)) {
-            val v1 = recognizeTerminal(Symbol.INTEGER_DIVIDE)
-            val v2 = recognizeEXPONENTIAL()
-            val v3 = recognizeMULTIPLICATIVE2()
+            val t1 = parseTerminal(Symbol.INTEGER_DIVIDE)
+            val expon = parseEXPONENTIAL()
 
-            println("MULTIPLICATIVE2 RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            val subres = IntegerDivides(iexp, expon)
+
+            val multi2 = parseMULTIPLICATIVE2(subres)
+            var res = multi2
+
+            println("MULTIPLICATIVE2 RETURN: "+res)
+            return res
         } else if( currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)) {
 
-            println("MULTIPLICATIVE2 RETURN: "+true)
-            return true // EPSILON case
+            var res = iexp
+            println("MULTIPLICATIVE2 RETURN: "+res)
+            return res // EPSILON case
         }
         else{
 
-            println("MULTIPLICATIVE2 RETURN: "+false)
-            return false
+            println("MULTIPLICATIVE2 RETURN: "+ "panic")
+            return panic()
         }
     }
 
