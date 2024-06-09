@@ -29,9 +29,8 @@ class Parser(private val lexer: Lexer) {
 
     //INH-PROGRAM
     fun parsePROGRAM(): Program {
-        println("Recognizing PROGRAM")
-        //var v1 = recognizePREDEF()
-        //var v2 = recognizeCITY()
+        println("Parsing PROGRAM")
+
         var predef = parsePREDEF()
         var city = parseCITY()
 
@@ -44,30 +43,36 @@ class Parser(private val lexer: Lexer) {
 
     //INH-PREDEF
     fun parsePREDEF(): Predef {
-        println("Recognizing PREDEF")
+        println("Parsing PREDEF")
         if(currentSymbol!!.symbol in setOf(Symbol.PROCEDURE)){
-            var v1 = recognizePROCEDURE()
-            var v2 = recognizePREDEF()
 
-            println("PREDEF RETURN: "+(v1 && v2))
-            return v1 && v2
+            var procedure = parsePROCEDURE()
+            var components = parsePREDEF()
+
+            var v1 = SeqPredef(procedure, components)
+
+            println("PREDEF RETURN: "+ (v1))
+            return v1
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.SCHEMA)){
-            var v1 = recognizeSCHEMAS()
-            var v2 = recognizePREDEF()
+            var schemas = parseSCHEMAS()
+            var predef = parsePREDEF()
 
-            println("PREDEF RETURN: "+(v1 && v2))
-            return v1 && v2
+            var v1 = SeqPredef(schemas, predef)
+
+            println("PREDEF RETURN: "+(v1))
+            return v1
         }
         else if (currentSymbol!!.symbol in setOf(Symbol.CITY)){
             //epsilon
-            println("PREDEF RETURN: "+true)
-            return true
+            var v1 = EndPredef()
+            println("PREDEF RETURN: "+v1)
+            return v1
         }
         else{
 
-            println("PREDEF RETURN: "+false)
-            return false
+            println("PREDEF RETURN: panic")
+            return panic()
         }
     }
 
