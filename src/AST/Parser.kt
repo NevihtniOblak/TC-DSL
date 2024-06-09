@@ -369,19 +369,23 @@ class Parser(private val lexer: Lexer) {
     fun parseTAG(): Tag {
         println("Recognizing TAG")
         if (currentSymbol!!.symbol in setOf( Symbol.LANGLE)) {
-            val v1 = recognizeTerminal(Symbol.LANGLE)
-            val v2 = recognizeEXP()
-            val v3 = recognizeTerminal(Symbol.RANGLE)
-            return v1 && v2 && v3
+            val t1 = parseTerminal(Symbol.LANGLE)
+            val exp = parseEXP()
+            val t2 = parseTerminal(Symbol.RANGLE)
+
+            var res = TagExp(exp)
+            println("TAG RETURN: "+res)
+            return res
         } else if( currentSymbol!!.symbol in setOf( Symbol.LPAREN)){
             // EPSILON case
+            var res = EndTag()
 
-            println("TAG RETURN: "+true)
-            return true
+            println("TAG RETURN: "+ res)
+            return res
         }
         else{
-            println("TAG RETURN: "+false)
-            return false
+            println("TAG RETURN: "+ "panic")
+            return panic()
         }
     }
 
@@ -389,19 +393,24 @@ class Parser(private val lexer: Lexer) {
     fun parseREF(): Ref {
         println("Recognizing REF")
         if (currentSymbol!!.symbol in setOf( Symbol.LANGLE)) {
-            val v1 = recognizeTerminal(Symbol.LANGLE)
-            val v2 = recognizeEXP()
-            val v3 = recognizeTerminal(Symbol.RANGLE)
-            println("REF RETURN: "+(v1 && v2 && v3))
-            return v1 && v2 && v3
+            val t1 = parseTerminal(Symbol.LANGLE)
+            val exp = parseEXP()
+            val t2 = parseTerminal(Symbol.RANGLE)
+
+            var res = Reffrence(exp)
+            println("REF RETURN: "+res)
+            return res
+
         } else if( currentSymbol!!.symbol in setOf( Symbol.COLON)){
             // EPSILON case
-            println("REF RETURN: "+true)
-            return true
+            var res = EndRef()
+
+            println("REF RETURN: "+ res)
+            return res
         }
         else{
-            println("REF RETURN: "+false)
-            return false
+            println("REF RETURN: "+ "panic")
+            return panic()
         }
     }
 
