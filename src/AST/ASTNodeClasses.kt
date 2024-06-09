@@ -49,7 +49,9 @@ class Schema(val infrastructure: Infrastructure) : Predef {}
 class EndPredef : Predef {}
 
 // Arguments
-class ArgumentsExp(val exp: Exp, val arguments: Arguments) : Arguments {}
+
+class SeqArguments(val arguments: Arguments, val arguments1: Arguments) : Arguments {}
+class ArgumentsExp(val exp: Exp) : Arguments {}
 class EndArguments : Arguments {}
 
 // City

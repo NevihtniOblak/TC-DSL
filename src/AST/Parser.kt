@@ -118,20 +118,23 @@ class Parser(private val lexer: Lexer) {
         println("Recognizing ARGUMENTS")
 
         if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
-            var v1 = recognizeEXP()
-            var v2 = recognizeARGUMENTS2()
+            var exp = parseEXP()
+            var arguments = parseARGUMENTS2()
 
-            println("ARGUMENTS RETURN: "+(v1 && v2))
-            return v1 && v2
+            var res = SeqArguments(ArgumentsExp(exp), arguments)
+
+            println("ARGUMENTS RETURN: "+res)
+            return res
         }
         else if (currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
             //epsilon
-            println("ARGUMENTS RETURN: "+true)
-            return true
+            var res = EndArguments()
+            println("ARGUMENTS RETURN: "+ res)
+            return res
         }
         else{
-            println("ARGUMENTS RETURN: "+false)
-            return false
+            println("ARGUMENTS RETURN: " + "panic")
+            return panic()
         }
     }
 
