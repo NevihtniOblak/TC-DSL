@@ -194,11 +194,39 @@ class SeqComponents(val components1: Components, val components2: Components) : 
     }
 }
 class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {
+    override fun eval(env: Environment): String {
+        var infname = infnames.eval()
+        var ref = ref.eval(env)
+        var tag = tag.eval(env)
+        var effect = effect.eval(env)
+        return render.eval(env)
+    }
 }
-class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rendercont: Rendercont, val effect: Effect) : Components {}
-class Statements(val stmts: Stmts) : Components {}
-class Specifications(val specs: Specs) : Components {}
-class EndComponents : Components {}
+class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rendercont: Rendercont, val effect: Effect) : Components {
+    override fun eval(env: Environment): String {
+        var contname = contnames.eval()
+        var ref = ref.eval(env)
+        var tag = tag.eval(env)
+        var effect = effect.eval(env)
+        return rendercont.eval(env)
+    }
+}
+class Statements(val stmts: Stmts) : Components {
+    override fun eval(env: Environment): String {
+        stmts.eval(env)
+        return ""
+    }
+}
+class Specifications(val specs: Specs) : Components {
+    override fun eval(env: Environment): String {
+        return specs.eval(env)
+    }
+}
+class EndComponents : Components {
+    override fun eval(env: Environment): String {
+        return ""
+    }
+}
 
 // Infnames
 class Building() : Infnames {
@@ -289,46 +317,93 @@ class EndTag : Tag {
 }
 
 // Render
-class SeqRender(val render: Render, val render1: Render) : Render {}
-class RenderStmts(val stmts: Stmts) : Render {}
-class RenderSpecs(val specs: Specs) : Render {}
-class EndRender : Render {}
+class SeqRender(val render: Render, val render1: Render) : Render {
+    override fun eval(env: Environment): String {
+        return render.eval(env) +"\n"+ render1.eval(env)
+    }
+}
+class RenderStmts(val stmts: Stmts) : Render {
+    override fun eval(env: Environment): String {
+        stmts.eval(env)
+        return ""
+    }
+}
+class RenderSpecs(val specs: Specs) : Render {
+    override fun eval(env: Environment): String {
+        return specs.eval(env)
+    }
+}
+class EndRender : Render {
+    override fun eval(env: Environment): String {
+        return ""
+    }
+}
 
 // Rendercont
 
-class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : Rendercont {}
-class RenderContStmts(val stmts: Stmts) : Rendercont {}
-class RenderContSpecs(val specs: Specs) : Rendercont {}
-class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {}
-class EndRendercont : Rendercont {}
+class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : Rendercont {
+    override fun eval(env: Environment): String {
+        return rendercont.eval(env) +"\n"+ rendercont1.eval(env)
+    }
+}
+class RenderContStmts(val stmts: Stmts) : Rendercont {
+    override fun eval(env: Environment): String {
+        stmts.eval(env)
+        return ""
+}
+class RenderContSpecs(val specs: Specs) : Rendercont {
+    override fun eval(env: Environment): String {
+        return specs.eval(env)
+
+}}
+class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {
+    override fun eval(env: Environment): String {
+        return infrastructure.eval(env)
+    }
+}
+class EndRendercont : Rendercont {
+    override fun eval(env: Environment): String {
+        return ""
+    }
+
+}
 
 // Effect
 class SeqEffect(val effect: Effect, val effect1: Effect) : Effect {
-    override fun eval() {
-        effect.eval()
-        effect1.eval()
+    override fun eval(env: Environment) {
     }
 }
 class EffectSmts(val stmts: Stmts) : Effect {
-    override fun eval() {
-        stmts.eval(mutableMapOf(), mutableMapOf())
+    override fun eval(env: Environment) {
     }
 }
 class EffectCommands(val commands: Commands) : Effect {
-    override fun eval() {
-        commands.eval()
+    override fun eval(env: Environment) {
     }
 }
 class EndEffect : Effect {
-    override fun eval() {
+    override fun eval(env: Environment) {
     }
 }
 
 // Commands
-class SetLocation(val exp: Exp) : Commands {}
-class Translate(val exp1: Exp, val exp2: Exp) : Commands {}
-class Rotate(val exp: Exp) : Commands {}
-class SetMarker(val exp: Exp) : Commands {}
+class SetLocation(val exp: Exp) : Commands {
+    override fun eval(env: Environment) {
+    }
+}
+class Translate(val exp1: Exp, val exp2: Exp) : Commands {
+    override fun eval(env: Environment) {
+    }
+
+}}
+class Rotate(val exp: Exp) : Commands {
+    override fun eval(env: Environment) {
+    }
+}
+class SetMarker(val exp: Exp) : Commands {
+    override fun eval(env: Environment) {
+    }
+}
 
 // Specs
 class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
@@ -363,16 +438,32 @@ class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: 
         return geoJson.toString()
     }
 }
-class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {}
+class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {
+    override fun eval(env: Environment): String {
+        TODO("Not yet implemented")
+        return ""
+    }
+}
 class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
 
     override fun eval(env: Environment): String {
-        var points = polyargs.eval(env)
+        TODO("Not yet implemented")
+        return ""
     }
 
-}}
-class Circle(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {}
-class CircleLine(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {}
+}
+class Circle(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
+    override fun eval(env: Environment): String {
+        TODO("Not yet implemented")
+        return ""
+    }
+}
+class CircleLine(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {
+    override fun eval(env: Environment): String {
+        TODO("Not yet implemented")
+        return ""
+    }
+}
 
 // Polyargs
 class SeqPolyargs(val polyargs: Polyargs, val restOfPolyargs: Polyargs) : Polyargs {
