@@ -16,7 +16,7 @@ interface Predef {
 
 
 interface Arguments {
-    fun eval(environment: Environment): Unit
+    fun eval(): MutableMap<Int,String>
 }
 
 interface City {
@@ -126,9 +126,22 @@ class EndPredef : Predef {
 
 // Arguments
 
-class SeqArguments(val arguments: Arguments, val arguments1: Arguments) : Arguments {}
-class ArgumentsExp(val exp: Exp) : Arguments {}
-class EndArguments : Arguments {}
+class SeqArguments(val arguments1: Arguments, val arguments2: Arguments) : Arguments {
+    override fun eval(): MutableMap<Int,String>{
+        arguments1.eval().putAll(arguments2.eval())
+        return arguments1.eval()
+    }
+}
+class ArgumentsExp(val exp: Exp) : Arguments {
+    override fun eval(): MutableMap<Int,String> {
+        var argument = exp.eval()
+    }
+}
+class EndArguments : Arguments {
+    override fun eval(): MutableMap<Int,String> {
+        return mutableMapOf()
+    }
+}
 
 // City
 class CityComponents(val components: Components) : City {}
