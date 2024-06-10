@@ -23,25 +23,6 @@
 			{
 				"type": "Feature",
 				"geometry":{
-					"type": "Polygon",
-					"coordinates": [[
-						[15.64252794363085, 46.56364894040025],
-						[15.642686846433039, 46.56364894040025],
-						[15.642686846433039, 46.56370130074412],
-						[15.64252794363085, 46.56370130074412],
-						[15.64252794363085, 46.56364894040025]
-					]]
-				},
-				"properties": {
-					"tag": "Box1",
-					"Parent type": "Building",
-					"Parent tag": "Lepo"
-				}
-			}
-		,
-			{
-				"type": "Feature",
-				"geometry":{
 					"type": "LineString",
 					"coordinates": [
 						[15.63800843958539, 46.5642234071271],
@@ -49,7 +30,7 @@
 					]
 				},
 				"properties": {
-					"tag": "",
+					"tag": "linija",
 					"Parent type": "Building",
 					"Parent tag": "Lepo"
 				}
