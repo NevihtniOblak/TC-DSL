@@ -338,7 +338,14 @@ class EndTag : Tag {
 // Render
 class SeqRender(val render: Render, val render1: Render) : Render {
     override fun eval(env: Environment, indent: Int): String {
-        return render.eval(env, indent+1) +"\n"+ render1.eval(env, indent+1)
+        var first = render.eval(env, indent+1)
+        var following = render1.eval(env, indent)
+        if(render1 !is EndRender){
+            return first + ",\n" + following
+        }
+        else{
+            return first
+        }
     }
 }
 class RenderStmts(val stmts: Stmts) : Render {
@@ -469,8 +476,39 @@ class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: 
 }
 class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {
     override fun eval(env: Environment, indent: Int): String {
-        TODO("Not yet implemented")
-        return ""
+        var p1 = exp1.eval(env)
+        var p2 = exp2.eval(env)
+        if(p1.type != Type.POINT || p2.type != Type.POINT){
+            throw Exception("Type mismatch in Box operation")
+        }
+        var coord1 = pointParse(p1)
+        var coord2 = pointParse(p2)
+
+        val (x1, y1) = coord1
+        val (x2, y2) = coord2
+
+        val lineCoords = listOf(
+            listOf(y1, x1),
+            listOf(y2, x2)
+        )
+
+        var geoJson = ""
+        geoJson += tab(indent) + "{\n"
+        geoJson += tab(indent+1) + "\"type\": \"Feature\",\n"
+        geoJson += tab(indent+1) + "\"geometry\":{\n"
+        geoJson += tab(indent+2) + "\"type\": \"LineString\",\n"
+        geoJson += tab(indent+2) + "\"coordinates\": [\n"
+        geoJson += tab(indent+3)
+        geoJson += lineCoords.joinToString(",\n${tab(indent+3)}") { "[${it[0]}, ${it[1]}]" }
+        geoJson += "\n"
+        geoJson += tab(indent+2) + "]\n"
+        geoJson += tab(indent+1) + "},\n"
+        geoJson += tab(indent+1) + "\"properties\": {\n"
+        geoJson += tab(indent+2) + "\"Property\": \"value\"\n"
+        geoJson += tab(indent+1) + "}\n"
+        geoJson += tab(indent) + "}\n"
+
+        return geoJson
     }
 }
 class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {

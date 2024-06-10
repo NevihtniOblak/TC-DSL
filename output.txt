@@ -17,6 +17,19 @@
 				"Property": "value"
 			}
 		}
-
+,
+		{
+			"type": "Feature",
+			"geometry":{
+				"type": "LineString",
+				"coordinates": [
+					[15.63800843958539, 46.5642234071271],
+					[15.643182372187036, 46.56308629762382]
+				]
+			},
+			"properties": {
+				"Property": "value"
+			}
+		}
 	]
 }
