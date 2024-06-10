@@ -187,7 +187,18 @@ class EndArgument : Arguments {
 // City
 class CityComponents(val components: Components) : City {
     override fun eval(env: Environment, indent: Int): String {
-        return components.eval(env, 0)
+        var components = components.eval(env, 0)
+        var geoJson = ""
+        geoJson += tab(indent) + "{\n"
+        geoJson += tab(indent+1) + "\"type\": \"FeatureCollection\",\n"
+        geoJson += tab(indent+1) + "\"features\": [\n"
+        geoJson += components
+        geoJson += tab(indent+1) + "]\n"
+        geoJson += tab(indent) + "}\n"
+
+        return geoJson
+
+
     }
 }
 
@@ -205,20 +216,8 @@ class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val ren
         var effect = effect.eval(env)
         //return render.eval(env, indent+1)
         var geoJson = ""
-        geoJson += tab(indent) + "{\n"
-        geoJson += tab(indent+1) + "\"type\": \"FeatureCollection\",\n"
-        geoJson += tab(indent+1) + "\"features\": [\n"
 
-        var render = render.eval(env, indent, mutableListOf(infname, tag))
-        geoJson+= render
-
-
-        geoJson += tab(indent+1) + "]\n"
-        geoJson += tab(indent) + "}\n"
-
-        return geoJson
-
-
+        return render.eval(env, indent, mutableListOf(infname, tag))
     }
 }
 class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rendercont: Rendercont, val effect: Effect) : Components {
@@ -227,7 +226,8 @@ class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rende
         var ref = ref.eval(env)
         var tag = tag.eval(env)
         var effect = effect.eval(env)
-        return rendercont.eval(env, indent+1, mutableListOf(contname, tag))
+
+        return rendercont.eval(env, indent, mutableListOf(contname, tag))
     }
 }
 class Statements(val stmts: Stmts) : Components {
@@ -341,7 +341,7 @@ class SeqRender(val render: Render, val render1: Render) : Render {
         var first = render.eval(env, indent+1, parent)
         var following = render1.eval(env, indent, parent)
         if(render1 !is EndRender){
-            return first + ",\n" + following
+            return first + tab(indent+1) +",\n" + following
         }
         else{
             return first
@@ -369,7 +369,14 @@ class EndRender : Render {
 
 class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : Rendercont {
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
-        return rendercont.eval(env, indent, parent) +"\n"+ rendercont1.eval(env, indent, parent)
+        var first = rendercont.eval(env, indent, parent)
+        var following = rendercont1.eval(env, indent, parent)
+        if(rendercont1 !is EndRendercont){
+            return first + tab(indent+1) +",\n" + following
+        }
+        else{
+            return first
+        }
     }
 }
 class RenderContStmts(val stmts: Stmts) : Rendercont {
