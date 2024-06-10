@@ -350,12 +350,14 @@ class RenderContStmts(val stmts: Stmts) : Rendercont {
     override fun eval(env: Environment): String {
         stmts.eval(env)
         return ""
+    }
 }
 class RenderContSpecs(val specs: Specs) : Rendercont {
     override fun eval(env: Environment): String {
         return specs.eval(env)
 
-}}
+    }
+}
 class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {
     override fun eval(env: Environment): String {
         return infrastructure.eval(env)
@@ -394,8 +396,7 @@ class SetLocation(val exp: Exp) : Commands {
 class Translate(val exp1: Exp, val exp2: Exp) : Commands {
     override fun eval(env: Environment) {
     }
-
-}}
+}
 class Rotate(val exp: Exp) : Commands {
     override fun eval(env: Environment) {
     }
