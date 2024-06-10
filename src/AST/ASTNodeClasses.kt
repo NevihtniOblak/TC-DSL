@@ -16,7 +16,7 @@ interface Predef {
 
 
 interface Arguments {
-    fun eval(): MutableMap<Int,String>
+    fun eval(index : Int): MutableMap<Int,String>
 }
 
 interface City {
@@ -127,18 +127,20 @@ class EndPredef : Predef {
 // Arguments
 
 class SeqArguments(val arguments1: Arguments, val arguments2: Arguments) : Arguments {
-    override fun eval(): MutableMap<Int,String>{
-        arguments1.eval().putAll(arguments2.eval())
-        return arguments1.eval()
+    override fun eval(index: Int): MutableMap<Int,String>{
+        var firstArg = arguments1.eval(index)
+        var restOfArgs = arguments2.eval(index+1)
+        firstArg.putAll(restOfArgs)
+        return firstArg
     }
 }
-class ArgumentsExp(val exp: Exp) : Arguments {
-    override fun eval(): MutableMap<Int,String> {
-        var argument = exp.eval()
+class ArgumentsExp(val argName: String) : Arguments {
+    override fun eval(index: Int): MutableMap<Int,String> {
+        return mutableMapOf(index to argName)
     }
 }
 class EndArguments : Arguments {
-    override fun eval(): MutableMap<Int,String> {
+    override fun eval(index: Int): MutableMap<Int,String> {
         return mutableMapOf()
     }
 }
@@ -577,3 +579,4 @@ class EndListitems : Listitems {
         return mutableListOf()
     }
 }
+

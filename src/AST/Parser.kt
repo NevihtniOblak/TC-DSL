@@ -127,11 +127,14 @@ class Parser(private val lexer: Lexer) {
     fun parseARGUMENTS(): Arguments {
         println("Recognizing ARGUMENTS")
 
-        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
-            var exp = parseEXP()
+        if(currentSymbol!!.symbol in setOf(/*Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING*/Symbol.VARIABLE)){
+            //var exp = parseEXP()
+            var argument1 = parseTerminal(Symbol.VARIABLE)
+            //
             var arguments = parseARGUMENTS2()
 
-            var res = SeqArguments(ArgumentsExp(exp), arguments)
+            //var res = SeqArguments(ArgumentsExp(exp), arguments)
+            var res = SeqArguments(ArgumentsExp(argument1), arguments)
 
             println("ARGUMENTS RETURN: "+res)
             return res
@@ -154,10 +157,13 @@ class Parser(private val lexer: Lexer) {
 
         if(currentSymbol!!.symbol in setOf(Symbol.COMMA)){
             var t1 = parseTerminal(Symbol.COMMA)
-            var exp = parseEXP()
+            //var exp = parseEXP()
+            var nextArgument = parseTerminal(Symbol.VARIABLE)
+            //
             var arguments = parseARGUMENTS2()
 
-            var res = SeqArguments(ArgumentsExp(exp), arguments)
+            //var res = SeqArguments(ArgumentsExp(exp), arguments)
+            var res = SeqArguments(ArgumentsExp(nextArgument), arguments)
 
             println("ARGUMENTS2 RETURN: "+res)
             return res
