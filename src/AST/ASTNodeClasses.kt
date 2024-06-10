@@ -514,8 +514,27 @@ class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: E
 class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
 
     override fun eval(env: Environment, indent: Int): String {
-        TODO("Not yet implemented")
-        return ""
+        var coordinates = polyargs.eval(env)
+        coordinates.add(coordinates[0])
+
+        var geoJson = ""
+        geoJson += tab(indent) + "{\n"
+        geoJson += tab(indent+1) + "\"type\": \"Feature\",\n"
+        geoJson += tab(indent+1) + "\"geometry\":{\n"
+        geoJson += tab(indent+2) + "\"type\": \"Polygon\",\n"
+        geoJson += tab(indent+2) + "\"coordinates\": [[\n"
+        geoJson += tab(indent+3)
+        geoJson += coordinates.joinToString(",\n${tab(indent+3)}") { "[${it.second}, ${it.first}]" }
+        geoJson += "\n"
+        geoJson += tab(indent+2) + "]]\n"
+        geoJson += tab(indent+1) + "},\n"
+        geoJson += tab(indent+1) + "\"properties\": {\n"
+        geoJson += tab(indent+2) + "\"Property\": \"value\"\n"
+        geoJson += tab(indent+1) + "}\n"
+        geoJson += tab(indent) + "}\n"
+
+
+        return geoJson
     }
 
 }
