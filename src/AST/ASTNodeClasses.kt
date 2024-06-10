@@ -107,7 +107,7 @@ class SeqPredef(val predef1: Predef, val predef2: Predef) : Predef {
             predef2.eval(environment)
         }
 }
-class Procedure(val name: String, arguments: Arguments, val components: Components) : Predef {
+class Procedure(val name: String, val params: Parameters, val components: Components) : Predef {
 
     override fun eval(environment: Environment): Unit {
         environment[EnvType.PROCEDURE]?.set(name, this)
@@ -149,7 +149,6 @@ class EndParameter : Parameters {
 }
 
 // Arguments
-
 class SeqArguments(val arguments1: Arguments, val arguments2: Arguments) : Arguments {
 
     override fun eval(env: Environment, index: Int): MutableMap<Int,Value>{
@@ -361,13 +360,32 @@ class Print(val exp: Exp) : Stmts {
         println(exp.eval(environment).value[0])
     }
 }
-class Call(val variable: String, val arguments: Arguments) : Stmts {
-    override fun eval(environment: Environment) {
-        var procedure = environment[EnvType.PROCEDURE]?.get(variable) as Procedure?: throw Exception("Procedure $variable not found")
+class Call(val variable: String, val args: Arguments) : Stmts {
+    override fun eval(env: Environment) {
+        var procedure = env[EnvType.PROCEDURE]?.get(variable) as Procedure?: throw Exception("Procedure $variable not found")
 
-        var arguments = procedure.arguments.eval(0)
+        var arguments = args.eval(env, 0)
+        var functionBody = procedure.components
+        var parameters = procedure.params.eval(0)
 
-        //procedure.eval(arguments, environment)
+        if (arguments.size != parameters.size) {
+            throw Exception("Mismatch in size of arguments and parameters")
+        }
+
+        val procedureEnv = mutableMapOf<EnvType, MutableMap<String, Any>>()
+        procedureEnv[EnvType.VARIABLE] = mutableMapOf()
+
+        for ((key, value) in arguments) {
+            val param = parameters[key]
+            if (param != null) {
+                procedureEnv[EnvType.VARIABLE]?.put(param, value)
+            } else {
+                throw Exception("Parameter not found for argument $key")
+            }
+        }
+
+        functionBody.eval(procedureEnv)
+
     }
 }
 class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Constructnames) : Stmts {

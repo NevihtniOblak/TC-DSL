@@ -110,7 +110,7 @@ class Parser(private val lexer: Lexer) {
         var name = parseTerminal(Symbol.VARIABLE)
         var v3 = parseTerminal(Symbol.LPAREN)
         //var arguments = parseARGUMENTS()
-        var parameters = parseARGUMENTS()
+        var parameters = parsePARAMETERS()
         //
         var v5 = parseTerminal(Symbol.RPAREN)
         var v6 = parseTerminal(Symbol.LCURLY)
