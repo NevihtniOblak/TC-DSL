@@ -60,11 +60,11 @@ interface Tag {
 }
 
 interface Render {
-    fun eval(env: Environment, indent: Int): String
+    fun eval(env: Environment, indent: Int, parent: String): String
 }
 
 interface Rendercont {
-    fun eval(env: Environment, indent: Int): String
+    fun eval(env: Environment, indent: Int, parent: String): String
 }
 
 interface Effect {
@@ -76,7 +76,7 @@ interface Commands {
 }
 
 interface Specs {
-    fun eval(env: Environment, indent: Int): String
+    fun eval(env: Environment, indent: Int, parent: String): String
 }
 
 interface Polyargs {
@@ -209,7 +209,7 @@ class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val ren
         geoJson += tab(indent+1) + "\"type\": \"FeatureCollection\",\n"
         geoJson += tab(indent+1) + "\"features\": [\n"
 
-        var render = render.eval(env, indent)
+        var render = render.eval(env, indent, infname)
         geoJson+= render
 
 
@@ -227,7 +227,7 @@ class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rende
         var ref = ref.eval(env)
         var tag = tag.eval(env)
         var effect = effect.eval(env)
-        return rendercont.eval(env, indent+1)
+        return rendercont.eval(env, indent+1, contname)
     }
 }
 class Statements(val stmts: Stmts) : Components {
@@ -238,7 +238,7 @@ class Statements(val stmts: Stmts) : Components {
 }
 class Specifications(val specs: Specs) : Components {
     override fun eval(env: Environment, indent: Int): String {
-        return specs.eval(env, indent+1)
+        return specs.eval(env, indent+1, "")
     }
 }
 class EndComponents : Components {
@@ -337,9 +337,9 @@ class EndTag : Tag {
 
 // Render
 class SeqRender(val render: Render, val render1: Render) : Render {
-    override fun eval(env: Environment, indent: Int): String {
-        var first = render.eval(env, indent+1)
-        var following = render1.eval(env, indent)
+    override fun eval(env: Environment, indent: Int, parent: String): String {
+        var first = render.eval(env, indent+1, parent)
+        var following = render1.eval(env, indent, parent)
         if(render1 !is EndRender){
             return first + ",\n" + following
         }
@@ -349,18 +349,18 @@ class SeqRender(val render: Render, val render1: Render) : Render {
     }
 }
 class RenderStmts(val stmts: Stmts) : Render {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
         stmts.eval(env)
         return ""
     }
 }
 class RenderSpecs(val specs: Specs) : Render {
-    override fun eval(env: Environment, indent: Int): String {
-        return specs.eval(env, indent+1)
+    override fun eval(env: Environment, indent: Int, parent: String): String {
+        return specs.eval(env, indent+1, parent)
     }
 }
 class EndRender : Render {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
         return ""
     }
 }
@@ -368,29 +368,29 @@ class EndRender : Render {
 // Rendercont
 
 class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : Rendercont {
-    override fun eval(env: Environment, indent: Int): String {
-        return rendercont.eval(env, indent) +"\n"+ rendercont1.eval(env, indent)
+    override fun eval(env: Environment, indent: Int, parent: String): String {
+        return rendercont.eval(env, indent, parent) +"\n"+ rendercont1.eval(env, indent, parent)
     }
 }
 class RenderContStmts(val stmts: Stmts) : Rendercont {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int,  parent: String): String {
         stmts.eval(env)
         return ""
     }
 }
 class RenderContSpecs(val specs: Specs) : Rendercont {
-    override fun eval(env: Environment, indent: Int): String {
-        return specs.eval(env, indent+1)
+    override fun eval(env: Environment, indent: Int, parent: String): String {
+        return specs.eval(env, indent+1, parent)
 
     }
 }
 class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
         return infrastructure.eval(env, indent+1)
     }
 }
 class EndRendercont : Rendercont {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
         return ""
     }
 
@@ -434,7 +434,9 @@ class SetMarker(val exp: Exp) : Commands {
 
 // Specs
 class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
+        var tag = tag.eval(env)
+
         var p1 = exp1.eval(env)
         var p2 = exp2.eval(env)
         if(p1.type != Type.POINT || p2.type != Type.POINT){
@@ -466,7 +468,12 @@ class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: 
         geoJson += tab(indent+2) + "]]\n"
         geoJson += tab(indent+1) + "},\n"
         geoJson += tab(indent+1) + "\"properties\": {\n"
-        geoJson += tab(indent+2) + "\"Property\": \"value\"\n"
+        if(tag != ""){
+            geoJson += tab(indent+2) + "\"tag\": $tag\n"
+        }
+        if(parent != ""){
+            geoJson += tab(indent+2) + "\"Type:\": \"$parent\"\n"
+        }
         geoJson += tab(indent+1) + "}\n"
         geoJson += tab(indent) + "}\n"
 
@@ -475,7 +482,8 @@ class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: 
     }
 }
 class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
+        var tag = tag.eval(env)
         var p1 = exp1.eval(env)
         var p2 = exp2.eval(env)
         if(p1.type != Type.POINT || p2.type != Type.POINT){
@@ -504,7 +512,12 @@ class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: E
         geoJson += tab(indent+2) + "]\n"
         geoJson += tab(indent+1) + "},\n"
         geoJson += tab(indent+1) + "\"properties\": {\n"
-        geoJson += tab(indent+2) + "\"Property\": \"value\"\n"
+        if(tag != ""){
+            geoJson += tab(indent+2) + "\"tag\": $tag\n"
+        }
+        if(parent != ""){
+            geoJson += tab(indent+2) + "\"Type:\": \"$parent\"\n"
+        }
         geoJson += tab(indent+1) + "}\n"
         geoJson += tab(indent) + "}\n"
 
@@ -513,7 +526,8 @@ class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: E
 }
 class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
 
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
+        var tag = tag.eval(env)
         var coordinates = polyargs.eval(env)
         coordinates.add(coordinates[0])
 
@@ -529,7 +543,12 @@ class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Ef
         geoJson += tab(indent+2) + "]]\n"
         geoJson += tab(indent+1) + "},\n"
         geoJson += tab(indent+1) + "\"properties\": {\n"
-        geoJson += tab(indent+2) + "\"Property\": \"value\"\n"
+        if(tag != ""){
+            geoJson += tab(indent+2) + "\"tag\": $tag\n"
+        }
+        if(parent != ""){
+            geoJson += tab(indent+2) + "\"Type:\": \"$parent\"\n"
+        }
         geoJson += tab(indent+1) + "}\n"
         geoJson += tab(indent) + "}\n"
 
@@ -539,13 +558,13 @@ class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Ef
 
 }
 class Circle(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
         TODO("Not yet implemented")
         return ""
     }
 }
 class CircleLine(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int): String {
+    override fun eval(env: Environment, indent: Int, parent: String): String {
         TODO("Not yet implemented")
         return ""
     }

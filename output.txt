@@ -14,7 +14,8 @@
 				]]
 			},
 			"properties": {
-				"Property": "value"
+				"tag": "Box1"
+				"Type:": "Building"
 			}
 		}
 ,
@@ -28,7 +29,7 @@
 				]
 			},
 			"properties": {
-				"Property": "value"
+				"Type:": "Building"
 			}
 		}
 ,
@@ -44,7 +45,7 @@
 				]]
 			},
 			"properties": {
-				"Property": "value"
+				"Type:": "Building"
 			}
 		}
 	]
