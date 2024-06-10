@@ -109,13 +109,15 @@ class Parser(private val lexer: Lexer) {
         var v1 = parseTerminal(Symbol.PROCEDURE)
         var name = parseTerminal(Symbol.VARIABLE)
         var v3 = parseTerminal(Symbol.LPAREN)
-        var arguments = parseARGUMENTS()
+        //var arguments = parseARGUMENTS()
+        var parameters = parseARGUMENTS()
+        //
         var v5 = parseTerminal(Symbol.RPAREN)
         var v6 = parseTerminal(Symbol.LCURLY)
         var components = parseCOMPONENTS()
         var v8 = parseTerminal(Symbol.RCURLY)
 
-        var res = Procedure(name,arguments, components)
+        var res = Procedure(name,parameters, components)
 
         println("POCEDURE return:" + res)
 
@@ -123,25 +125,83 @@ class Parser(private val lexer: Lexer) {
 
     }
 
+    //INH-PARAMETERS
+    fun parsePARAMETERS(): Parameters {
+        println("Recognizing PARAMETERS")
+
+        if(currentSymbol!!.symbol in setOf(Symbol.VARIABLE)){
+            //var exp = parseEXP()
+            var parameter = parseTerminal(Symbol.VARIABLE)
+            //
+            var nextParameter = parsePARAMETERS2()
+
+            //var res = SeqArguments(ArgumentsExp(exp), arguments)
+            var res = SeqParameters(Parameter(parameter), nextParameter)
+
+            println("PARAMETERS RETURN: "+res)
+            return res
+        }
+        else if (currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
+            //epsilon
+            var res = EndParameter()
+            println("PARAMETERS RETURN: "+ res)
+            return res
+        }
+        else{
+            println("PARAMETERS RETURN: " + "panic")
+            return panic()
+        }
+    }
+
+    //INH-ARGUMENTS
+    fun parsePARAMETERS2(): Parameters {
+        println("Recognizing PARAMETERS2")
+
+        if(currentSymbol!!.symbol in setOf(Symbol.COMMA)){
+            var t1 = parseTerminal(Symbol.COMMA)
+            //var exp = parseEXP()
+            var parameter = parseTerminal(Symbol.VARIABLE)
+            //
+            var nextParameter = parsePARAMETERS2()
+
+            //var res = SeqArguments(ArgumentsExp(exp), arguments)
+            var res = SeqParameters(Parameter(parameter), nextParameter)
+
+            println("ARGUMENTS2 RETURN: "+res)
+            return res
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
+            //epsilon
+            var res = EndParameter()
+
+            println("PARAMETERS2 RETURN: "+ res)
+            return res
+        }
+        else{
+            println( "PARAMETERS2 RETURN: " + "panic")
+            return panic()
+        }
+    }
+
+
     //INH-ARGUMENTS
     fun parseARGUMENTS(): Arguments {
         println("Recognizing ARGUMENTS")
 
-        if(currentSymbol!!.symbol in setOf(/*Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING*/Symbol.VARIABLE)){
-            //var exp = parseEXP()
-            var argument1 = parseTerminal(Symbol.VARIABLE)
-            //
+        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+            var exp = parseEXP()
             var arguments = parseARGUMENTS2()
 
             //var res = SeqArguments(ArgumentsExp(exp), arguments)
-            var res = SeqArguments(ArgumentsExp(argument1), arguments)
+            var res = SeqArguments(Argument(exp), arguments)
 
             println("ARGUMENTS RETURN: "+res)
             return res
         }
         else if (currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
             //epsilon
-            var res = EndArguments()
+            var res = EndArgument()
             println("ARGUMENTS RETURN: "+ res)
             return res
         }
@@ -157,13 +217,11 @@ class Parser(private val lexer: Lexer) {
 
         if(currentSymbol!!.symbol in setOf(Symbol.COMMA)){
             var t1 = parseTerminal(Symbol.COMMA)
-            //var exp = parseEXP()
-            var nextArgument = parseTerminal(Symbol.VARIABLE)
-            //
+            var exp = parseEXP()
+
             var arguments = parseARGUMENTS2()
 
-            //var res = SeqArguments(ArgumentsExp(exp), arguments)
-            var res = SeqArguments(ArgumentsExp(nextArgument), arguments)
+            var res = SeqArguments(Argument(exp), arguments)
 
             println("ARGUMENTS2 RETURN: "+res)
             return res
@@ -171,7 +229,7 @@ class Parser(private val lexer: Lexer) {
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.RPAREN)){
             //epsilon
-            var res = EndArguments()
+            var res = EndArgument()
 
             println("ARGUMENTS2 RETURN: "+ res)
             return res

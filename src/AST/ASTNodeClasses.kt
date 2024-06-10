@@ -16,7 +16,11 @@ interface Predef {
 
 
 interface Arguments {
-    fun eval(index : Int): MutableMap<Int,String>
+    fun eval(index : Int): MutableMap<Int,Value>
+}
+
+interface Parameters {
+    fun eval(index: Int): MutableMap<Int,String>
 }
 
 interface City {
@@ -103,7 +107,6 @@ class SeqPredef(val predef1: Predef, val predef2: Predef) : Predef {
             predef2.eval(environment)
         }
 }
-
 class Procedure(val name: String, arguments: Arguments, val components: Components) : Predef {
 
     override fun eval(environment: Environment): Unit {
@@ -126,7 +129,7 @@ class EndPredef : Predef {
 
 // Arguments
 
-class SeqArguments(val arguments1: Arguments, val arguments2: Arguments) : Arguments {
+class SeqParameters(val param1: Parameters, val param2: Parameters) : Parameters {
     override fun eval(index: Int): MutableMap<Int,String>{
         var firstArg = arguments1.eval(index)
         var restOfArgs = arguments2.eval(index+1)
@@ -134,19 +137,41 @@ class SeqArguments(val arguments1: Arguments, val arguments2: Arguments) : Argum
         return firstArg
     }
 }
-class ArgumentsExp(val argName: String) : Arguments {
+class Parameter(val argName: String) : Parameters {
     override fun eval(index: Int): MutableMap<Int,String> {
         return mutableMapOf(index to argName)
     }
 }
-class EndArguments : Arguments {
+class EndParameter : Parameters {
     override fun eval(index: Int): MutableMap<Int,String> {
         return mutableMapOf()
     }
 }
 
+// Arguments
+
+class SeqArguments(val arguments1: Arguments, val arguments2: Arguments) : Arguments {
+    override fun eval(index: Int): MutableMap<Int,Value>{
+
+    }
+}
+class Argument(val exp: Exp) : Arguments {
+    override fun eval(index: Int): MutableMap<Int,Value> {
+
+    }
+}
+class EndArgument : Arguments {
+    override fun eval(index: Int): MutableMap<Int,Value> {
+    }
+}
+
+
 // City
-class CityComponents(val components: Components) : City {}
+class CityComponents(val components: Components) : City {
+    override fun eval(env: Environment): String {
+        return components.eval(env)
+    }
+}
 
 // Components
 class SeqComponents(val components: Components, val components1: Components) : Components {}
@@ -333,8 +358,9 @@ class Print(val exp: Exp) : Stmts {
 }
 class Call(val variable: String, val arguments: Arguments) : Stmts {
     override fun eval(environment: Environment) {
-        var procedure = environment[EnvType.PROCEDURE]?.get(variable) ?: throw Exception("Procedure $variable not found")
-        procedure = procedure as Procedure
+        var procedure = environment[EnvType.PROCEDURE]?.get(variable) as Procedure?: throw Exception("Procedure $variable not found")
+
+        var arguments = procedure.arguments.eval(0)
 
         //procedure.eval(arguments, environment)
     }
