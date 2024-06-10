@@ -4,6 +4,14 @@ enum class EnvType {
     VARIABLE, PROCEDURE, SCHEMA
 }
 
+fun pointParse(point: Value): Pair<Double, Double> {
+    if(point.type != Type.POINT){
+        throw Exception("Type mismatch in pointParse function")
+    }
+    val coords = point.value[0].split(",")
+    return Pair(coords[0].toDouble(), coords[1].toDouble())
+}
+
 typealias Environment = MutableMap<EnvType, MutableMap<String, Any>>
 
 interface Program {
@@ -323,7 +331,38 @@ class Rotate(val exp: Exp) : Commands {}
 class SetMarker(val exp: Exp) : Commands {}
 
 // Specs
-class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {}
+class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
+    override fun eval(env: Environment): String {
+        var p1 = exp1.eval(env)
+        var p2 = exp2.eval(env)
+        if(p1.type != Type.POINT || p2.type != Type.POINT){
+            throw Exception("Type mismatch in Box operation")
+        }
+        var coord1 = pointParse(p1)
+        var coord2 = pointParse(p2)
+
+        val (x1, y1) = coord1
+        val (x2, y2) = coord2
+
+        val rectangleCoords = listOf(
+            listOf(x1, y1),
+            listOf(x1, y2),
+            listOf(x2, y2),
+            listOf(x2, y1),
+            listOf(x1, y1)  // Repeat the first point to close the polygon
+        )
+
+        val geoJson = mapOf(
+            "type" to "Feature",
+            "geometry" to mapOf(
+                "type" to "Polygon",
+                "coordinates" to listOf(rectangleCoords)
+            )
+        )
+
+        return geoJson.toString()
+    }
+}
 class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {}
 class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
 
