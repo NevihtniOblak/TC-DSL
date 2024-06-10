@@ -16,7 +16,7 @@ interface Predef {
 
 
 interface Arguments {
-    fun eval(index : Int): MutableMap<Int,Value>
+    fun eval(env: Environment, index : Int): MutableMap<Int,Value>
 }
 
 interface Parameters {
@@ -131,10 +131,10 @@ class EndPredef : Predef {
 
 class SeqParameters(val param1: Parameters, val param2: Parameters) : Parameters {
     override fun eval(index: Int): MutableMap<Int,String>{
-        var firstArg = arguments1.eval(index)
-        var restOfArgs = arguments2.eval(index+1)
-        firstArg.putAll(restOfArgs)
-        return firstArg
+        var firstParam = param1.eval(index)
+        var restOfParams = param2.eval(index+1)
+        firstParam.putAll(restOfParams)
+        return firstParam
     }
 }
 class Parameter(val argName: String) : Parameters {
@@ -151,17 +151,22 @@ class EndParameter : Parameters {
 // Arguments
 
 class SeqArguments(val arguments1: Arguments, val arguments2: Arguments) : Arguments {
-    override fun eval(index: Int): MutableMap<Int,Value>{
 
+    override fun eval(env: Environment, index: Int): MutableMap<Int,Value>{
+        var firstArg = arguments1.eval(env, index)
+        var restOfArgs = arguments2.eval(env,index+1)
+        firstArg.putAll(restOfArgs)
+        return firstArg
     }
 }
 class Argument(val exp: Exp) : Arguments {
-    override fun eval(index: Int): MutableMap<Int,Value> {
-
+    override fun eval(env: Environment, index: Int): MutableMap<Int,Value> {
+        return mutableMapOf(index to exp.eval(env))
     }
 }
 class EndArgument : Arguments {
-    override fun eval(index: Int): MutableMap<Int,Value> {
+    override fun eval(env: Environment, index: Int): MutableMap<Int,Value> {
+        return mutableMapOf()
     }
 }
 
