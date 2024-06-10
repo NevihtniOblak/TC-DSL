@@ -1,42 +1,39 @@
 
-procedure hello(string){
+procedure hello(){
+	print("Nice");
+}
 
-    Box: <"Gloryyy"> ((46.56364894040025, 15.64252794363085),(46.56370130074412, 15.642686846433039)){
-        setLocation((46.56377825076932, 15.642647527357997));
-        translate(-120.0,10.0);
-        rotate(300.0);
+City: "Maribor" (
+
+	var array = ["hisa1","hisa2","hisa3","hisa4","hisa5"];
+
+	print("Array before");
+
+	for(var i = 0; 4){
+		print(array[i]);
+	}
+
+    var length = 5;
+    for(var i = 0; (length//2)){
+        var temp = array[i];
+        array[i]=array[length-1-i];
+        array[length-1-i]=temp;
+        print("1 operation");
+        for(var i = 0; 4){
+
+            print(array[i]);
+        }
+
 
     }
 
-}
+	print("Array after");
 
-City: "Maribor"(
+	for(var i = 0; 4){
+		print(array[i]);
+	}
 
-    Park:<"Parkh">(
-
-
-        var v = (45,21);
-        var list = ["jpsdj","asd"];
-        list[0]="asdasd";
-
-        for(var i = 0; 1){
-            print(list[i]);
-        }
-
-        call hello("Hello World");
-
-        Box:((46.56612782258697, 15.644959003181171),v){}
-
-        Building<"nekaj">:<"Lepo"> (
-
-            call hello("f");
-
-            Line:<"linija"> ((46.5642234071271, 15.63800843958539),(46.56308629762382, 15.643182372187036),0,0){}
-
-            Polygon:((46.56559320159382, 15.640207656204904),(46.56636233672396, 15.64082113483959),(46.565487756301025, 15.641669182311363)){}
-        ){}
-
-    ){}
+	call hello();
 
 
 )

@@ -693,14 +693,20 @@ class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components
         var itertorValue = exp1.eval(environment).value[0].toDouble().toInt()
         var end = exp2.eval(environment).value[0].toDouble().toInt()
 
+        var res = components
+        var subres = ""
 
         for(i in itertorValue..end){
             environment[EnvType.VARIABLE]?.set(variable, Value(Type.REAL, mutableListOf((i).toString())))
 
-            components.eval(environment, 0)
+            subres += components.eval(environment, 0)
+            if(i != end && subres != ""){
+                subres += ",\n"
+            }
+            //res = SeqComponents(res, components)
         }
 
-        return ""
+        return subres
 
     }
 }
@@ -718,6 +724,9 @@ class Call(val variable: String, val args: Arguments) : Stmts {
         var functionBody = procedure.components
         var parameters = procedure.params.eval(0)
 
+        println("Arguments size: ${arguments.size}")
+        println("Parameters size: ${parameters.size}")
+        println(arguments)
         if (arguments.size != parameters.size) {
             throw Exception("Mismatch in size of arguments and parameters")
         }
@@ -735,7 +744,7 @@ class Call(val variable: String, val args: Arguments) : Stmts {
         }
 
         var res = functionBody.eval(procedureEnv, 0)
-        println("Result of call: $res")
+        //println("Result of call: $res")
         return res
 
     }
