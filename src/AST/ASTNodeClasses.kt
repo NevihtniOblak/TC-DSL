@@ -205,7 +205,22 @@ class CityComponents(val components: Components) : City {
 // Components
 class SeqComponents(val components1: Components, val components2: Components) : Components {
     override fun eval(env: Environment, indent: Int): String {
-        return components1.eval(env, indent) + components2.eval(env, indent)
+        //return components1.eval(env, indent) +",\n"+ components2.eval(env, indent)
+        var first = components1.eval(env, indent)
+        var following = components2.eval(env, indent)
+
+        if(first != "" && following != ""){
+            return first + tab(indent+1) +",\n" + following
+        }
+        else if(first != ""){
+            return first
+        }
+        else if(following != ""){
+            return following
+        }
+        else{
+            return ""
+        }
     }
 }
 class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {
@@ -340,11 +355,17 @@ class SeqRender(val render: Render, val render1: Render) : Render {
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var first = render.eval(env, indent+1, parent)
         var following = render1.eval(env, indent, parent)
-        if(render1 !is EndRender){
+        if(first != "" && following != ""){
             return first + tab(indent+1) +",\n" + following
         }
-        else{
+        else if(first != ""){
             return first
+        }
+        else if(following != ""){
+            return following
+        }
+        else{
+            return ""
         }
     }
 }
@@ -371,11 +392,17 @@ class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : R
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var first = rendercont.eval(env, indent, parent)
         var following = rendercont1.eval(env, indent, parent)
-        if(rendercont1 !is EndRendercont){
+        if(first != "" && following != ""){
             return first + tab(indent+1) +",\n" + following
         }
-        else{
+        else if(first != ""){
             return first
+        }
+        else if(following != ""){
+            return following
+        }
+        else{
+            return ""
         }
     }
 }
