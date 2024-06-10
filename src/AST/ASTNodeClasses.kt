@@ -60,11 +60,11 @@ interface Tag {
 }
 
 interface Render {
-    fun eval(env: Environment, indent: Int, parent: String): String
+    fun eval(env: Environment, indent: Int, parent: MutableList<String>): String
 }
 
 interface Rendercont {
-    fun eval(env: Environment, indent: Int, parent: String): String
+    fun eval(env: Environment, indent: Int, parent: MutableList<String>): String
 }
 
 interface Effect {
@@ -76,7 +76,7 @@ interface Commands {
 }
 
 interface Specs {
-    fun eval(env: Environment, indent: Int, parent: String): String
+    fun eval(env: Environment, indent: Int, parent: MutableList<String>): String
 }
 
 interface Polyargs {
@@ -209,7 +209,7 @@ class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val ren
         geoJson += tab(indent+1) + "\"type\": \"FeatureCollection\",\n"
         geoJson += tab(indent+1) + "\"features\": [\n"
 
-        var render = render.eval(env, indent, infname)
+        var render = render.eval(env, indent, mutableListOf(infname, tag))
         geoJson+= render
 
 
@@ -227,7 +227,7 @@ class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rende
         var ref = ref.eval(env)
         var tag = tag.eval(env)
         var effect = effect.eval(env)
-        return rendercont.eval(env, indent+1, contname)
+        return rendercont.eval(env, indent+1, mutableListOf(contname, tag))
     }
 }
 class Statements(val stmts: Stmts) : Components {
@@ -238,7 +238,7 @@ class Statements(val stmts: Stmts) : Components {
 }
 class Specifications(val specs: Specs) : Components {
     override fun eval(env: Environment, indent: Int): String {
-        return specs.eval(env, indent+1, "")
+        return specs.eval(env, indent+1, mutableListOf("",""))
     }
 }
 class EndComponents : Components {
@@ -337,7 +337,7 @@ class EndTag : Tag {
 
 // Render
 class SeqRender(val render: Render, val render1: Render) : Render {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var first = render.eval(env, indent+1, parent)
         var following = render1.eval(env, indent, parent)
         if(render1 !is EndRender){
@@ -349,18 +349,18 @@ class SeqRender(val render: Render, val render1: Render) : Render {
     }
 }
 class RenderStmts(val stmts: Stmts) : Render {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         stmts.eval(env)
         return ""
     }
 }
 class RenderSpecs(val specs: Specs) : Render {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         return specs.eval(env, indent+1, parent)
     }
 }
 class EndRender : Render {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         return ""
     }
 }
@@ -368,29 +368,29 @@ class EndRender : Render {
 // Rendercont
 
 class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : Rendercont {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         return rendercont.eval(env, indent, parent) +"\n"+ rendercont1.eval(env, indent, parent)
     }
 }
 class RenderContStmts(val stmts: Stmts) : Rendercont {
-    override fun eval(env: Environment, indent: Int,  parent: String): String {
+    override fun eval(env: Environment, indent: Int,  parent: MutableList<String>): String {
         stmts.eval(env)
         return ""
     }
 }
 class RenderContSpecs(val specs: Specs) : Rendercont {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         return specs.eval(env, indent+1, parent)
 
     }
 }
 class RenderContInfra(val infrastructure: Infrastructure) : Rendercont {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         return infrastructure.eval(env, indent+1)
     }
 }
 class EndRendercont : Rendercont {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         return ""
     }
 
@@ -434,7 +434,7 @@ class SetMarker(val exp: Exp) : Commands {
 
 // Specs
 class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var tag = tag.eval(env)
 
         var p1 = exp1.eval(env)
@@ -469,10 +469,22 @@ class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: 
         geoJson += tab(indent+1) + "},\n"
         geoJson += tab(indent+1) + "\"properties\": {\n"
         if(tag != ""){
-            geoJson += tab(indent+2) + "\"tag\": $tag\n"
+            geoJson += tab(indent+2) + "\"tag\": $tag,\n"
         }
-        if(parent != ""){
-            geoJson += tab(indent+2) + "\"Type:\": \"$parent\"\n"
+        else{
+            geoJson += tab(indent+2) + "\"tag\": \"\",\n"
+        }
+        if(parent[0]!=""){
+            geoJson += tab(indent+2) + "\"Parent type\": \"${parent[0]}\",\n"
+        }
+        else{
+            geoJson += tab(indent+2) + "\"Parent type\": \"\",\n"
+        }
+        if(parent[1]!=""){
+            geoJson += tab(indent+2) + "\"Parent tag\": ${parent[1]}\n"
+        }
+        else{
+            geoJson += tab(indent+2) + "\"Parent tag\": \"\"\n"
         }
         geoJson += tab(indent+1) + "}\n"
         geoJson += tab(indent) + "}\n"
@@ -482,7 +494,7 @@ class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: 
     }
 }
 class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var tag = tag.eval(env)
         var p1 = exp1.eval(env)
         var p2 = exp2.eval(env)
@@ -512,12 +524,27 @@ class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: E
         geoJson += tab(indent+2) + "]\n"
         geoJson += tab(indent+1) + "},\n"
         geoJson += tab(indent+1) + "\"properties\": {\n"
+
         if(tag != ""){
-            geoJson += tab(indent+2) + "\"tag\": $tag\n"
+            geoJson += tab(indent+2) + "\"tag\": $tag,\n"
         }
-        if(parent != ""){
-            geoJson += tab(indent+2) + "\"Type:\": \"$parent\"\n"
+        else{
+            geoJson += tab(indent+2) + "\"tag\": \"\",\n"
         }
+        if(parent[0]!=""){
+            geoJson += tab(indent+2) + "\"Parent type\": \"${parent[0]}\",\n"
+        }
+        else{
+            geoJson += tab(indent+2) + "\"Parent type\": \"\",\n"
+        }
+        if(parent[1]!=""){
+            geoJson += tab(indent+2) + "\"Parent tag\": ${parent[1]}\n"
+        }
+        else{
+            geoJson += tab(indent+2) + "\"Parent tag\": \"\"\n"
+        }
+
+
         geoJson += tab(indent+1) + "}\n"
         geoJson += tab(indent) + "}\n"
 
@@ -526,7 +553,7 @@ class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: E
 }
 class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
 
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var tag = tag.eval(env)
         var coordinates = polyargs.eval(env)
         coordinates.add(coordinates[0])
@@ -544,10 +571,22 @@ class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Ef
         geoJson += tab(indent+1) + "},\n"
         geoJson += tab(indent+1) + "\"properties\": {\n"
         if(tag != ""){
-            geoJson += tab(indent+2) + "\"tag\": $tag\n"
+            geoJson += tab(indent+2) + "\"tag\": $tag,\n"
         }
-        if(parent != ""){
-            geoJson += tab(indent+2) + "\"Type:\": \"$parent\"\n"
+        else{
+            geoJson += tab(indent+2) + "\"tag\": \"\",\n"
+        }
+        if(parent[0]!=""){
+            geoJson += tab(indent+2) + "\"Parent type\": \"${parent[0]}\",\n"
+        }
+        else{
+            geoJson += tab(indent+2) + "\"Parent type\": \"\",\n"
+        }
+        if(parent[1]!=""){
+            geoJson += tab(indent+2) + "\"Parent tag\": ${parent[1]}\n"
+        }
+        else{
+            geoJson += tab(indent+2) + "\"Parent tag\": \"\"\n"
         }
         geoJson += tab(indent+1) + "}\n"
         geoJson += tab(indent) + "}\n"
@@ -558,13 +597,13 @@ class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Ef
 
 }
 class Circle(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         TODO("Not yet implemented")
         return ""
     }
 }
 class CircleLine(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {
-    override fun eval(env: Environment, indent: Int, parent: String): String {
+    override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         TODO("Not yet implemented")
         return ""
     }

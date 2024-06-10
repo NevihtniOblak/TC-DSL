@@ -14,8 +14,9 @@
 				]]
 			},
 			"properties": {
-				"tag": "Box1"
-				"Type:": "Building"
+				"tag": "Box1",
+				"Parent type": "Building",
+				"Parent tag": "Lepo"
 			}
 		}
 ,
@@ -29,7 +30,9 @@
 				]
 			},
 			"properties": {
-				"Type:": "Building"
+				"tag": "",
+				"Parent type": "Building",
+				"Parent tag": "Lepo"
 			}
 		}
 ,
@@ -45,7 +48,9 @@
 				]]
 			},
 			"properties": {
-				"Type:": "Building"
+				"tag": "",
+				"Parent type": "Building",
+				"Parent tag": "Lepo"
 			}
 		}
 	]
