@@ -84,7 +84,7 @@ interface Polyargs {
 }
 
 interface Stmts {
-    fun eval(env: Environment): Unit
+    fun eval(env: Environment): String
 }
 
 interface Constructnames {
@@ -371,8 +371,8 @@ class SeqRender(val render: Render, val render1: Render) : Render {
 }
 class RenderStmts(val stmts: Stmts) : Render {
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
-        stmts.eval(env)
-        return ""
+        var res = stmts.eval(env)
+        return res
     }
 }
 class RenderSpecs(val specs: Specs) : Render {
@@ -408,8 +408,8 @@ class SeqRendercont(val rendercont: Rendercont, val rendercont1: Rendercont) : R
 }
 class RenderContStmts(val stmts: Stmts) : Rendercont {
     override fun eval(env: Environment, indent: Int,  parent: MutableList<String>): String {
-        stmts.eval(env)
-        return ""
+        var res = stmts.eval(env)
+        return res
     }
 }
 class RenderContSpecs(val specs: Specs) : Rendercont {
@@ -672,21 +672,24 @@ class EndPolyargs : Polyargs {
 
 // Stmts
 class Define(val variable: String, val data: Data) : Stmts {
-    override fun eval( environment: Environment) {
+    override fun eval( environment: Environment): String {
         environment[EnvType.VARIABLE]?.set(variable, data.eval(environment))
+        return ""
     }
 }
 class Assign(val variable: String, val exp: Data) : Stmts {
 
-    override fun eval(environment: Environment) {
+    override fun eval(environment: Environment): String {
         if(environment[EnvType.VARIABLE]?.get(variable) == null){
             throw Exception("Variable $variable not found")
         }
         environment[EnvType.VARIABLE]?.set(variable, exp.eval(environment))
+
+        return ""
     }
 }
 class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components: Components) : Stmts {
-    override fun eval(environment: Environment) {
+    override fun eval(environment: Environment): String {
         var itertorValue = exp1.eval(environment).value[0].toDouble().toInt()
         var end = exp2.eval(environment).value[0].toDouble().toInt()
 
@@ -697,15 +700,18 @@ class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components
             components.eval(environment, 0)
         }
 
+        return ""
+
     }
 }
 class Print(val exp: Exp) : Stmts {
-    override fun eval(environment: Environment) {
+    override fun eval(environment: Environment): String {
         println(exp.eval(environment).value[0])
+        return ""
     }
 }
 class Call(val variable: String, val args: Arguments) : Stmts {
-    override fun eval(env: Environment) {
+    override fun eval(env: Environment): String {
         var procedure = env[EnvType.PROCEDURE]?.get(variable) as Procedure?: throw Exception("Procedure $variable not found")
 
         var arguments = args.eval(env, 0)
@@ -728,12 +734,14 @@ class Call(val variable: String, val args: Arguments) : Stmts {
             }
         }
 
-        functionBody.eval(procedureEnv, 0)
+        var res = functionBody.eval(procedureEnv, 0)
+        println("Result of call: $res")
+        return res
 
     }
 }
 class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Constructnames) : Stmts {
-    override fun eval(environment: Environment) {
+    override fun eval(environment: Environment): String {
         var value1 = exp1.eval(environment)
         if(value1.type != Type.POINT){
             throw Exception("Type mismatch in DisplayMarkers operation")
@@ -745,11 +753,12 @@ class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Construct
         var constructName = constructnames.eval()
 
         //TODO
+        return ""
 
     }
 }
 class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts {
-    override fun eval(environment: Environment) {
+    override fun eval(environment: Environment) : String{
         var index = exp1.eval(environment)
         var listItem = environment[EnvType.VARIABLE]?.get(variable)?: throw Exception("Listitem at $variable not found")
         listItem = listItem as Value
@@ -759,6 +768,8 @@ class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts
         }
 
         listItem.value[index.value[0].toDouble().toInt()] = exp2.eval(environment).value[0]
+
+        return ""
     }
 
 }
