@@ -67,7 +67,9 @@ interface Specs {
     fun eval(env: Environment): String
 }
 
-interface Polyargs {}
+interface Polyargs {
+    fun eval(env: Environment): MutableList<Pair<Double,Double>>
+}
 
 interface Stmts {
     fun eval(env: Environment): Unit
@@ -178,8 +180,13 @@ class CityComponents(val components: Components) : City {
 }
 
 // Components
-class SeqComponents(val components: Components, val components1: Components) : Components {}
-class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {}
+class SeqComponents(val components1: Components, val components2: Components) : Components {
+    override fun eval(env: Environment): String {
+        return components1.eval(env) + components2.eval(env)
+    }
+}
+class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {
+}
 class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rendercont: Rendercont, val effect: Effect) : Components {}
 class Statements(val stmts: Stmts) : Components {}
 class Specifications(val specs: Specs) : Components {}
@@ -318,14 +325,42 @@ class SetMarker(val exp: Exp) : Commands {}
 // Specs
 class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {}
 class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {}
-class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {}
+class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
+
+    override fun eval(env: Environment): String {
+        var points = polyargs.eval(env)
+    }
+
+}}
 class Circle(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {}
 class CircleLine(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {}
 
 // Polyargs
-class SeqPolyargs(val polyargs: Polyargs, val polyargs1: Polyargs) : Polyargs {}
-class PolyargsExp(val exp: Exp) : Polyargs {}
-class EndPolyargs : Polyargs {}
+class SeqPolyargs(val polyargs: Polyargs, val restOfPolyargs: Polyargs) : Polyargs {
+    override fun eval(env: Environment): MutableList<Pair<Double, Double>> {
+        var first = polyargs.eval(env)
+        var rest = restOfPolyargs.eval(env)
+        first.addAll(rest)
+        return first
+    }
+}
+class PolyargsExp(val exp: Exp) : Polyargs {
+
+    override fun eval(env: Environment): MutableList<Pair<Double, Double>> {
+        var value = exp.eval(env)
+        if(value.type != Type.POINT){
+            throw Exception("Type mismatch in Polyargs operation")
+        }
+        var coords = value.value[0].split(",")
+        return mutableListOf(Pair(coords[0].toDouble(), coords[1].toDouble()))
+    }
+}
+class EndPolyargs : Polyargs {
+    override fun eval(env: Environment): MutableList<Pair<Double, Double>> {
+        return mutableListOf()
+    }
+
+}
 
 // Stmts
 class Define(val variable: String, val data: Data) : Stmts {
@@ -567,7 +602,7 @@ class Point(val exp1: Exp, val exp2: Exp) : Exp {
         if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
             throw Exception("Type mismatch in Point operation")
         }
-        var res = "("+value1.value[0]+","+value2.value[0]+")"
+        var res = value1.value[0]+","+value2.value[0]
         return Value(Type.POINT, mutableListOf(res))
     }
 }
