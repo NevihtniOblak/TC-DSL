@@ -1,3 +1,5 @@
+import AST.EnvType
+import AST.Environment
 import AST.Parser
 import LexAnalysis.ForForeachFFFAutomaton
 import LexAnalysis.Lexer
@@ -14,7 +16,15 @@ fun main(args: Array<String>) {
 
     //val result = Recognizer(Lexer(ForForeachFFFAutomaton,  input.byteInputStream())).recognizeStart()
 
-    val result = Parser(Lexer(ForForeachFFFAutomaton,  input.byteInputStream())).parseStart()
+    val AST = Parser(Lexer(ForForeachFFFAutomaton,  input.byteInputStream())).parseStart()
+
+    val environment: Environment = mutableMapOf(
+        EnvType.VARIABLE to mutableMapOf(),
+        EnvType.PROCEDURE to mutableMapOf(),
+        EnvType.SCHEMA to mutableMapOf()
+    )
+
+    outputFile.writeText(AST.eval(environment))
 
     /*
     if(result){
