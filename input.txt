@@ -1,10 +1,24 @@
 
+procedure hello(string){
+    print(string);
+    var i = 300-100*-1;
+    print(i);
+}
+
 City: "Maribor"(
 
     Park:<"Parkh">(
 
 
         var v = (45,21);
+        var list = ["jpsdj","asd"];
+        list[0]="asdasd";
+
+        for(var i = 0; 1){
+            print(list[i]);
+        }
+
+        call hello("Hello World");
 
         Box:((46.56612782258697, 15.644959003181171),v){}
 

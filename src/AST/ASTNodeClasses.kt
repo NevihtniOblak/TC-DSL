@@ -687,15 +687,16 @@ class Assign(val variable: String, val exp: Data) : Stmts {
 }
 class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components: Components) : Stmts {
     override fun eval(environment: Environment) {
-        var itertorValue = exp1.eval(environment).value[0].toInt()
+        var itertorValue = exp1.eval(environment).value[0].toDouble().toInt()
+        var end = exp2.eval(environment).value[0].toDouble().toInt()
 
-        var end = exp2.eval(environment).value[0].toInt()
 
         for(i in itertorValue..end){
             environment[EnvType.VARIABLE]?.set(variable, Value(Type.REAL, mutableListOf((i).toString())))
 
             components.eval(environment, 0)
         }
+
     }
 }
 class Print(val exp: Exp) : Stmts {
@@ -757,7 +758,7 @@ class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts
             throw Exception("Type mismatch in ListItemAssign operation")
         }
 
-        listItem.value[index.value[0].toInt()] = exp2.eval(environment).value[0]
+        listItem.value[index.value[0].toDouble().toInt()] = exp2.eval(environment).value[0]
     }
 
 }
@@ -838,7 +839,7 @@ class IntegerDivides(val exp1: Exp, val exp2: Exp) : Exp {
         if(!(value1.type == Type.REAL && value2.type == Type.REAL)){
             throw Exception("Type mismatch in IntegerDivides operation")
         }
-        var res = value1.value[0].toInt() / value2.value[0].toInt()
+        var res = value1.value[0].toDouble().toInt() / value2.value[0].toDouble().toInt()
 
         return Value(Type.REAL, mutableListOf(res.toString()))
     }
@@ -931,7 +932,7 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
             throw Exception("Type mismatch in ListIndex operation")
         }
 
-        var resValue = listItem.value[index.value[0].toInt()]
+        var resValue = listItem.value[index.value[0].toDouble().toInt()]
         var resType = listItem.type
 
         return Value(resType, mutableListOf(resValue))
