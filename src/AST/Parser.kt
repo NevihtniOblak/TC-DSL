@@ -107,7 +107,7 @@ class Parser(private val lexer: Lexer) {
     fun parsePROCEDURE(): Predef {
         println( "Recognizing PROCEDURE")
         var v1 = parseTerminal(Symbol.PROCEDURE)
-        var v2 = parseTerminal(Symbol.VARIABLE)
+        var name = parseTerminal(Symbol.VARIABLE)
         var v3 = parseTerminal(Symbol.LPAREN)
         var arguments = parseARGUMENTS()
         var v5 = parseTerminal(Symbol.RPAREN)
@@ -115,7 +115,7 @@ class Parser(private val lexer: Lexer) {
         var components = parseCOMPONENTS()
         var v8 = parseTerminal(Symbol.RCURLY)
 
-        var res = Procedure(arguments, components)
+        var res = Procedure(name,arguments, components)
 
         println("POCEDURE return:" + res)
 

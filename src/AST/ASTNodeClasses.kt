@@ -7,15 +7,17 @@ enum class EnvType {
 typealias Environment = MutableMap<EnvType, MutableMap<String, Any>>
 
 interface Program {
-    fun eval(): String
+    fun eval(environment: Environment): String
 }
 
 interface Predef {
-    fun eval(): MutableList<Any>
+    fun eval(environment: Environment): Unit
 }
 
 
-interface Arguments {}
+interface Arguments {
+    fun eval(environment: Environment): Unit
+}
 
 interface City {
     fun eval(env: Environment): String
@@ -86,27 +88,39 @@ interface Listitems {
 }
 
 class Start(val predef: Predef, val city: City) : Program {
-    override fun eval(): String {
-        val predefined = predef.eval()
 
-        return city.eval(predefined)
+    override fun eval(environment: Environment): String {
+        predef.eval(environment)
+        return city.eval(environment)
     }
 }
 
 // Predef
-class SeqPredef(val predef: Predef, val predef1: Predef) : Predef {
+class SeqPredef(val predef1: Predef, val predef2: Predef) : Predef {
 
+        override fun eval(environment: Environment) {
+            predef1.eval(environment)
+            predef2.eval(environment)
+        }
 }
-class Procedure(val arguments: Arguments, val components: Components) : Predef {
 
-    override fun eval(): Environment {
+class Procedure(val name: String, arguments: Arguments, val components: Components) : Predef {
 
+    override fun eval(environment: Environment): Unit {
+        environment[EnvType.PROCEDURE]?.set(name, this)
     }
 }
 class Schema(val infrastructure: Infrastructure) : Predef {
 
+    override fun eval(environment: Environment) {
+        val tag = infrastructure.tag.eval(environment)
+        environment[EnvType.SCHEMA]?.set(tag, this)
+    }
 }
 class EndPredef : Predef {
+
+        override fun eval(environment: Environment) {
+        }
 
 }
 
@@ -185,7 +199,7 @@ class Park() : Contnames {
 // Ref
 class Reffrence(val exp: Exp) : Ref {
 
-    override fun eval(environment: MutableMap<String, Value>): String {
+    override fun eval(environment: Environment): String {
         var value = exp.eval(environment)
         if(value.type != Type.STRING){
             throw Exception("Type mismatch in Ref operation")
@@ -194,14 +208,14 @@ class Reffrence(val exp: Exp) : Ref {
     }
 }
 class EndRef : Ref {
-    override fun eval(environment: MutableMap<String, Value>): String {
+    override fun eval(environment: Environment): String {
         return ""
     }
 }
 
 // Tag
 class TagExp(val exp: Exp) : Tag {
-    override fun eval(environment: MutableMap<String, Value>): String {
+    override fun eval(environment: Environment): String {
         var value = exp.eval(environment)
         if (value.type != Type.STRING) {
             throw Exception("Type mismatch in Ref operation")
@@ -210,7 +224,7 @@ class TagExp(val exp: Exp) : Tag {
     }
 }
 class EndTag : Tag {
-    override fun eval(environment: MutableMap<String, Value>): String {
+    override fun eval(environment: Environment): String {
         return ""
     }
 }
@@ -271,45 +285,47 @@ class EndPolyargs : Polyargs {}
 
 // Stmts
 class Define(val variable: String, val data: Data) : Stmts {
-    override fun eval( environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
-        environment[variable] = data.eval(environment)
+    override fun eval( environment: Environment) {
+        environment[EnvType.VARIABLE]?.set(variable, data.eval(environment))
     }
 }
 class Assign(val variable: String, val exp: Data) : Stmts {
 
-    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
-        if(environment[variable] == null){
+    override fun eval(environment: Environment) {
+        if(environment[EnvType.VARIABLE]?.get(variable) == null){
             throw Exception("Variable $variable not found")
         }
-        environment[variable] = exp.eval(environment)
+        environment[EnvType.VARIABLE]?.set(variable, exp.eval(environment))
     }
 }
 class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components: Components) : Stmts {
-    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+    override fun eval(environment: Environment) {
         var itertorValue = exp1.eval(environment).value[0].toInt()
-        environment[variable] = Value(Type.REAL, mutableListOf(itertorValue.toString()))
 
         var end = exp2.eval(environment).value[0].toInt()
-        for(i in itertorValue..end){
-            environment[variable] = Value(Type.REAL, mutableListOf(i.toString()))
 
-            components.eval(environment, procedures)
+        for(i in itertorValue..end){
+            environment[EnvType.VARIABLE]?.set(variable, Value(Type.REAL, mutableListOf((i).toString())))
+
+            components.eval(environment)
         }
     }
 }
 class Print(val exp: Exp) : Stmts {
-    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+    override fun eval(environment: Environment) {
         println(exp.eval(environment).value[0])
     }
 }
 class Call(val variable: String, val arguments: Arguments) : Stmts {
-    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
-        var procedure = procedures[variable] ?: throw Exception("Procedure $variable not found")
-        procedure.eval(arguments, environment)
+    override fun eval(environment: Environment) {
+        var procedure = environment[EnvType.PROCEDURE]?.get(variable) ?: throw Exception("Procedure $variable not found")
+        procedure = procedure as Procedure
+
+        //procedure.eval(arguments, environment)
     }
 }
 class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Constructnames) : Stmts {
-    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+    override fun eval(environment: Environment) {
         var value1 = exp1.eval(environment)
         if(value1.type != Type.POINT){
             throw Exception("Type mismatch in DisplayMarkers operation")
@@ -325,9 +341,10 @@ class DisplayMarkers(val exp1: Exp, val exp2: Exp, val constructnames: Construct
     }
 }
 class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts {
-    override fun eval(environment: MutableMap<String, Value>, procedures: MutableMap<String, Procedure>) {
+    override fun eval(environment: Environment) {
         var index = exp1.eval(environment)
-        var listItem = environment[variable] ?: throw Exception("Listitem at $variable not found")
+        var listItem = environment[EnvType.VARIABLE]?.get(variable)?: throw Exception("Listitem at $variable not found")
+        listItem = listItem as Value
 
         if(listItem.type != Type.LIST){
             throw Exception("Type mismatch in ListItemAssign operation")
