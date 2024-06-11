@@ -230,7 +230,6 @@ class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val ren
         var tag = tag.eval(env)
         var effect = effect.eval(env)
         //return render.eval(env, indent+1)
-        var geoJson = ""
 
         return render.eval(env, indent, mutableListOf(infname, tag))
     }
@@ -247,8 +246,7 @@ class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rende
 }
 class Statements(val stmts: Stmts) : Components {
     override fun eval(env: Environment, indent: Int): String {
-        stmts.eval(env)
-        return ""
+        return stmts.eval(env)
     }
 }
 class Specifications(val specs: Specs) : Components {
@@ -701,7 +699,7 @@ class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components
 
             subres += components.eval(environment, 0)
             if(i != end && subres != ""){
-                subres += ",\n"
+                subres += tab(2)+",\n"
             }
             //res = SeqComponents(res, components)
         }
@@ -733,6 +731,12 @@ class Call(val variable: String, val args: Arguments) : Stmts {
 
         val procedureEnv = mutableMapOf<EnvType, MutableMap<String, Any>>()
         procedureEnv[EnvType.VARIABLE] = mutableMapOf()
+
+        //cool
+        procedureEnv.computeIfAbsent(EnvType.PROCEDURE) { mutableMapOf() }
+        procedureEnv[EnvType.PROCEDURE]?.putAll(env[EnvType.PROCEDURE] ?: emptyMap())
+        //println(env[EnvType.PROCEDURE])
+
 
         for ((key, value) in arguments) {
             val param = parameters[key]

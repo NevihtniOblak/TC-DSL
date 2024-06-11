@@ -1,52 +1,5 @@
 {
 	"type": "FeatureCollection",
 	"features": [
-	{
-		"type": "Feature",
-		"geometry":{
-			"type": "LineString",
-			"coordinates": [
-				[15.659695854273087, 46.5554851467403],
-				[15.666360049362842, 46.556145157713246]
-			]
-		},
-		"properties": {
-			"tag": "",
-			"Parent type": "",
-			"Parent tag": ""
-		}
-	}
-	,
-		{
-			"type": "Feature",
-			"geometry":{
-				"type": "LineString",
-				"coordinates": [
-					[15.66137203443767, 46.55473252655585],
-					[15.664032462201792, 46.55504758064567]
-				]
-			},
-			"properties": {
-				"tag": "upper",
-				"Parent type": "Road",
-				"Parent tag": "Zrkovska cesta"
-			}
-		}
-	,
-		{
-			"type": "Feature",
-			"geometry":{
-				"type": "LineString",
-				"coordinates": [
-					[15.66137203443767, 46.55473252655585],
-					[15.664032462201792, 46.55504758064567]
-				]
-			},
-			"properties": {
-				"tag": "lower",
-				"Parent type": "Road",
-				"Parent tag": "Zrkovska cesta"
-			}
-		}
 	]
 }
