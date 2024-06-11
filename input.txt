@@ -1,21 +1,12 @@
 
-procedure bye(target){
-    print("Goodbye");
-    print(target);
+procedure A(num){
+    var res = num + 1;
+    print(res);
+    call A(res);
 }
 
-procedure greetings(target){
-    print("Hello");
-    print(target);
+City: "Maribor" (
 
-    call bye(target);
-
-}
-
-City : "Maribor" (
-
-    call greetings("world");
-
-
+    call A(1);
 
 )

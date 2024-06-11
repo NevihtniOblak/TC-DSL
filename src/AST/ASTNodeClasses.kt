@@ -226,7 +226,7 @@ class SeqComponents(val components1: Components, val components2: Components) : 
 class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {
     override fun eval(env: Environment, indent: Int): String {
         var infname = infnames.eval()
-        var ref = ref.eval(env)
+        //var ref = ref.eval(env)
         var tag = tag.eval(env)
         var effect = effect.eval(env)
         //return render.eval(env, indent+1)
@@ -336,8 +336,9 @@ class EndRef : Ref {
 class TagExp(val exp: Exp) : Tag {
     override fun eval(environment: Environment): String {
         var value = exp.eval(environment)
+        //println(value)
         if (value.type != Type.STRING) {
-            throw Exception("Type mismatch in Ref operation")
+            throw Exception("Type mismatch in Tag operation")
         }
         return value.value[0]
     }
@@ -654,6 +655,7 @@ class PolyargsExp(val exp: Exp) : Polyargs {
 
     override fun eval(env: Environment): MutableList<Pair<Double, Double>> {
         var value = exp.eval(env)
+        //println(value)
         if(value.type != Type.POINT){
             throw Exception("Type mismatch in Polyargs operation")
         }
@@ -957,7 +959,22 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
         }
 
         var resValue = listItem.value[index.value[0].toDouble().toInt()]
-        var resType = listItem.type
+
+        /*
+        var resType : Type = when(resValue[0]){
+            '\"' ->  Type.STRING
+            '(' -> Type.POINT
+            else -> Type.REAL
+        }
+
+         */
+        var resType: Type = when {
+            resValue.matches("^\".*\"$".toRegex()) -> Type.STRING
+            resValue.matches("^\\d+(\\.\\d+)?,\\d+(\\.\\d+)?$".toRegex()) -> Type.POINT
+            resValue.matches("^\\d+(\\.\\d+)?$".toRegex()) -> Type.REAL
+            else -> throw IllegalArgumentException("Unknown type for value: ${resValue[0]}")
+        }
+        //
 
         return Value(resType, mutableListOf(resValue))
     }
