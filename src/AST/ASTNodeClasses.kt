@@ -722,9 +722,9 @@ class Call(val variable: String, val args: Arguments) : Stmts {
         var functionBody = procedure.components
         var parameters = procedure.params.eval(0)
 
-        println("Arguments size: ${arguments.size}")
-        println("Parameters size: ${parameters.size}")
-        println(arguments)
+        //println("Arguments size: ${arguments.size}")
+        //println("Parameters size: ${parameters.size}")
+        //println(arguments)
         if (arguments.size != parameters.size) {
             throw Exception("Mismatch in size of arguments and parameters")
         }

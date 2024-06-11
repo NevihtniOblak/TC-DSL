@@ -8,7 +8,8 @@ procedure greetings(target){
     print("Hello");
     print(target);
 
-    call greetings(target);
+    call bye(target);
+
 }
 
 City : "Maribor" (
