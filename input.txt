@@ -1,39 +1,25 @@
 
-procedure hello(){
-	print("Nice");
+
+procedure AquaAndHello(message){
+    Line:((46.5554851467403, 15.659695854273087), (46.556145157713246, 15.666360049362842),10,20){}
+	print(message);
+
 }
 
-City: "Maribor" (
 
-	var array = ["hisa1","hisa2","hisa3","hisa4","hisa5"];
+City : "Maribor" (
 
-	print("Array before");
+    Aqua:<"Drava">(
+        call AquaAndHello("Hello from Maribor");
+    ){}
 
-	for(var i = 0; 4){
-		print(array[i]);
-	}
+    call AquaAndHello("Hello from Maribor");
 
-    var length = 5;
-    for(var i = 0; (length//2)){
-        var temp = array[i];
-        array[i]=array[length-1-i];
-        array[length-1-i]=temp;
-        print("1 operation");
-        for(var i = 0; 4){
+	Road:<"Zrkovska cesta">(
 
-            print(array[i]);
-        }
+		Line:<"upper">((46.55473252655585, 15.66137203443767),(46.55504758064567, 15.664032462201792),0,0){}
 
-
-    }
-
-	print("Array after");
-
-	for(var i = 0; 4){
-		print(array[i]);
-	}
-
-	call hello();
-
+		Line:<"lower">((46.55473252655585, 15.66137203443767),(46.55504758064567, 15.664032462201792),0,0){}
+	){}
 
 )
