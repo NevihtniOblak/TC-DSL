@@ -5,7 +5,7 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 177).toSet()
+    override val states = (1 .. 181).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
 
@@ -17,7 +17,7 @@ object ForForeachFFFAutomaton: DFA {
 
     val normalStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174, 177)
+        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174, 177, 181)
 
     //vmesna stanja ki lahko z nekim branjem grejo v variable (prvi znak je stanje in drugi znak je alphanum znak, ki ga ne smemo prebrati da gre v variable stanje)
     private val canGoToVariable = listOf(
@@ -48,6 +48,7 @@ object ForForeachFFFAutomaton: DFA {
         Pair(1,'c'), Pair(138,'a'), Pair(139,'l'), Pair(140,'l'), // CALL(call)
         Pair(1,'d'), Pair(142,'i'), Pair(143,'s'), Pair(144,'p'), Pair(145,'l'), Pair(146,'a'), Pair(147,'y'), Pair(148,'M'), Pair(149,'a'), Pair(150,'r'), Pair(151,'k'), Pair(152,'e'), Pair(153,'r'), Pair(154,'s'), // DISPLAY_MARKERS(displayMarkers)
         Pair(92, 'u'), Pair(176, 'e'), // true
+        Pair(132, 'a'), Pair(178, 'l'), Pair(179, 's'), Pair(180, 'e') // false
 
     )
 
@@ -555,8 +556,16 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(177, char, 170)
         }
 
+        //false
+        //f dobi od for
+        setTransition(132, 'a', 178)
+        setTransition(178, 'l', 179)
+        setTransition(179, 's', 180)
+        setTransition(180, 'e', 181)
 
-
+        for(char in alphaNum){
+            setTransition(181, char, 170)
+        }
 
 
         //KONCNA STANJA
@@ -668,6 +677,9 @@ object ForForeachFFFAutomaton: DFA {
 
         //TRUE(true)
         setSymbol(177, Symbol.TRUE)
+
+        //FALSE(false)
+        setSymbol(181, Symbol.FALSE)
 
 
 

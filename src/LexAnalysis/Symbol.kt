@@ -53,6 +53,7 @@ enum class Symbol {
 
     CIRCLELINE,
     TRUE,
+    FALSE,
 
 
 
@@ -114,6 +115,8 @@ enum class Symbol {
 
             CIRCLELINE -> "CIRCLELINE"
             TRUE -> "TRUE"
+            FALSE -> "FALSE"
+
 
 
 
