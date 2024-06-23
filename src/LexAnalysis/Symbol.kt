@@ -52,13 +52,18 @@ enum class Symbol {
     VARIABLE,
 
     CIRCLELINE,
+
     TRUE,
     FALSE,
-
-
-
-
-
+    GREATER,
+    LESSER,
+    GREATER_EQUAL,
+    LESSER_EQUAL,
+    EQUAL,
+    INEQUAL,
+    AND,
+    OR,
+    NEGATE,
 
 
     ;
@@ -114,10 +119,18 @@ enum class Symbol {
             VARIABLE -> "VARIABLE"
 
             CIRCLELINE -> "CIRCLELINE"
+
             TRUE -> "TRUE"
             FALSE -> "FALSE"
-
-
+            GREATER -> "GREATER"
+            LESSER -> "LESSER"
+            GREATER_EQUAL -> "GREATER_EQUAL"
+            LESSER_EQUAL -> "LESSER_EQUAL"
+            EQUAL -> "EQUAL"
+            INEQUAL -> "INEQUAL"
+            AND -> "AND"
+            OR -> "OR"
+            NEGATE -> "NEGATE"
 
 
 

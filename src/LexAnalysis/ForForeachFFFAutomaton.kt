@@ -567,6 +567,8 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(181, char, 170)
         }
 
+        //
+
 
         //KONCNA STANJA
         //eof
