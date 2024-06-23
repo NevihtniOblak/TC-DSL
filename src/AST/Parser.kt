@@ -989,7 +989,7 @@ class Parser(private val lexer: Lexer) {
             var or2 = parseOR2(and)
 
             var subres = Or(iexp, or2)
-            var res = parseOR(subres)
+            var res = parseOR2(subres)
 
             //println("OR2 RETURN: "+res)
             return res
