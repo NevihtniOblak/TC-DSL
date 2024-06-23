@@ -983,6 +983,27 @@ class Parser(private val lexer: Lexer) {
     }
 
     fun parseOR2(iexp: Exp): Exp{
+        if(currentSymbol!!.symbol in setOf(Symbol.OR)) {
+            var t1 = parseTerminal(Symbol.OR)
+            var and = parseAND()
+            var or2 = parseOR2(and)
+
+            var subres = Or(iexp, or2)
+            var res = parseOR(subres)
+
+            //println("OR2 RETURN: "+res)
+            return res
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+            var res = iexp
+            //println("OR2 RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
+
 
     }
 

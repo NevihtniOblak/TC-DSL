@@ -980,6 +980,70 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
     }
 }
 
+class Or(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class And(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class Equal(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class Inequal(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class Greater(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class GreaterEqual(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class Lesser(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class LesserEqual(val exp1: Exp, val exp2: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+class Negate(val exp: Exp) : Exp {
+
+    override fun eval(environment: Environment): Value {
+
+    }
+}
+
+
 // Data
 class ListData(val listitems: Listitems) : Data {
     override fun eval(environment:Environment): Value {
