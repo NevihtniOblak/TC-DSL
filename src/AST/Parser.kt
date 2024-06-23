@@ -965,15 +965,24 @@ class Parser(private val lexer: Lexer) {
     //INH-EXP
     fun parseEXP(): Exp {
         //println("Recognizing EXP")
-        val add = parseADDITIVE()
+        val or = parseOR()
 
-        var res = add
-        //println("EXP RETURN: "+add)
-        return add
+        var res = or
+        //println("EXP RETURN: "+or)
+        return or
     }
 
     //INH-EXP
     fun parseOR(): Exp{
+        var and = parseAND()
+        var or2 = parseOR2(and)
+
+        var res = or2
+        //println("OR RETURN: "+or2)
+        return or2
+    }
+
+    fun parseOR2(iexp: Exp): Exp{
 
     }
 
@@ -983,12 +992,25 @@ class Parser(private val lexer: Lexer) {
 
     }
 
+    fun parseAND2(iexp: Exp): Exp{
+
+    }
+
     fun parseEQUAL(): Exp{
+
+    }
+
+    fun parseEQUAL2(iexp: Exp): Exp{
 
     }
 
     //INH-EXP
     fun parseCOMPARE(): Exp{
+
+    }
+
+    //INH-EXP
+    fun parseCOMPARE2(iexp: Exp): Exp{
 
     }
 
