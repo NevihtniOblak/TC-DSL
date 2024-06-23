@@ -1,0 +1,12 @@
+
+procedure A(num){
+    var res = num + 1;
+    print(res);
+    call A(res);
+}
+
+City: "Maribor" (
+
+    call A(1);
+
+)
