@@ -1047,9 +1047,49 @@ class Parser(private val lexer: Lexer) {
 
     fun parseEQUAL(): Exp{
 
+        var compare = parseCOMPARE()
+        var equal2 = parseEQUAL2(compare)
+
+        var res = equal2
+        //println("EQUAL RETURN: "+equal2)
+        return equal2
+
     }
 
     fun parseEQUAL2(iexp: Exp): Exp{
+
+        if(currentSymbol!!.symbol in setOf(Symbol.EQUALS)) {
+            var t1 = parseTerminal(Symbol.EQUALS)
+            var compare = parseCOMPARE()
+            var equal2 = parseEQUAL2(compare)
+
+            var subres = Equal(iexp, equal2)
+            var res = parseEQUAL2(subres)
+
+            //println("EQUAL2 RETURN: "+res)
+            return res
+        }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.NEGATE)){
+            var t1 = parseTerminal(Symbol.NEGATE)
+            var compare = parseCOMPARE()
+            var equal2 = parseEQUAL2(compare)
+
+            var subres = Inequal(iexp, equal2)
+            var res = parseEQUAL2(subres)
+
+            //println("EQUAL2 RETURN: "+res)
+            return res
+        }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+            var res = iexp
+            //println("EQUAL2 RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
 
     }
 
