@@ -972,6 +972,26 @@ class Parser(private val lexer: Lexer) {
         return add
     }
 
+    //INH-EXP
+    fun parseOR(): Exp{
+
+    }
+
+
+    //INH-EXP
+    fun parseAND(): Exp{
+
+    }
+
+    fun parseEQUAL(): Exp{
+
+    }
+
+    //INH-EXP
+    fun parseCOMPARE(): Exp{
+
+    }
+
 
     //INH-EXP
     fun parseADDITIVE(): Exp {
