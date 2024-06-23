@@ -1011,9 +1011,37 @@ class Parser(private val lexer: Lexer) {
     //INH-EXP
     fun parseAND(): Exp{
 
+        var equal = parseEQUAL()
+        var and2 = parseAND2(equal)
+
+        var res = and2
+        //println("AND RETURN: "+and2)
+        return and2
+
     }
 
     fun parseAND2(iexp: Exp): Exp{
+
+        if(currentSymbol!!.symbol in setOf(Symbol.AND)) {
+            var t1 = parseTerminal(Symbol.AND)
+            var equal = parseEQUAL()
+            var and2 = parseAND2(equal)
+
+            var subres = And(iexp, and2)
+            var res = parseAND2(subres)
+
+            //println("AND2 RETURN: "+res)
+            return res
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+            var res = iexp
+            //println("AND2 RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
 
     }
 
