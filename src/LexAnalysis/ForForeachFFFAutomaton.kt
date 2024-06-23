@@ -5,7 +5,7 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 181).toSet()
+    override val states = (1 .. 183).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
 
@@ -17,7 +17,7 @@ object ForForeachFFFAutomaton: DFA {
 
     val normalStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174, 177, 181)
+        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174, 177, 181, 183)
 
     //vmesna stanja ki lahko z nekim branjem grejo v variable (prvi znak je stanje in drugi znak je alphanum znak, ki ga ne smemo prebrati da gre v variable stanje)
     private val canGoToVariable = listOf(
@@ -567,6 +567,14 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(181, char, 170)
         }
 
+        //AND(&&)
+        setTransition(1, '&', 182)
+        setTransition(182, '&', 183)
+
+
+
+
+
 
 
         //KONCNA STANJA
@@ -681,6 +689,9 @@ object ForForeachFFFAutomaton: DFA {
 
         //FALSE(false)
         setSymbol(181, Symbol.FALSE)
+
+        //AND(&&)
+        setSymbol(183, Symbol.AND)
 
 
 
