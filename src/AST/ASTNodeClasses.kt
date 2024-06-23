@@ -226,11 +226,10 @@ class SeqComponents(val components1: Components, val components2: Components) : 
 class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {
     override fun eval(env: Environment, indent: Int): String {
         var infname = infnames.eval()
-        var ref = ref.eval(env)
+        //var ref = ref.eval(env)
         var tag = tag.eval(env)
         var effect = effect.eval(env)
         //return render.eval(env, indent+1)
-        var geoJson = ""
 
         return render.eval(env, indent, mutableListOf(infname, tag))
     }
@@ -247,8 +246,7 @@ class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rende
 }
 class Statements(val stmts: Stmts) : Components {
     override fun eval(env: Environment, indent: Int): String {
-        stmts.eval(env)
-        return ""
+        return stmts.eval(env)
     }
 }
 class Specifications(val specs: Specs) : Components {
@@ -338,8 +336,9 @@ class EndRef : Ref {
 class TagExp(val exp: Exp) : Tag {
     override fun eval(environment: Environment): String {
         var value = exp.eval(environment)
+        //println(value)
         if (value.type != Type.STRING) {
-            throw Exception("Type mismatch in Ref operation")
+            throw Exception("Type mismatch in Tag operation")
         }
         return value.value[0]
     }
@@ -656,6 +655,7 @@ class PolyargsExp(val exp: Exp) : Polyargs {
 
     override fun eval(env: Environment): MutableList<Pair<Double, Double>> {
         var value = exp.eval(env)
+        //println(value)
         if(value.type != Type.POINT){
             throw Exception("Type mismatch in Polyargs operation")
         }
@@ -701,7 +701,7 @@ class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components
 
             subres += components.eval(environment, 0)
             if(i != end && subres != ""){
-                subres += ",\n"
+                subres += tab(2)+",\n"
             }
             //res = SeqComponents(res, components)
         }
@@ -724,15 +724,21 @@ class Call(val variable: String, val args: Arguments) : Stmts {
         var functionBody = procedure.components
         var parameters = procedure.params.eval(0)
 
-        println("Arguments size: ${arguments.size}")
-        println("Parameters size: ${parameters.size}")
-        println(arguments)
+        //println("Arguments size: ${arguments.size}")
+        //println("Parameters size: ${parameters.size}")
+        //println(arguments)
         if (arguments.size != parameters.size) {
             throw Exception("Mismatch in size of arguments and parameters")
         }
 
         val procedureEnv = mutableMapOf<EnvType, MutableMap<String, Any>>()
         procedureEnv[EnvType.VARIABLE] = mutableMapOf()
+
+        //cool
+        procedureEnv.computeIfAbsent(EnvType.PROCEDURE) { mutableMapOf() }
+        procedureEnv[EnvType.PROCEDURE]?.putAll(env[EnvType.PROCEDURE] ?: emptyMap())
+        //println(env[EnvType.PROCEDURE])
+
 
         for ((key, value) in arguments) {
             val param = parameters[key]
@@ -953,7 +959,22 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
         }
 
         var resValue = listItem.value[index.value[0].toDouble().toInt()]
-        var resType = listItem.type
+
+        /*
+        var resType : Type = when(resValue[0]){
+            '\"' ->  Type.STRING
+            '(' -> Type.POINT
+            else -> Type.REAL
+        }
+
+         */
+        var resType: Type = when {
+            resValue.matches("^\".*\"$".toRegex()) -> Type.STRING
+            resValue.matches("^\\d+(\\.\\d+)?,\\d+(\\.\\d+)?$".toRegex()) -> Type.POINT
+            resValue.matches("^\\d+(\\.\\d+)?$".toRegex()) -> Type.REAL
+            else -> throw IllegalArgumentException("Unknown type for value: ${resValue[0]}")
+        }
+        //
 
         return Value(resType, mutableListOf(resValue))
     }

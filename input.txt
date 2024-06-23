@@ -1,25 +1,12 @@
 
-
-procedure AquaAndHello(message){
-    Line:((46.5554851467403, 15.659695854273087), (46.556145157713246, 15.666360049362842),10,20){}
-	print(message);
-
+procedure A(num){
+    var res = num + 1;
+    print(res);
+    call A(res);
 }
 
+City: "Maribor" (
 
-City : "Maribor" (
-
-    Aqua:<"Drava">(
-        call AquaAndHello("Hello from Maribor");
-    ){}
-
-    call AquaAndHello("Hello from Maribor");
-
-	Road:<"Zrkovska cesta">(
-
-		Line:<"upper">((46.55473252655585, 15.66137203443767),(46.55504758064567, 15.664032462201792),0,0){}
-
-		Line:<"lower">((46.55473252655585, 15.66137203443767),(46.55504758064567, 15.664032462201792),0,0){}
-	){}
+    call A(1);
 
 )
