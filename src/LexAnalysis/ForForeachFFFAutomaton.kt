@@ -556,8 +556,6 @@ object ForForeachFFFAutomaton: DFA {
         }
 
 
-        //false
-        //f dobi od FOR
 
 
 
