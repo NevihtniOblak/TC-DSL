@@ -988,6 +988,16 @@ class BooleanExp(val value: Boolean): Exp{
 class Or(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+
+        if(!(value1.type == Type.BOOLEAN && value2.type == Type.BOOLEAN)){
+            throw Exception("Type mismatch in Or operation")
+        }
+
+        var res = value1.value[0].toBoolean() || value2.value[0].toBoolean()
+
+        return Value(Type.BOOLEAN, mutableListOf(res.toString()))
 
     }
 }
@@ -995,7 +1005,17 @@ class Or(val exp1: Exp, val exp2: Exp) : Exp {
 class And(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
 
+        if(!(value1.type == Type.BOOLEAN && value2.type == Type.BOOLEAN)){
+            throw Exception("Type mismatch in And operation")
+        }
+
+        var res = value1.value[0].toBoolean() && value2.value[0].toBoolean()
+
+        return Value(Type.BOOLEAN, mutableListOf(res.toString()))
+        
     }
 }
 
