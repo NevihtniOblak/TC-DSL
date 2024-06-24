@@ -979,6 +979,11 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
         return Value(resType, mutableListOf(resValue))
     }
 }
+class BooleanExp(val value: Boolean): Exp{
+    override fun eval(environment: Environment): Value {
+        //todo
+    }
+}
 
 class Or(val exp1: Exp, val exp2: Exp) : Exp {
 

@@ -189,7 +189,7 @@ class Parser(private val lexer: Lexer) {
     fun parseARGUMENTS(): Arguments {
         //println("Recognizing ARGUMENTS")
 
-        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
             var exp = parseEXP()
             var arguments = parseARGUMENTS2()
 
@@ -1060,6 +1060,7 @@ class Parser(private val lexer: Lexer) {
 
         if(currentSymbol!!.symbol in setOf(Symbol.EQUALS)) {
             var t1 = parseTerminal(Symbol.EQUALS)
+            var t2 = parseTerminal(Symbol.EQUALS)
             var compare = parseCOMPARE()
             var equal2 = parseEQUAL2(compare)
 
@@ -1072,6 +1073,7 @@ class Parser(private val lexer: Lexer) {
 
         else if(currentSymbol!!.symbol in setOf(Symbol.NEGATE)){
             var t1 = parseTerminal(Symbol.NEGATE)
+            var t2 = parseTerminal(Symbol.EQUALS)
             var compare = parseCOMPARE()
             var equal2 = parseEQUAL2(compare)
 
@@ -1096,12 +1098,100 @@ class Parser(private val lexer: Lexer) {
     //INH-EXP
     fun parseCOMPARE(): Exp{
 
+        var additive = parseADDITIVE()
+        var compare2 = parseCOMPARE2(additive)
+
+        var res = compare2
+        //println("COMPARE RETURN: "+compare2)
+        return compare2
     }
 
     //INH-EXP
     fun parseCOMPARE2(iexp: Exp): Exp{
 
+        if(currentSymbol!!.symbol in setOf(Symbol.RANGLE)){
+            //greater or greaterEqual
+            var t1 = parseTerminal(Symbol.RANGLE)
+
+            if(currentSymbol!!.symbol in setOf(Symbol.EQUALS)){
+                // greaterEqual
+                var t2 = parseTerminal(Symbol.EQUALS)
+
+                var add = parseADDITIVE()
+                var subres = GreaterEqual(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+            }
+            else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
+                // greater
+                var add = parseADDITIVE()
+                var subres = Greater(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+            }
+            else{
+                //println("COMPARE2 RETURN: "+ "panic")
+                return panic()
+
+            }
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.LANGLE)){
+            //lesser or lesserEqual
+            var t1 = parseTerminal(Symbol.LANGLE)
+
+            if(currentSymbol!!.symbol in setOf(Symbol.EQUALS)){
+                // lesserEqual
+                var t2 = parseTerminal(Symbol.EQUALS)
+
+                var add = parseADDITIVE()
+                var subres = LesserEqual(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+
+            }
+            else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
+                // lesser
+                var add = parseADDITIVE()
+                var subres = Lesser(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+            }
+            else{
+                //println("COMPARE2 RETURN: "+ "panic")
+                return panic()
+
+            }
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+            var res = iexp
+            //println("COMPARE2 return"+ res)
+            return res
+        }
+        else{
+            //println("COMPARE2 RETURN: "+ "panic")
+            return panic()
+        }
+
     }
+
 
 
     //INH-EXP
@@ -1289,7 +1379,7 @@ class Parser(private val lexer: Lexer) {
             //println("UNARY RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf( Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+        } else if(currentSymbol!!.symbol in setOf( Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
             val primary = parsePRIMARY()
 
             var res = primary
@@ -1340,11 +1430,43 @@ class Parser(private val lexer: Lexer) {
             return res
 
         }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.FALSE, Symbol.TRUE)){
+            var bool = parseBOOL()
+
+            var res = bool
+
+            //println("PRIMARY RETURN: "+res)
+            return res
+        }
         else{
 
             //println("PRIMARY RETURN: "+ "panic")
             return panic()
         }
+    }
+
+
+    fun parseBOOL(): Exp{
+
+        if(currentSymbol!!.symbol in setOf(Symbol.TRUE)){
+            var t1 = parseTerminal(Symbol.TRUE)
+
+            var res = BooleanExp(true)
+            //println("BOOL RETURN: "+res)
+            return res
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.FALSE)){
+            var t1 = parseTerminal(Symbol.FALSE)
+
+            var res = BooleanExp(false)
+            //println("BOOL RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
+
     }
 
 
@@ -1411,7 +1533,7 @@ class Parser(private val lexer: Lexer) {
             return res
 
         } else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS,
-                Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+                Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
             var exp = parseEXP()
 
             var res = ExpData(exp)
@@ -1442,7 +1564,7 @@ class Parser(private val lexer: Lexer) {
     fun parseLISTITEM(): Listitems {
         //println("Recognizing LISTITEM")
         if (currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE,
-                Symbol.LPAREN, Symbol.STRING)) {
+                Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)) {
             val exp1 = parseEXP()
             val listitem2 = parseLISTITEM2()
 
