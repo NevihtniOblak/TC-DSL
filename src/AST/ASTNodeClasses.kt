@@ -981,7 +981,7 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
 }
 class BooleanExp(val value: Boolean): Exp{
     override fun eval(environment: Environment): Value {
-        //todo
+        return Value(Type.BOOLEAN, mutableListOf(value.toString()))
     }
 }
 

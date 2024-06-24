@@ -550,7 +550,7 @@ object ForForeachFFFAutomaton: DFA {
         //true
         //tr dobi od translate
         setTransition(92, 'u', 175)
-        setTransition(176, 'e', 177)
+        setTransition(175, 'e', 177)
 
         for(char in alphaNum){
             setTransition(177, char, 170)

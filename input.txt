@@ -1,12 +1,9 @@
 
-procedure A(num){
-    var res = num + 1;
-    print(res);
-    call A(res);
-}
 
 City: "Maribor" (
 
-    call A(1);
+    var a = (true && !false) && 3>2 && 6>=6 || !("jan"!="matej");
+
+    print(a);
 
 )

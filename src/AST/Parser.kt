@@ -189,7 +189,8 @@ class Parser(private val lexer: Lexer) {
     fun parseARGUMENTS(): Arguments {
         //println("Recognizing ARGUMENTS")
 
-        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
+        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE
+            )){
             var exp = parseEXP()
             var arguments = parseARGUMENTS2()
 
@@ -1162,7 +1163,8 @@ class Parser(private val lexer: Lexer) {
 
 
             }
-            else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
+            else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE
+                )){
                 // lesser
                 var add = parseADDITIVE()
                 var subres = Lesser(iexp, add)
@@ -1180,7 +1182,8 @@ class Parser(private val lexer: Lexer) {
             }
 
         }
-        else if(currentSymbol!!.symbol in setOf(Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+        else if(currentSymbol!!.symbol in setOf(Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE
+            )){
             var res = iexp
             //println("COMPARE2 return"+ res)
             return res
@@ -1233,7 +1236,7 @@ class Parser(private val lexer: Lexer) {
             //println("ADDITIVE2 RETURN: "+add2)
             return add2
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL)){
 
             var res = iexp
             //println("ADDITIVE2 RETURN: "+ res)
@@ -1299,7 +1302,7 @@ class Parser(private val lexer: Lexer) {
 
             //println("MULTIPLICATIVE2 RETURN: "+res)
             return res
-        } else if( currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)) {
+        } else if( currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL)) {
 
             var res = iexp
             //println("MULTIPLICATIVE2 RETURN: "+res)
@@ -1342,8 +1345,7 @@ class Parser(private val lexer: Lexer) {
             //println("EXPONENTIAL2 RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS,
-                Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS, Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL)){
 
             var res = iexp
             //println("EXPONENTIAL2 RETURN: "+res)
@@ -1370,7 +1372,8 @@ class Parser(private val lexer: Lexer) {
             //println("UNARY RETURN: "+res)
             return res
 
-        } else if (currentSymbol!!.symbol in setOf( Symbol.MINUS)) {
+        }
+        else if (currentSymbol!!.symbol in setOf( Symbol.MINUS)) {
             val t1 = parseTerminal(Symbol.MINUS)
 
             val primary = parsePRIMARY()
@@ -1379,7 +1382,18 @@ class Parser(private val lexer: Lexer) {
             //println("UNARY RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf( Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.NEGATE)){
+            var t1 = parseTerminal(Symbol.NEGATE)
+
+            var primary = parsePRIMARY()
+
+            var res = Negate(primary)
+            //println("UNARY RETURN: "+res)
+            return res
+
+        }
+        else if(currentSymbol!!.symbol in setOf( Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
             val primary = parsePRIMARY()
 
             var res = primary
@@ -1482,8 +1496,7 @@ class Parser(private val lexer: Lexer) {
             //println("PRIMARY1 RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.POW, Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS, Symbol.COMMA,
-                Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.POW, Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS, Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL)){
 
             var res = Variable(ivariable)
             //println("PRIMARY1 RETURN: "+ res)
@@ -1532,8 +1545,7 @@ class Parser(private val lexer: Lexer) {
             //println("DATA RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS,
-                Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
             var exp = parseEXP()
 
             var res = ExpData(exp)
