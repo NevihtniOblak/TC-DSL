@@ -1015,13 +1015,26 @@ class And(val exp1: Exp, val exp2: Exp) : Exp {
         var res = value1.value[0].toBoolean() && value2.value[0].toBoolean()
 
         return Value(Type.BOOLEAN, mutableListOf(res.toString()))
-        
+
     }
 }
 
 class Equal(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+
+        if(value1.type == Type.LIST || value2.type == Type.LIST){
+            throw Exception("Invalid type list in equal operation")
+        }
+
+        if(!(value1.type == value2.type) || !(value1.value[0] == value2.value[0])){
+            return Value(Type.BOOLEAN, mutableListOf("false"))
+        }
+        else{
+            return Value(Type.BOOLEAN, mutableListOf("true"))
+        }
 
     }
 }
@@ -1029,6 +1042,19 @@ class Equal(val exp1: Exp, val exp2: Exp) : Exp {
 class Inequal(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        val value1 = exp1.eval(environment)
+        val value2 = exp2.eval(environment)
+
+        if(value1.type == Type.LIST || value2.type == Type.LIST){
+            throw Exception("Invalid type list in inequal operation")
+        }
+
+        if(!(value1.type == value2.type) || !(value1.value[0] == value2.value[0])){
+            return Value(Type.BOOLEAN, mutableListOf("true"))
+        }
+        else{
+            return Value(Type.BOOLEAN, mutableListOf("false"))
+        }
 
     }
 }
