@@ -1062,6 +1062,16 @@ class Inequal(val exp1: Exp, val exp2: Exp) : Exp {
 class Greater(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        var value1 = exp1.eval(environment)
+        var value2 = exp2.eval(environment)
+
+        if(value1.type != Type.REAL || value2.type != Type.REAL){
+            throw Exception("Type mismatch in Greater operation")
+        }
+
+        var res = value1.value[0].toDouble() > value2.value[0].toDouble()
+
+        return Value(Type.BOOLEAN, mutableListOf(res.toString()))
 
     }
 }
@@ -1069,6 +1079,16 @@ class Greater(val exp1: Exp, val exp2: Exp) : Exp {
 class GreaterEqual(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        var value1 = exp1.eval(environment)
+        var value2 = exp2.eval(environment)
+
+        if(value1.type != Type.REAL || value2.type != Type.REAL){
+            throw Exception("Type mismatch in Greater operation")
+        }
+
+        var res = value1.value[0].toDouble() >= value2.value[0].toDouble()
+
+        return Value(Type.BOOLEAN, mutableListOf(res.toString()))
 
     }
 }
@@ -1076,6 +1096,16 @@ class GreaterEqual(val exp1: Exp, val exp2: Exp) : Exp {
 class Lesser(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        var value1 = exp1.eval(environment)
+        var value2 = exp2.eval(environment)
+
+        if(value1.type != Type.REAL || value2.type != Type.REAL){
+            throw Exception("Type mismatch in Greater operation")
+        }
+
+        var res = value1.value[0].toDouble() < value2.value[0].toDouble()
+
+        return Value(Type.BOOLEAN, mutableListOf(res.toString()))
 
     }
 }
@@ -1083,6 +1113,16 @@ class Lesser(val exp1: Exp, val exp2: Exp) : Exp {
 class LesserEqual(val exp1: Exp, val exp2: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        var value1 = exp1.eval(environment)
+        var value2 = exp2.eval(environment)
+
+        if(value1.type != Type.REAL || value2.type != Type.REAL){
+            throw Exception("Type mismatch in Greater operation")
+        }
+
+        var res = value1.value[0].toDouble() <= value2.value[0].toDouble()
+
+        return Value(Type.BOOLEAN, mutableListOf(res.toString()))
 
     }
 }
@@ -1090,6 +1130,15 @@ class LesserEqual(val exp1: Exp, val exp2: Exp) : Exp {
 class Negate(val exp: Exp) : Exp {
 
     override fun eval(environment: Environment): Value {
+        var value1 = exp.eval(environment)
+
+        if(value1.type != Type.BOOLEAN){
+            throw Exception("Type mismatch in Negate operation")
+        }
+
+        var res = !value1.value[0].toBoolean()
+
+        return Value(Type.BOOLEAN, mutableListOf(res.toString()))
 
     }
 }
