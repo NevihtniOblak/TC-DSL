@@ -5,7 +5,7 @@ object ForForeachFFFAutomaton: DFA {
     const val EOF = -1
     const val NEWLINE = '\n'.code
 
-    override val states = (1 .. 186).toSet()
+    override val states = (1 .. 194).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
 
@@ -590,7 +590,7 @@ object ForForeachFFFAutomaton: DFA {
         }
 
         //ELIF(elif)
-        setTransition(188, 'e', 189)
+        setTransition(1, 'e', 189)
         setTransition(189, 'l', 190)
         setTransition(190, 'i', 191)
         setTransition(191, 'f', 192)

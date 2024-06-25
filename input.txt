@@ -9,12 +9,17 @@ City: "Maribor" (
 
     print(a||true);
 
-    var b = false;
+    var b = 4;
 
-    if(b) {
-        print("b is true");
-    } else {
-        print("b is false");
+    if(b==4) {
+        print("b is 4 !!!!!!!");
+    }
+    elif(b==4) {
+        print("b is 4");
+    }
+
+    else {
+        print("I dont know what b is");
     }
 
 )

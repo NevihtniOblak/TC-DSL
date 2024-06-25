@@ -283,7 +283,7 @@ class Parser(private val lexer: Lexer) {
 
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)){
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)){
             var stmts = parseSTMTS()
             var components = parseCOMPONENTS()
 
@@ -497,7 +497,7 @@ class Parser(private val lexer: Lexer) {
     fun parseRENDER(): Render {
         println("Recognizing RENDER")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)) {
             val stmts = parseSTMTS()
             val render = parseRENDER()
 
@@ -532,7 +532,7 @@ class Parser(private val lexer: Lexer) {
     fun parseRENDERCONT(): Rendercont {
         println("Recognizing RENDERCONT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)) {
             val stmts = parseSTMTS()
             val rendercont = parseRENDERCONT()
 
@@ -582,7 +582,7 @@ class Parser(private val lexer: Lexer) {
     fun parseEFFECT(): Effect {
         println("Recognizing EFFECT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)) {
             val stmts = parseSTMTS()
             val effect = parseEFFECT()
 
@@ -903,6 +903,7 @@ class Parser(private val lexer: Lexer) {
         }
 
         else if(currentSymbol!!.symbol in setOf(Symbol.IF)){
+            println("If statement!!!")
             val t1 = parseTerminal(Symbol.IF)
             val t2 = parseTerminal(Symbol.LPAREN)
             val exp = parseEXP()
@@ -942,6 +943,7 @@ class Parser(private val lexer: Lexer) {
             return res
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.ELSE)){
+            println("Else!!!")
             val t1 = parseTerminal(Symbol.ELSE)
             val t2 = parseTerminal(Symbol.LCURLY)
             val components = parseCOMPONENTS()
