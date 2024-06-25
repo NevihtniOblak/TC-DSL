@@ -9,4 +9,12 @@ City: "Maribor" (
 
     print(a||true);
 
+    var b = false;
+
+    if(b) {
+        print("b is true");
+    } else {
+        print("b is false");
+    }
+
 )

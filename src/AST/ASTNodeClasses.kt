@@ -87,6 +87,10 @@ interface Stmts {
     fun eval(env: Environment): String
 }
 
+interface IfElseStmts {
+    fun eval(env: Environment): String
+}
+
 interface Constructnames {
     fun eval(): String
 }
@@ -784,6 +788,61 @@ class ListItemAssign(val variable: String, val exp1: Exp, val exp2: Exp) : Stmts
 
         listItem.value[index.value[0].toDouble().toInt()] = exp2.eval(environment).value[0]
 
+        return ""
+    }
+
+}
+class IfStatement(val exp: Exp, val components: Components ,val ifElseStmts: IfElseStmts) : Stmts {
+    override fun eval(environment: Environment): String {
+        var condition = exp.eval(environment)
+
+        if(condition.type != Type.BOOLEAN){
+                throw Exception("Type mismatch in IfStatement operation")
+        }
+
+        if(condition.value[0].toBoolean()){
+            return components.eval(environment, 0)
+
+        }
+        else{
+            return ifElseStmts.eval(environment)
+        }
+
+    }
+}
+
+// IfElseStmts
+class Elif(val exp: Exp, val components: Components, val ifElseStmts: IfElseStmts): IfElseStmts {
+
+    override fun eval(environment: Environment): String {
+        var condition = exp.eval(environment)
+
+        if(condition.type != Type.BOOLEAN){
+            throw Exception("Type mismatch in IfStatement operation")
+        }
+
+        if(condition.value[0].toBoolean()){
+            return components.eval(environment, 0)
+
+        }
+        else{
+            return ifElseStmts.eval(environment)
+        }
+
+    }
+
+}
+
+class Else(val components: Components): IfElseStmts {
+
+    override fun eval(environment: Environment): String {
+        return components.eval(environment, 0)
+    }
+
+}
+
+class EndIfelse(): IfElseStmts {
+    override fun eval(env: Environment): String {
         return ""
     }
 

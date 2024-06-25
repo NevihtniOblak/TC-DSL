@@ -884,7 +884,7 @@ class Parser(private val lexer: Lexer) {
             return res
 
 
-        } else if (currentSymbol!!.symbol in setOf( Symbol.DISPLAY_MARKERS)) {
+        } else if (currentSymbol!!.symbol in setOf(Symbol.DISPLAY_MARKERS)) {
             val t1 = parseTerminal(Symbol.DISPLAY_MARKERS)
             val t2 = parseTerminal(Symbol.LPAREN)
             val exp1 = parseEXP()
@@ -900,9 +900,61 @@ class Parser(private val lexer: Lexer) {
             return res
 
 
-        } else {
+        }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.IF)){
+            val t1 = parseTerminal(Symbol.IF)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.LCURLY)
+            val components = parseCOMPONENTS()
+            val t5 = parseTerminal(Symbol.RCURLY)
+            val ifelse = parseIFELSE()
+
+            var res = IfStatement(exp, components, ifelse)
+            //println("STMTS RETURN: "+res)
+            return res
+        }
+
+        else {
 
             //println("STMTS RETURN: "+ "panic")
+            return panic()
+        }
+    }
+
+    //INH-IFELSE
+    fun parseIFELSE(): IfElseStmts {
+        println("Recognizing IFELSE")
+        if(currentSymbol!!.symbol in setOf(Symbol.ELIF)){
+            val t1 = parseTerminal(Symbol.ELIF)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.LCURLY)
+            val components = parseCOMPONENTS()
+            val t5 = parseTerminal(Symbol.RCURLY)
+            val ifelse = parseIFELSE()
+
+            var res = Elif(exp, components, ifelse)
+            //println("IFELSE RETURN: "+res)
+            return res
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.ELSE)){
+            val t1 = parseTerminal(Symbol.ELSE)
+            val t2 = parseTerminal(Symbol.LCURLY)
+            val components = parseCOMPONENTS()
+            val t3 = parseTerminal(Symbol.RCURLY)
+
+            var res = Else(components)
+            //println("IFELSE RETURN: "+res)
+            return res
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT, Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF, Symbol.SET_LOCATION, Symbol.TRANSLATE, Symbol.ROTATE, Symbol.SET_MARKER, Symbol.BOX, Symbol.LINE, Symbol.POLYGON, Symbol.CIRCLE, Symbol.CIRCLELINE, Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA, Symbol.PATH, Symbol.SHOP_TUS, Symbol.SHOP_MERCATOR, Symbol.BUILDING_COMPLEX, Symbol.PARK, Symbol.RCURLY, Symbol.RPAREN)){
+            return EndIfelse()
+        }
+        else{
             return panic()
         }
     }
