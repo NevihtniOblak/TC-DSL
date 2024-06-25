@@ -59,6 +59,10 @@ enum class Symbol {
     OR,
     NEGATE,
 
+    IF,
+    ELIF,
+    ELSE,
+
 
     ;
 
@@ -119,6 +123,10 @@ enum class Symbol {
             AND -> "AND"
             OR -> "OR"
             NEGATE -> "NEGATE"
+
+            IF -> "IF"
+            ELIF -> "ELIF"
+            ELSE -> "ELSE"
 
 
 

@@ -17,7 +17,7 @@ object ForForeachFFFAutomaton: DFA {
 
     val normalStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
         40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174, 177, 181, 183, 185, 186)
+        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174, 177, 181, 183, 185, 186, 188, 192, 194)
 
     //vmesna stanja ki lahko z nekim branjem grejo v variable (prvi znak je stanje in drugi znak je alphanum znak, ki ga ne smemo prebrati da gre v variable stanje)
     private val canGoToVariable = listOf(
@@ -48,7 +48,10 @@ object ForForeachFFFAutomaton: DFA {
         Pair(1,'c'), Pair(138,'a'), Pair(139,'l'), Pair(140,'l'), // CALL(call)
         Pair(1,'d'), Pair(142,'i'), Pair(143,'s'), Pair(144,'p'), Pair(145,'l'), Pair(146,'a'), Pair(147,'y'), Pair(148,'M'), Pair(149,'a'), Pair(150,'r'), Pair(151,'k'), Pair(152,'e'), Pair(153,'r'), Pair(154,'s'), // DISPLAY_MARKERS(displayMarkers)
         Pair(92, 'u'), Pair(176, 'e'), // true
-        Pair(132, 'a'), Pair(178, 'l'), Pair(179, 's'), Pair(180, 'e') // false
+        Pair(132, 'a'), Pair(178, 'l'), Pair(179, 's'), Pair(180, 'e'), // false
+        Pair(1, 'i'), Pair(187, 'f'), // IF(if
+        Pair(188, 'e'), Pair(189, 'l'), Pair(190, 'i'), Pair(191, 'f'), // ELIF(elif)
+        Pair(190, 's'), Pair(193, 'e'), // ELSE(else)
 
     )
 
@@ -578,6 +581,32 @@ object ForForeachFFFAutomaton: DFA {
         //NEGATE(!)
         setTransition(1, '!', 186)
 
+        //IF(if)
+        setTransition(1, 'i', 187)
+        setTransition(187, 'f', 188)
+
+        for(char in alphaNum){
+            setTransition(188, char, 170)
+        }
+
+        //ELIF(elif)
+        setTransition(188, 'e', 189)
+        setTransition(189, 'l', 190)
+        setTransition(190, 'i', 191)
+        setTransition(191, 'f', 192)
+
+        for(char in alphaNum){
+            setTransition(192, char, 170)
+        }
+
+        //ELSE(else)
+        //el dobi od elif
+        setTransition(190, 's', 193)
+        setTransition(193, 'e', 194)
+
+        for(char in alphaNum){
+            setTransition(194, char, 170)
+        }
 
         //KONCNA STANJA
         //eof
@@ -701,7 +730,14 @@ object ForForeachFFFAutomaton: DFA {
         //NEGATE(!)
         setSymbol(186, Symbol.NEGATE)
 
+        //IF(if)
+        setSymbol(188, Symbol.IF)
 
+        //ELIF(elif)
+        setSymbol(192, Symbol.ELIF)
+
+        //ELSE(else)
+        setSymbol(194, Symbol.ELSE)
 
 
     }
