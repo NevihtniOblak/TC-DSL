@@ -1,41 +1,26 @@
 
+procedure bubbleSort(array, len){
+
+    for(var i = 0; len-1){
+        for(var j = 0; len-i-2){
+            if(array[j] > array[j+1]){
+                var temp = array[j];
+                array[j] = array[j+1];
+                array[j+1] = temp;
+            }
+        }
+    }
+}
+
 City: "Maribor" (
 
-	var vectorX = 0.0015;
-	var vectorY = 0.0015;
+    var a = [1,4,2,10,5,-1,200,12];
+    var length = 8;
 
+    call bubbleSort(a, length);
 
-	var x1 = 46.57386444140938;
-	var y1 = 15.632654828243249;
-
-	var x2 = 46.5741292677468;
-	var y2 = 15.633398289961093;
-
-	var bool = true;
-
-	for(var i = 0; 5){
-		for(var j = 0; 5){
-
-		    if(bool){
-
-
-                Building: "Grid element" :(
-                        Box: "Main" :((x1+vectorX*i, y1+vectorY*j),(x2+vectorX*i, y2+vectorY*j)){}
-                ){}
-
-			}
-
-			bool = !bool;
-
-
-		}
-
-	}
-
-	Building: "Newhouse" :(
-
-		Box: "Main" :((46.548980819615686, 15.688142030357398),(46.548154016070725, 15.689374312840817)){}
-
-	){}
+    for(var i = 0; length-1){
+        print(a[i]);
+    }
 
 )

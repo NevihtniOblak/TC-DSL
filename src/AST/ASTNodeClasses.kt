@@ -1034,8 +1034,9 @@ class ListIndex(val variable: String, val exp: Exp): Exp {
          */
         var resType: Type = when {
             resValue.matches("^\".*\"$".toRegex()) -> Type.STRING
-            resValue.matches("^\\d+(\\.\\d+)?,\\d+(\\.\\d+)?$".toRegex()) -> Type.POINT
-            resValue.matches("^\\d+(\\.\\d+)?$".toRegex()) -> Type.REAL
+            resValue.matches("^-?\\d+(\\.\\d+)?,\\d+(\\.\\d+)?$".toRegex()) -> Type.POINT
+            resValue.matches("^-?\\d+(\\.\\d+)?$".toRegex()) -> Type.REAL
+            resValue.matches("true|false".toRegex()) -> Type.BOOLEAN
             else -> throw IllegalArgumentException("Unknown type for value: ${resValue[0]}")
         }
         //
