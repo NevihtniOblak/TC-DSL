@@ -1,25 +1,41 @@
 
 City: "Maribor" (
 
-    var a = true;
-
-    a = !a;
-
+	var vectorX = 0.0015;
+	var vectorY = 0.0015;
 
 
-    print(a||true);
+	var x1 = 46.57386444140938;
+	var y1 = 15.632654828243249;
 
-    var b = 4;
+	var x2 = 46.5741292677468;
+	var y2 = 15.633398289961093;
 
-    if(b==4) {
-        print("b is 4 !!!!!!!");
-    }
-    elif(b==4) {
-        print("b is 4");
-    }
+	var bool = true;
 
-    else {
-        print("I dont know what b is");
-    }
+	for(var i = 0; 5){
+		for(var j = 0; 5){
+
+		    if(bool){
+
+
+                Building: "Grid element" :(
+                        Box: "Main" :((x1+vectorX*i, y1+vectorY*j),(x2+vectorX*i, y2+vectorY*j)){}
+                ){}
+
+			}
+
+			bool = !bool;
+
+
+		}
+
+	}
+
+	Building: "Newhouse" :(
+
+		Box: "Main" :((46.548980819615686, 15.688142030357398),(46.548154016070725, 15.689374312840817)){}
+
+	){}
 
 )

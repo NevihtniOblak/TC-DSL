@@ -697,20 +697,25 @@ class Forloop(val variable: String, val exp1: Exp, val exp2: Exp, val components
         var itertorValue = exp1.eval(environment).value[0].toDouble().toInt()
         var end = exp2.eval(environment).value[0].toDouble().toInt()
 
-        var res = components
+        var res = ""
         var subres = ""
 
         for(i in itertorValue..end){
             environment[EnvType.VARIABLE]?.set(variable, Value(Type.REAL, mutableListOf((i).toString())))
 
-            subres += components.eval(environment, 0)
-            if(i != end && subres != ""){
-                subres += tab(2)+",\n"
+            subres = components.eval(environment, 0)
+
+            if(res!="" && subres!=""){
+                res+= tab(2)+",\n"
+                res+= subres
             }
-            //res = SeqComponents(res, components)
+            else if(res=="" && subres!=""){
+                res+=subres
+            }
+
         }
 
-        return subres
+        return res
 
     }
 }
