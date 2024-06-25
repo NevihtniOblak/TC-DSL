@@ -223,7 +223,7 @@ class SeqComponents(val components1: Components, val components2: Components) : 
         }
     }
 }
-class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val render: Render, val effect: Effect) : Components {
+class Infrastructure(val infnames: Infnames, val tag: Tag, val render: Render, val effect: Effect) : Components {
     override fun eval(env: Environment, indent: Int): String {
         var infname = infnames.eval()
         //var ref = ref.eval(env)
@@ -234,10 +234,10 @@ class Infrastructure(val infnames: Infnames, val ref: Ref, val tag: Tag, val ren
         return render.eval(env, indent, mutableListOf(infname, tag))
     }
 }
-class Containers(val contnames: Contnames, val ref: Ref, val tag: Tag, val rendercont: Rendercont, val effect: Effect) : Components {
+class Containers(val contnames: Contnames, val tag: Tag, val rendercont: Rendercont, val effect: Effect) : Components {
     override fun eval(env: Environment, indent: Int): String {
         var contname = contnames.eval()
-        var ref = ref.eval(env)
+        //var ref = ref.eval(env)
         var tag = tag.eval(env)
         var effect = effect.eval(env)
 
@@ -466,7 +466,7 @@ class SetMarker(val exp: Exp) : Commands {
 }
 
 // Specs
-class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
+class Box(val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var tag = tag.eval(env)
 
@@ -526,7 +526,7 @@ class Box(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: 
         return geoJson
     }
 }
-class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {
+class Line(val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val exp4: Exp, val effect: Effect) : Specs {
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var tag = tag.eval(env)
         var p1 = exp1.eval(env)
@@ -584,7 +584,7 @@ class Line(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: E
         return geoJson
     }
 }
-class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
+class Polygon(val tag: Tag, val polyargs: Polyargs, val effect: Effect) : Specs {
 
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         var tag = tag.eval(env)
@@ -629,13 +629,13 @@ class Polygon(val ref: Ref, val tag: Tag, val polyargs: Polyargs, val effect: Ef
     }
 
 }
-class Circle(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
+class Circle(val tag: Tag, val exp1: Exp, val exp2: Exp, val effect: Effect) : Specs {
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         TODO("Not yet implemented")
         return ""
     }
 }
-class CircleLine(val ref: Ref, val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {
+class CircleLine(val tag: Tag, val exp1: Exp, val exp2: Exp, val exp3: Exp, val effect: Effect) : Specs {
     override fun eval(env: Environment, indent: Int, parent: MutableList<String>): String {
         TODO("Not yet implemented")
         return ""

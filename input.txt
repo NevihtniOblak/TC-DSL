@@ -1,9 +1,12 @@
 
-
 City: "Maribor" (
 
-    var a = (true && !false) && 3>2 && 6>=6 || !("jan"!="matej");
+    var a = true;
 
-    print(a);
+    a = !a;
+
+
+
+    print(a||true);
 
 )
