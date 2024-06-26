@@ -51,10 +51,17 @@ enum class Symbol {
     REAL,
     VARIABLE,
 
-    CIRCLELINE
+    CIRCLELINE,
 
+    TRUE,
+    FALSE,
+    AND,
+    OR,
+    NEGATE,
 
-
+    IF,
+    ELIF,
+    ELSE,
 
 
     ;
@@ -111,6 +118,15 @@ enum class Symbol {
 
             CIRCLELINE -> "CIRCLELINE"
 
+            TRUE -> "TRUE"
+            FALSE -> "FALSE"
+            AND -> "AND"
+            OR -> "OR"
+            NEGATE -> "NEGATE"
+
+            IF -> "IF"
+            ELIF -> "ELIF"
+            ELSE -> "ELSE"
 
 
 

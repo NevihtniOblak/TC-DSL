@@ -189,7 +189,8 @@ class Parser(private val lexer: Lexer) {
     fun parseARGUMENTS(): Arguments {
         //println("Recognizing ARGUMENTS")
 
-        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+        if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE
+            )){
             var exp = parseEXP()
             var arguments = parseARGUMENTS2()
 
@@ -282,7 +283,7 @@ class Parser(private val lexer: Lexer) {
 
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)){
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)){
             var stmts = parseSTMTS()
             var components = parseCOMPONENTS()
 
@@ -317,17 +318,18 @@ class Parser(private val lexer: Lexer) {
     fun parseINFRASTRUCTURE(): Components {
         //println("Recognizing INFRASTRUCTURE")
         var infnames = parseINFNAMES()
-        var ref = parseREF()
         var t1 = parseTerminal(Symbol.COLON)
         var tag = parseTAG()
-        var t2 = parseTerminal(Symbol.LPAREN)
-        var render = parseRENDER()
-        var t3 = parseTerminal(Symbol.RPAREN)
-        var t4 = parseTerminal(Symbol.LCURLY)
-        var effect = parseEFFECT()
-        var t5 = parseTerminal(Symbol.RCURLY)
+        var t2 = parseTerminal(Symbol.COLON)
 
-        var res = Infrastructure(infnames, ref, tag, render, effect)
+        var t3= parseTerminal(Symbol.LPAREN)
+        var render = parseRENDER()
+        var t4 = parseTerminal(Symbol.RPAREN)
+        var t5 = parseTerminal(Symbol.LCURLY)
+        var effect = parseEFFECT()
+        var t6 = parseTerminal(Symbol.RCURLY)
+
+        var res = Infrastructure(infnames, tag, render, effect)
 
         //println("INFRASTRUCTURE RETURN: "+res)
 
@@ -398,17 +400,18 @@ class Parser(private val lexer: Lexer) {
     fun parseCONTAINERS(): Components {
         //println("Recognizing CONTAINERS")
         var contname = parseCONTNAMES()
-        var ref = parseREF()
         var t1 = parseTerminal(Symbol.COLON)
         var tag = parseTAG()
-        var t2 = parseTerminal(Symbol.LPAREN)
-        var rendercont = parseRENDERCONT()
-        var t3 = parseTerminal(Symbol.RPAREN)
-        var t4 = parseTerminal(Symbol.LCURLY)
-        var effect = parseEFFECT()
-        var t5 = parseTerminal(Symbol.RCURLY)
+        var t2 = parseTerminal(Symbol.COLON)
 
-        var res = Containers(contname, ref, tag, rendercont, effect)
+        var t3 = parseTerminal(Symbol.LPAREN)
+        var rendercont = parseRENDERCONT()
+        var t4 = parseTerminal(Symbol.RPAREN)
+        var t5 = parseTerminal(Symbol.LCURLY)
+        var effect = parseEFFECT()
+        var t6 = parseTerminal(Symbol.RCURLY)
+
+        var res = Containers(contname, tag, rendercont, effect)
 
         //println("CONTAINERS RETURN: "+res)
         return res
@@ -442,15 +445,13 @@ class Parser(private val lexer: Lexer) {
     //INH-TAG
     fun parseTAG(): Tag {
         //println("Recognizing TAG")
-        if (currentSymbol!!.symbol in setOf( Symbol.LANGLE)) {
-            val t1 = parseTerminal(Symbol.LANGLE)
+        if (currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)) {
             val exp = parseEXP()
-            val t2 = parseTerminal(Symbol.RANGLE)
 
             var res = TagExp(exp)
             //println("TAG RETURN: "+res)
             return res
-        } else if( currentSymbol!!.symbol in setOf( Symbol.LPAREN)){
+            } else if( currentSymbol!!.symbol in setOf( Symbol.COLON)){
             // EPSILON case
             var res = EndTag()
 
@@ -464,9 +465,10 @@ class Parser(private val lexer: Lexer) {
     }
 
     //INH-REF
+    /*
     fun parseREF(): Ref {
-        //println("Recognizing REF")
-        if (currentSymbol!!.symbol in setOf( Symbol.LANGLE)) {
+        println("Recognizing REF")
+        if (currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)) {
             val t1 = parseTerminal(Symbol.LANGLE)
             val exp = parseEXP()
             val t2 = parseTerminal(Symbol.RANGLE)
@@ -488,12 +490,14 @@ class Parser(private val lexer: Lexer) {
         }
     }
 
+     */
+
 
     //INH-RENDER
     fun parseRENDER(): Render {
         //println("Recognizing RENDER")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)) {
             val stmts = parseSTMTS()
             val render = parseRENDER()
 
@@ -528,7 +532,7 @@ class Parser(private val lexer: Lexer) {
     fun parseRENDERCONT(): Rendercont {
         //println("Recognizing RENDERCONT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)) {
             val stmts = parseSTMTS()
             val rendercont = parseRENDERCONT()
 
@@ -578,7 +582,7 @@ class Parser(private val lexer: Lexer) {
     fun parseEFFECT(): Effect {
         //println("Recognizing EFFECT")
         if (currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT,
-                Symbol.CALL, Symbol.DISPLAY_MARKERS)) {
+                Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF)) {
             val stmts = parseSTMTS()
             val effect = parseEFFECT()
 
@@ -668,95 +672,95 @@ class Parser(private val lexer: Lexer) {
         //println("Recognizing SPECS")
         if (currentSymbol!!.symbol in setOf(Symbol.BOX)) {
             val t1 = parseTerminal(Symbol.BOX)
-            val ref = parseREF()
             val t2 = parseTerminal(Symbol.COLON)
             val tag = parseTAG()
-            val t3 = parseTerminal(Symbol.LPAREN)
+            val t3 = parseTerminal(Symbol.COLON)
+            val t4 = parseTerminal(Symbol.LPAREN)
             val exp1 = parseEXP()
-            val t4 = parseTerminal(Symbol.COMMA)
-            val exp2 = parseEXP()
-            val t5 = parseTerminal(Symbol.RPAREN)
-            val t6 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
-            val t7 = parseTerminal(Symbol.RCURLY)
-
-            var res = Box(ref, tag, exp1, exp2, effect)
-            //println("SPECS RETURN: "+res)
-            return res
-
-        } else if (currentSymbol!!.symbol in setOf(Symbol.LINE)) {
-            val t1 = parseTerminal(Symbol.LINE)
-            val ref = parseREF()
-            val t2 = parseTerminal(Symbol.COLON)
-            val tag = parseTAG()
-            val t3 = parseTerminal(Symbol.LPAREN)
-            val exp1 = parseEXP()
-            val t4 = parseTerminal(Symbol.COMMA)
-            val exp2 = parseEXP()
             val t5 = parseTerminal(Symbol.COMMA)
-            val exp3 = parseEXP()
-            val t6 = parseTerminal(Symbol.COMMA)
-            val exp4 = parseEXP()
-            val t7 = parseTerminal(Symbol.RPAREN)
-            val t8 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
-            val t9 = parseTerminal(Symbol.RCURLY)
-
-            var res = Line(ref, tag, exp1, exp2, exp3, exp4, effect)
-            //println("SPECS RETURN: "+res)
-            return res
-
-        } else if (currentSymbol!!.symbol in setOf( Symbol.POLYGON)) {
-            val t1 = parseTerminal(Symbol.POLYGON)
-            val ref = parseREF()
-            val t2 = parseTerminal(Symbol.COLON)
-            val tag = parseTAG()
-            val t3 = parseTerminal(Symbol.LPAREN)
-            val polyargs = parsePOLYARGS()
-            val t4 = parseTerminal(Symbol.RPAREN)
-            val t5 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
-            val t6 = parseTerminal(Symbol.RCURLY)
-
-            var res = Polygon(ref, tag, polyargs, effect)
-            //println("SPECS RETURN: "+res)
-            return res
-
-        } else if (currentSymbol!!.symbol in setOf( Symbol.CIRCLE)) {
-            val t1 = parseTerminal(Symbol.CIRCLE)
-            val ref = parseREF()
-            val t2 = parseTerminal(Symbol.COLON)
-            val tag = parseTAG()
-            val t3 = parseTerminal(Symbol.LPAREN)
-            val exp1 = parseEXP()
-            val t4 = parseTerminal(Symbol.COMMA)
             val exp2 = parseEXP()
-            val t5 = parseTerminal(Symbol.RPAREN)
-            val t6 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
-            val t7 = parseTerminal(Symbol.RCURLY)
-
-            var res = Circle(ref, tag, exp1, exp2, effect)
-            //println("SPECS RETURN: "+res)
-            return res
-
-        } else if (currentSymbol!!.symbol in setOf( Symbol.CIRCLELINE)) {
-            val t1 = parseTerminal(Symbol.CIRCLELINE)
-            val ref = parseREF()
-            val t2 = parseTerminal(Symbol.COLON)
-            val tag = parseTAG()
-            val t3 = parseTerminal(Symbol.LPAREN)
-            val exp1 = parseEXP()
-            val t4 = parseTerminal(Symbol.COMMA)
-            val exp2 = parseEXP()
-            val t5 = parseTerminal(Symbol.COMMA)
-            val exp3 = parseEXP()
             val t6 = parseTerminal(Symbol.RPAREN)
             val t7 = parseTerminal(Symbol.LCURLY)
             val effect = parseEFFECT()
             val t8 = parseTerminal(Symbol.RCURLY)
 
-            var res = CircleLine(ref, tag, exp1, exp2, exp3, effect)
+            var res = Box(tag, exp1, exp2, effect)
+            //println("SPECS RETURN: "+res)
+            return res
+
+        } else if (currentSymbol!!.symbol in setOf(Symbol.LINE)) {
+            val t1 = parseTerminal(Symbol.LINE)
+            val t2 = parseTerminal(Symbol.COLON)
+            val tag = parseTAG()
+            val t3 = parseTerminal(Symbol.COLON)
+            val t4 = parseTerminal(Symbol.LPAREN)
+            val exp1 = parseEXP()
+            val t5 = parseTerminal(Symbol.COMMA)
+            val exp2 = parseEXP()
+            val t6 = parseTerminal(Symbol.COMMA)
+            val exp3 = parseEXP()
+            val t7 = parseTerminal(Symbol.COMMA)
+            val exp4 = parseEXP()
+            val t8 = parseTerminal(Symbol.RPAREN)
+            val t9 = parseTerminal(Symbol.LCURLY)
+            val effect = parseEFFECT()
+            val t10 = parseTerminal(Symbol.RCURLY)
+
+            var res = Line(tag, exp1, exp2, exp3, exp4, effect)
+            //println("SPECS RETURN: "+res)
+            return res
+
+        } else if (currentSymbol!!.symbol in setOf( Symbol.POLYGON)) {
+            val t1 = parseTerminal(Symbol.POLYGON)
+            val t2 = parseTerminal(Symbol.COLON)
+            val tag = parseTAG()
+            val t3 = parseTerminal(Symbol.COLON)
+            val t4 = parseTerminal(Symbol.LPAREN)
+            val polyargs = parsePOLYARGS()
+            val t5 = parseTerminal(Symbol.RPAREN)
+            val t6 = parseTerminal(Symbol.LCURLY)
+            val effect = parseEFFECT()
+            val t7 = parseTerminal(Symbol.RCURLY)
+
+            var res = Polygon(tag, polyargs, effect)
+            //println("SPECS RETURN: "+res)
+            return res
+
+        } else if (currentSymbol!!.symbol in setOf( Symbol.CIRCLE)) {
+            val t1 = parseTerminal(Symbol.CIRCLE)
+            val t2 = parseTerminal(Symbol.COLON)
+            val tag = parseTAG()
+            val t3 = parseTerminal(Symbol.COLON)
+            val t4 = parseTerminal(Symbol.LPAREN)
+            val exp1 = parseEXP()
+            val t5 = parseTerminal(Symbol.COMMA)
+            val exp2 = parseEXP()
+            val t6 = parseTerminal(Symbol.RPAREN)
+            val t7 = parseTerminal(Symbol.LCURLY)
+            val effect = parseEFFECT()
+            val t8 = parseTerminal(Symbol.RCURLY)
+
+            var res = Circle(tag, exp1, exp2, effect)
+            //println("SPECS RETURN: "+res)
+            return res
+
+        } else if (currentSymbol!!.symbol in setOf( Symbol.CIRCLELINE)) {
+            val t1 = parseTerminal(Symbol.CIRCLELINE)
+            val t2 = parseTerminal(Symbol.COLON)
+            val tag = parseTAG()
+            val t3 = parseTerminal(Symbol.COLON)
+            val t4 = parseTerminal(Symbol.LPAREN)
+            val exp1 = parseEXP()
+            val t5 = parseTerminal(Symbol.COMMA)
+            val exp2 = parseEXP()
+            val t6 = parseTerminal(Symbol.COMMA)
+            val exp3 = parseEXP()
+            val t7 = parseTerminal(Symbol.RPAREN)
+            val t8 = parseTerminal(Symbol.LCURLY)
+            val effect = parseEFFECT()
+            val t9 = parseTerminal(Symbol.RCURLY)
+
+            var res = CircleLine(tag, exp1, exp2, exp3, effect)
             //println("SPECS RETURN: "+res)
             return res
 
@@ -880,7 +884,7 @@ class Parser(private val lexer: Lexer) {
             return res
 
 
-        } else if (currentSymbol!!.symbol in setOf( Symbol.DISPLAY_MARKERS)) {
+        } else if (currentSymbol!!.symbol in setOf(Symbol.DISPLAY_MARKERS)) {
             val t1 = parseTerminal(Symbol.DISPLAY_MARKERS)
             val t2 = parseTerminal(Symbol.LPAREN)
             val exp1 = parseEXP()
@@ -896,9 +900,63 @@ class Parser(private val lexer: Lexer) {
             return res
 
 
-        } else {
+        }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.IF)){
+            println("If statement!!!")
+            val t1 = parseTerminal(Symbol.IF)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.LCURLY)
+            val components = parseCOMPONENTS()
+            val t5 = parseTerminal(Symbol.RCURLY)
+            val ifelse = parseIFELSE()
+
+            var res = IfStatement(exp, components, ifelse)
+            //println("STMTS RETURN: "+res)
+            return res
+        }
+
+        else {
 
             //println("STMTS RETURN: "+ "panic")
+            return panic()
+        }
+    }
+
+    //INH-IFELSE
+    fun parseIFELSE(): IfElseStmts {
+        //println("Recognizing IFELSE")
+        if(currentSymbol!!.symbol in setOf(Symbol.ELIF)){
+            val t1 = parseTerminal(Symbol.ELIF)
+            val t2 = parseTerminal(Symbol.LPAREN)
+            val exp = parseEXP()
+            val t3 = parseTerminal(Symbol.RPAREN)
+            val t4 = parseTerminal(Symbol.LCURLY)
+            val components = parseCOMPONENTS()
+            val t5 = parseTerminal(Symbol.RCURLY)
+            val ifelse = parseIFELSE()
+
+            var res = Elif(exp, components, ifelse)
+            //println("IFELSE RETURN: "+res)
+            return res
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.ELSE)){
+            println("Else!!!")
+            val t1 = parseTerminal(Symbol.ELSE)
+            val t2 = parseTerminal(Symbol.LCURLY)
+            val components = parseCOMPONENTS()
+            val t3 = parseTerminal(Symbol.RCURLY)
+
+            var res = Else(components)
+            //println("IFELSE RETURN: "+res)
+            return res
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.VAR, Symbol.VARIABLE, Symbol.FOR, Symbol.PRINT, Symbol.CALL, Symbol.DISPLAY_MARKERS, Symbol.IF, Symbol.SET_LOCATION, Symbol.TRANSLATE, Symbol.ROTATE, Symbol.SET_MARKER, Symbol.BOX, Symbol.LINE, Symbol.POLYGON, Symbol.CIRCLE, Symbol.CIRCLELINE, Symbol.BUILDING, Symbol.ROAD, Symbol.RAIL, Symbol.AQUA, Symbol.PATH, Symbol.SHOP_TUS, Symbol.SHOP_MERCATOR, Symbol.BUILDING_COMPLEX, Symbol.PARK, Symbol.RCURLY, Symbol.RPAREN)){
+            return EndIfelse()
+        }
+        else{
             return panic()
         }
     }
@@ -965,12 +1023,234 @@ class Parser(private val lexer: Lexer) {
     //INH-EXP
     fun parseEXP(): Exp {
         //println("Recognizing EXP")
-        val add = parseADDITIVE()
+        val or = parseOR()
 
-        var res = add
-        //println("EXP RETURN: "+add)
-        return add
+        var res = or
+        //println("EXP RETURN: "+or)
+        return or
     }
+
+    //INH-EXP
+    fun parseOR(): Exp{
+        var and = parseAND()
+        var or2 = parseOR2(and)
+
+        var res = or2
+        //println("OR RETURN: "+or2)
+        return or2
+    }
+
+    fun parseOR2(iexp: Exp): Exp{
+        if(currentSymbol!!.symbol in setOf(Symbol.OR)) {
+            var t1 = parseTerminal(Symbol.OR)
+            var and = parseAND()
+            var or2 = parseOR2(and)
+
+            var subres = Or(iexp, or2)
+            var res = parseOR2(subres)
+
+            //println("OR2 RETURN: "+res)
+            return res
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)){
+            var res = iexp
+            //println("OR2 RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
+
+
+    }
+
+
+    //INH-EXP
+    fun parseAND(): Exp{
+
+        var equal = parseEQUAL()
+        var and2 = parseAND2(equal)
+
+        var res = and2
+        //println("AND RETURN: "+and2)
+        return and2
+
+    }
+
+    fun parseAND2(iexp: Exp): Exp{
+
+        if(currentSymbol!!.symbol in setOf(Symbol.AND)) {
+            var t1 = parseTerminal(Symbol.AND)
+            var equal = parseEQUAL()
+            var and2 = parseAND2(equal)
+
+            var subres = And(iexp, and2)
+            var res = parseAND2(subres)
+
+            //println("AND2 RETURN: "+res)
+            return res
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)){
+            var res = iexp
+            //println("AND2 RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
+
+    }
+
+    fun parseEQUAL(): Exp{
+
+        var compare = parseCOMPARE()
+        var equal2 = parseEQUAL2(compare)
+
+        var res = equal2
+        //println("EQUAL RETURN: "+equal2)
+        return equal2
+
+    }
+
+    fun parseEQUAL2(iexp: Exp): Exp{
+
+        if(currentSymbol!!.symbol in setOf(Symbol.EQUALS)) {
+            var t1 = parseTerminal(Symbol.EQUALS)
+            var t2 = parseTerminal(Symbol.EQUALS)
+            var compare = parseCOMPARE()
+            var equal2 = parseEQUAL2(compare)
+
+            var subres = Equal(iexp, equal2)
+            var res = parseEQUAL2(subres)
+
+            //println("EQUAL2 RETURN: "+res)
+            return res
+        }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.NEGATE)){
+            var t1 = parseTerminal(Symbol.NEGATE)
+            var t2 = parseTerminal(Symbol.EQUALS)
+            var compare = parseCOMPARE()
+            var equal2 = parseEQUAL2(compare)
+
+            var subres = Inequal(iexp, equal2)
+            var res = parseEQUAL2(subres)
+
+            //println("EQUAL2 RETURN: "+res)
+            return res
+        }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)){
+            var res = iexp
+            //println("EQUAL2 RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
+
+    }
+
+    //INH-EXP
+    fun parseCOMPARE(): Exp{
+
+        var additive = parseADDITIVE()
+        var compare2 = parseCOMPARE2(additive)
+
+        var res = compare2
+        //println("COMPARE RETURN: "+compare2)
+        return compare2
+    }
+
+    //INH-EXP
+    fun parseCOMPARE2(iexp: Exp): Exp{
+
+        if(currentSymbol!!.symbol in setOf(Symbol.RANGLE)){
+            //greater or greaterEqual
+            var t1 = parseTerminal(Symbol.RANGLE)
+
+            if(currentSymbol!!.symbol in setOf(Symbol.EQUALS)){
+                // greaterEqual
+                var t2 = parseTerminal(Symbol.EQUALS)
+
+                var add = parseADDITIVE()
+                var subres = GreaterEqual(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+            }
+            else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
+                // greater
+                var add = parseADDITIVE()
+                var subres = Greater(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+            }
+            else{
+                //println("COMPARE2 RETURN: "+ "panic")
+                return panic()
+
+            }
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.LANGLE)){
+            //lesser or lesserEqual
+            var t1 = parseTerminal(Symbol.LANGLE)
+
+            if(currentSymbol!!.symbol in setOf(Symbol.EQUALS)){
+                // lesserEqual
+                var t2 = parseTerminal(Symbol.EQUALS)
+
+                var add = parseADDITIVE()
+                var subres = LesserEqual(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+
+            }
+            else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE
+                )){
+                // lesser
+                var add = parseADDITIVE()
+                var subres = Lesser(iexp, add)
+                var compare2 = parseCOMPARE2(subres)
+
+                var res = compare2
+                //println("COMPARE2 RETURN: "+res)
+                return res
+
+            }
+            else{
+                //println("COMPARE2 RETURN: "+ "panic")
+                return panic()
+
+            }
+
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)){
+            var res = iexp
+            //println("COMPARE2 return"+ res)
+            return res
+        }
+        else{
+            //println("COMPARE2 RETURN: "+ "panic")
+            return panic()
+        }
+
+    }
+
 
 
     //INH-EXP
@@ -1012,7 +1292,7 @@ class Parser(private val lexer: Lexer) {
             //println("ADDITIVE2 RETURN: "+add2)
             return add2
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)){
 
             var res = iexp
             //println("ADDITIVE2 RETURN: "+ res)
@@ -1078,7 +1358,7 @@ class Parser(private val lexer: Lexer) {
 
             //println("MULTIPLICATIVE2 RETURN: "+res)
             return res
-        } else if( currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)) {
+        } else if( currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)) {
 
             var res = iexp
             //println("MULTIPLICATIVE2 RETURN: "+res)
@@ -1121,8 +1401,7 @@ class Parser(private val lexer: Lexer) {
             //println("EXPONENTIAL2 RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS,
-                Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS, Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)){
 
             var res = iexp
             //println("EXPONENTIAL2 RETURN: "+res)
@@ -1149,7 +1428,8 @@ class Parser(private val lexer: Lexer) {
             //println("UNARY RETURN: "+res)
             return res
 
-        } else if (currentSymbol!!.symbol in setOf( Symbol.MINUS)) {
+        }
+        else if (currentSymbol!!.symbol in setOf( Symbol.MINUS)) {
             val t1 = parseTerminal(Symbol.MINUS)
 
             val primary = parsePRIMARY()
@@ -1158,7 +1438,18 @@ class Parser(private val lexer: Lexer) {
             //println("UNARY RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf( Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.NEGATE)){
+            var t1 = parseTerminal(Symbol.NEGATE)
+
+            var primary = parsePRIMARY()
+
+            var res = Negate(primary)
+            //println("UNARY RETURN: "+res)
+            return res
+
+        }
+        else if(currentSymbol!!.symbol in setOf( Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
             val primary = parsePRIMARY()
 
             var res = primary
@@ -1203,17 +1494,50 @@ class Parser(private val lexer: Lexer) {
 
         } else if (currentSymbol!!.symbol in setOf( Symbol.STRING)) {
             val string = parseTerminal(Symbol.STRING)
+            println("parsed a string!")
 
             var res = StringExp(string)
             //println("PRIMARY RETURN: "+res)
             return res
 
         }
+
+        else if(currentSymbol!!.symbol in setOf(Symbol.FALSE, Symbol.TRUE)){
+            var bool = parseBOOL()
+
+            var res = bool
+
+            //println("PRIMARY RETURN: "+res)
+            return res
+        }
         else{
 
             //println("PRIMARY RETURN: "+ "panic")
             return panic()
         }
+    }
+
+
+    fun parseBOOL(): Exp{
+
+        if(currentSymbol!!.symbol in setOf(Symbol.TRUE)){
+            var t1 = parseTerminal(Symbol.TRUE)
+
+            var res = BooleanExp(true)
+            //println("BOOL RETURN: "+res)
+            return res
+        }
+        else if(currentSymbol!!.symbol in setOf(Symbol.FALSE)){
+            var t1 = parseTerminal(Symbol.FALSE)
+
+            var res = BooleanExp(false)
+            //println("BOOL RETURN: "+res)
+            return res
+        }
+        else{
+            return panic()
+        }
+
     }
 
 
@@ -1229,8 +1553,7 @@ class Parser(private val lexer: Lexer) {
             //println("PRIMARY1 RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.POW, Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS, Symbol.COMMA,
-                Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.RANGLE)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.POW, Symbol.TIMES, Symbol.DIVIDE, Symbol.INTEGER_DIVIDE, Symbol.PLUS, Symbol.MINUS, Symbol.RANGLE, Symbol.LANGLE, Symbol.EQUALS, Symbol.NEGATE, Symbol.AND, Symbol.OR, Symbol.COMMA, Symbol.RPAREN, Symbol.RSQURE, Symbol.SEMICOL, Symbol.COLON)){
 
             var res = Variable(ivariable)
             //println("PRIMARY1 RETURN: "+ res)
@@ -1279,8 +1602,7 @@ class Parser(private val lexer: Lexer) {
             //println("DATA RETURN: "+res)
             return res
 
-        } else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS,
-                Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING)){
+        } else if(currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.NEGATE, Symbol.REAL, Symbol.VARIABLE, Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)){
             var exp = parseEXP()
 
             var res = ExpData(exp)
@@ -1311,7 +1633,7 @@ class Parser(private val lexer: Lexer) {
     fun parseLISTITEM(): Listitems {
         //println("Recognizing LISTITEM")
         if (currentSymbol!!.symbol in setOf(Symbol.PLUS, Symbol.MINUS, Symbol.REAL, Symbol.VARIABLE,
-                Symbol.LPAREN, Symbol.STRING)) {
+                Symbol.LPAREN, Symbol.STRING, Symbol.TRUE, Symbol.FALSE)) {
             val exp1 = parseEXP()
             val listitem2 = parseLISTITEM2()
 
