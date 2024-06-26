@@ -278,7 +278,7 @@ class Parser(private val lexer: Lexer) {
 
             var res = SeqComponents(containers, components)
 
-            println("COMPONENTS RETURN: "+res)
+            //println("COMPONENTS RETURN: "+res)
             return res
 
         }
