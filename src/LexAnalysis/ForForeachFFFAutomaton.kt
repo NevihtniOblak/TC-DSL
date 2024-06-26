@@ -15,13 +15,13 @@ object ForForeachFFFAutomaton: DFA {
 
     //DELO Z STANJII
 
-    val normalStates = setOf(2, 3, 9, 18, 19, 20, 21, 22, 23, 27, 28, 36,
-        40, 43, 47, 51, 58, 66, 74, 76, 77, 78, 89, 90, 99, 105, 111, 113, 117, 123, 127, 130, 131,
-        134, 137, 141, 155, 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, 174, 177, 181, 183, 185, 186, 188, 192, 194)
+    val normalStates = setOf(2, 3, /*9,*/ 18, 19, 20, 21, 22, 23, 27, 28, 36,
+        40, 43, 47, 51, 58, 66, 74, 76, 77, 78, /*89,*/ 90, /*99,*/ 105, /*111,*/ 113, 117, 123, /*127,*/ 130, 131,
+        134, 137, 141, /*155,*/ 156, 157, 158, 159, 160, 161, 162, 163, 166, 167, 169, 170, /*174,*/ 177, 181, 183, 185, 186, 188, 192, 194)
 
     //vmesna stanja ki lahko z nekim branjem grejo v variable (prvi znak je stanje in drugi znak je alphanum znak, ki ga ne smemo prebrati da gre v variable stanje)
     private val canGoToVariable = listOf(
-        Pair(1,'S'), Pair(4,'C'), Pair(5,'H'), Pair(6,'E'), Pair(7,'M'), Pair(8,'A'), // schema(SCHEMA)
+        Pair(1,'S'),// Pair(4,'C'), Pair(5,'H'), Pair(6,'E'), Pair(7,'M'), Pair(8,'A'), // schema(SCHEMA)
         Pair(1,'p'), Pair(10,'r'), Pair(11,'o'), Pair(12,'c'), Pair(13,'e'), Pair(14,'d'), Pair(15,'u'), Pair(16,'r'), Pair(17,'e'), // PROCEDURE(procedure)
         Pair(1,'C'), Pair(24,'i'), Pair(25,'t'), Pair(26,'y'), // CITY(City)
         Pair(1,'B'), Pair(29,'u'), Pair(30,'i'), Pair(31,'l'), Pair(32,'d'), Pair(33,'i'), Pair(34,'n'), Pair(35,'g'), // BUILDING(Building)
@@ -33,20 +33,20 @@ object ForForeachFFFAutomaton: DFA {
         Pair(55,'M'), Pair(59,'e'), Pair(60,'r'), Pair(61,'c'), Pair(62,'a'), Pair(63,'t'), Pair(64,'o'), Pair(65, 'r'), // SHOP-MERCATOR(Shop-Mercator)
         Pair(36,'-'), Pair(67,'C'), Pair(68,'o'), Pair(69,'m'), Pair(70,'p'), Pair(71,'l'), Pair(72,'e'),Pair(73,'x'), // BUILDING-COMPLEX(Building-Complex)
         Pair(49,'r'), Pair(50,'k'), // PARK(Park)
-        Pair(1,'s'), Pair(79,'e'), Pair(80,'t'), Pair(81,'L'), Pair(82,'o'), Pair(83,'c'), Pair(84,'a'), Pair(85,'t'), Pair(86,'i'), Pair(87,'o'), Pair(88,'n'), // SET_LOCATION(setLocation)
-        Pair(1,'t'), Pair(91,'r'), Pair(92,'a'), Pair(93,'n'), Pair(94,'s'), Pair(95,'l'), Pair(96,'a'), Pair(97,'t'), Pair(98, 'e'),// TRANSLATE(translate)
+        //Pair(1,'s'), Pair(79,'e'), Pair(80,'t'), Pair(81,'L'), Pair(82,'o'), Pair(83,'c'), Pair(84,'a'), Pair(85,'t'), Pair(86,'i'), Pair(87,'o'), Pair(88,'n'), // SET_LOCATION(setLocation)
+        Pair(1,'t'), Pair(91,'r'),// Pair(92,'a'), Pair(93,'n'), Pair(94,'s'), Pair(95,'l'), Pair(96,'a'), Pair(97,'t'), Pair(98, 'e'),// TRANSLATE(translate)
         Pair(1,'r'), Pair(100,'o'), Pair(101,'t'), Pair(102,'a'), Pair(103,'t') , Pair(104,'e'), // ROTATE(rotate)
-        Pair(81,'M'), Pair(106,'a'), Pair(107,'r'), Pair(108,'k'), Pair(109,'e'), Pair(110,'r'), // SET_MARKER(setMarker)
+        //Pair(81,'M'), Pair(106,'a'), Pair(107,'r'), Pair(108,'k'), Pair(109,'e'), Pair(110,'r'), // SET_MARKER(setMarker)
         Pair(29,'o'), Pair(112,'x'),// BOX(Box)
         Pair(1,'L'), Pair(114,'i'), Pair(115,'n'), Pair(116,'e'),// LINE(Line)
         Pair(48,'o'), Pair(118,'l'), Pair(119,'y'), Pair(120,'g'), Pair(121,'o'),  Pair(122,'n'), // POLYGON(Polygon)
-        Pair(25,'r'), Pair(124,'c'), Pair(125,'l'), Pair(126,'e'),// CIRCLE(Circle)
-        Pair(127,'L'), Pair(171,'i'), Pair(172,'n'), Pair(173,'e'), // CIRCLELINE(CircleLine)
+        //Pair(25,'r'), Pair(124,'c'), Pair(125,'l'), Pair(126,'e'),// CIRCLE(Circle)
+        //Pair(127,'L'), Pair(171,'i'), Pair(172,'n'), Pair(173,'e'), // CIRCLELINE(CircleLine)
         Pair(1,'v'), Pair(128,'a'), Pair(129,'r'),// VAR(var)
         Pair(1,'f'), Pair(132,'o'), Pair(133,'r'),// FOR(for)
         Pair(11,'i'), Pair(135,'n'), Pair(136,'t'),// PRINT(print)
         Pair(1,'c'), Pair(138,'a'), Pair(139,'l'), Pair(140,'l'), // CALL(call)
-        Pair(1,'d'), Pair(142,'i'), Pair(143,'s'), Pair(144,'p'), Pair(145,'l'), Pair(146,'a'), Pair(147,'y'), Pair(148,'M'), Pair(149,'a'), Pair(150,'r'), Pair(151,'k'), Pair(152,'e'), Pair(153,'r'), Pair(154,'s'), // DISPLAY_MARKERS(displayMarkers)
+        //Pair(1,'d'), Pair(142,'i'), Pair(143,'s'), Pair(144,'p'), Pair(145,'l'), Pair(146,'a'), Pair(147,'y'), Pair(148,'M'), Pair(149,'a'), Pair(150,'r'), Pair(151,'k'), Pair(152,'e'), Pair(153,'r'), Pair(154,'s'), // DISPLAY_MARKERS(displayMarkers)
         Pair(92, 'u'), Pair(176, 'e'), // true
         Pair(132, 'a'), Pair(178, 'l'), Pair(179, 's'), Pair(180, 'e'), // false
         Pair(1, 'i'), Pair(187, 'f'), // IF(if
@@ -116,7 +116,9 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(1, '\n', 3)
 
         //schema(SCHEMA)
+
         setTransition(1,'S', 4)
+        /*
         setTransition(4,'C', 5)
         setTransition(5,'H', 6)
         setTransition(6,'E', 7)
@@ -126,6 +128,8 @@ object ForForeachFFFAutomaton: DFA {
         for(char in alphaNum){
             setTransition(9, char, 170)
         }
+
+         */
 
         //PROCEDURE(procedure)
         setTransition(1,'p', 10)
@@ -292,6 +296,7 @@ object ForForeachFFFAutomaton: DFA {
         setTransition(1,'>', 78)
 
         //SET_LOCATION(setLocation)
+        /*
         setTransition(1,'s', 79)
         setTransition(79,'e', 80)
         setTransition(80,'t', 81)
@@ -308,6 +313,8 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(89, char, 170)
         }
 
+         */
+
         //ignore
         //SEMICOL(;)
         setTransition(1,';', 90)
@@ -315,6 +322,7 @@ object ForForeachFFFAutomaton: DFA {
         //TRANSLATE(translate)
         setTransition(1,'t', 91)
         setTransition(91,'r', 92)
+        /*
         setTransition(92,'a', 93)
         setTransition(93,'n', 94)
         setTransition(94,'s', 95)
@@ -326,6 +334,8 @@ object ForForeachFFFAutomaton: DFA {
         for(char in alphaNum){
             setTransition(99, char, 170)
         }
+
+         */
 
         //ROTATE(rotate)
         setTransition(1,'r', 100)
@@ -341,6 +351,7 @@ object ForForeachFFFAutomaton: DFA {
 
         //SET_MARKER(setMarker)
         //set dobi od SET_LOCATION
+        /*
         setTransition(81,'M', 106)
         setTransition(106,'a', 107)
         setTransition(107,'r', 108)
@@ -351,6 +362,8 @@ object ForForeachFFFAutomaton: DFA {
         for(char in alphaNum){
             setTransition(112, char, 170)
         }
+
+         */
 
         //BOX(Box)
         //B dobi od BUILDING
@@ -386,6 +399,7 @@ object ForForeachFFFAutomaton: DFA {
 
         //CIRCLE(Circle)
         //Ci dobi od CITY
+        /*
         setTransition(25,'r', 124)
         setTransition(124,'c', 125)
         setTransition(125,'l', 126)
@@ -395,8 +409,11 @@ object ForForeachFFFAutomaton: DFA {
             setTransition(127, char, 170)
         }
 
+         */
+
         //CIRCLELINE(CircleLine)
         //CIRCLE dobi od CIRCLE
+        /*
         setTransition(127,'L', 171)
         setTransition(171,'i', 172)
         setTransition(172,'n', 173)
@@ -405,6 +422,8 @@ object ForForeachFFFAutomaton: DFA {
         for(char in alphaNum){
             setTransition(174, char, 170)
         }
+
+         */
 
         //VAR(var)
         setTransition(1,'v', 128)
@@ -450,6 +469,7 @@ object ForForeachFFFAutomaton: DFA {
         }
 
         //DISPLAY_MARKERS(displayMarkers)
+        /*
         setTransition(1,'d', 142)
         setTransition(142,'i', 143)
         setTransition(143,'s', 144)
@@ -468,6 +488,8 @@ object ForForeachFFFAutomaton: DFA {
         for(char in alphaNum){
             setTransition(155, char, 170)
         }
+
+         */
 
         //ignore
         //LSQURE([)
@@ -612,7 +634,7 @@ object ForForeachFFFAutomaton: DFA {
         //eof
         setSymbol(2, Symbol.EOF)
         //schema(SCHEMA)
-        setSymbol(9, Symbol.SCHEMA)
+        //setSymbol(9, Symbol.SCHEMA)
         //PROCEDURE(procedure)
         setSymbol(18, Symbol.PROCEDURE)
         //LPAREN(()
@@ -652,15 +674,15 @@ object ForForeachFFFAutomaton: DFA {
         //RANGLE(>)
         setSymbol(78, Symbol.RANGLE)
         //SET_LOCATION(setLocation)
-        setSymbol(89, Symbol.SET_LOCATION)
+        //setSymbol(89, Symbol.SET_LOCATION)
         //SEMICOL(;)
         setSymbol(90, Symbol.SEMICOL)
         //TRANSLATE(translate)
-        setSymbol(99, Symbol.TRANSLATE)
+        //setSymbol(99, Symbol.TRANSLATE)
         //ROTATE(rotate)
         setSymbol(105, Symbol.ROTATE)
         //SET_MARKER(setMarker)
-        setSymbol(111, Symbol.SET_MARKER)
+        //setSymbol(111, Symbol.SET_MARKER)
         //BOX(Box)
         setSymbol(113, Symbol.BOX)
         //LINE(Line)
@@ -668,7 +690,7 @@ object ForForeachFFFAutomaton: DFA {
         //POLYGON(Polygon)
         setSymbol(123, Symbol.POLYGON)
         //CIRCLE(Circle)
-        setSymbol(127, Symbol.CIRCLE)
+        //setSymbol(127, Symbol.CIRCLE)
         //VAR(var)
         setSymbol(130, Symbol.VAR)
         //EQUALS(=)
@@ -680,7 +702,7 @@ object ForForeachFFFAutomaton: DFA {
         //CALL(call)
         setSymbol(141, Symbol.CALL)
         //DISPLAY_MARKERS(displayMarkers)
-        setSymbol(155, Symbol.DISPLAY_MARKERS)
+        //setSymbol(155, Symbol.DISPLAY_MARKERS)
         //LSQURE([)
         setSymbol(156, Symbol.LSQURE)
         //RSQURE(])
@@ -713,7 +735,7 @@ object ForForeachFFFAutomaton: DFA {
         }
 
         //CIRCLELINE(CircleLine)
-        setSymbol(174, Symbol.CIRCLELINE)
+        //setSymbol(174, Symbol.CIRCLELINE)
 
         //TRUE(true)
         setSymbol(177, Symbol.TRUE)

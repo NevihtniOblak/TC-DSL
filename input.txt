@@ -1,32 +1,46 @@
-City : "Maribor" (
+
+procedure fakulteta(n, res){
+    if(n == 0){
+        res[0]=1;
+    }
+    elif(n == 1){
+        res[0]=1;
+    }
+    else{
+        call fakulteta(n-1, res);
+        res[0] = res[0] * n;
+    }
+}
+
+procedure fibonnaci(n, res){
+
+    if(n == 1){
+        res[0]=1;
+    }
+    elif(n == 2){
+        res[0]=1;
+    }
+    else{
+        call fibonnaci(n-1, res);
+        var subres1 = res[0];
+        call fibonnaci(n-2, res);
+        var subres2 = res[0];
+
+        res[0] = subres1 + subres2;
+    }
+}
 
 
-    var vX = 0.0001;
-    var vY = 0.0003;
+City: "Maribor" (
 
-    Building: "Hisa Epic" :(
+    var result = [0];
+    call fibonnaci(10, result);
+    print(result[0]);
 
-        for(var i = 0; 2){
-            var px = (46.54611504236091+vX*i, 15.638147372583589+vY*i);
-            var py = (46.54620268748064+vX*i, 15.638262400927925+vY*i);
-
-            Box: "Box" :(px,py){}
-
-            }
-    ){}
+    call fakulteta(5, result);
+    print(result[0]);
 
 
-
-    Building-Complex: "Nakupovalni center Tabor" :(
-        Polygon: "Main_building" :((46.5408416783155, 15.640630939781921),(46.5396239985821,
-         15.63972971539479),(46.539159065615735, 15.641553608301916),(46.540428388838926, 15.642540701474442)){}
-
-        Line::((46.54046417232154, 15.64322084730311),(46.54118742416189, 15.640442032630785),0,0){}
-        Shop-Mercator: "Mercator-Tabor" :(
-            Polygon::((46.53949369695169, 15.641641704988919),(46.54010185032307, 15.642092808731256),
-            (46.54021355669839, 15.641596605363688),(46.53962147863174, 15.641013861975608)){}
-        ){}
-    ){}
 
 
 )
