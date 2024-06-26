@@ -1494,7 +1494,7 @@ class Parser(private val lexer: Lexer) {
 
         } else if (currentSymbol!!.symbol in setOf( Symbol.STRING)) {
             val string = parseTerminal(Symbol.STRING)
-            println("parsed a string!")
+            //println("parsed a string!")
 
             var res = StringExp(string)
             //println("PRIMARY RETURN: "+res)
