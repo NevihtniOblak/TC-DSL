@@ -278,7 +278,7 @@ class Parser(private val lexer: Lexer) {
 
             var res = SeqComponents(containers, components)
 
-            println("COMPONENTS RETURN: "+res)
+            //println("COMPONENTS RETURN: "+res)
             return res
 
         }
@@ -326,10 +326,10 @@ class Parser(private val lexer: Lexer) {
         var render = parseRENDER()
         var t4 = parseTerminal(Symbol.RPAREN)
         var t5 = parseTerminal(Symbol.LCURLY)
-        var effect = parseEFFECT()
+        //var effect = parseEFFECT()
         var t6 = parseTerminal(Symbol.RCURLY)
 
-        var res = Infrastructure(infnames, tag, render, effect)
+        var res = Infrastructure(infnames, tag, render/*, effect*/)
 
         //println("INFRASTRUCTURE RETURN: "+res)
 
@@ -408,10 +408,10 @@ class Parser(private val lexer: Lexer) {
         var rendercont = parseRENDERCONT()
         var t4 = parseTerminal(Symbol.RPAREN)
         var t5 = parseTerminal(Symbol.LCURLY)
-        var effect = parseEFFECT()
+        //var effect = parseEFFECT()
         var t6 = parseTerminal(Symbol.RCURLY)
 
-        var res = Containers(contname, tag, rendercont, effect)
+        var res = Containers(contname, tag, rendercont/*, effect*/)
 
         //println("CONTAINERS RETURN: "+res)
         return res
@@ -681,10 +681,10 @@ class Parser(private val lexer: Lexer) {
             val exp2 = parseEXP()
             val t6 = parseTerminal(Symbol.RPAREN)
             val t7 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
+            //val effect = parseEFFECT()
             val t8 = parseTerminal(Symbol.RCURLY)
 
-            var res = Box(tag, exp1, exp2, effect)
+            var res = Box(tag, exp1, exp2/*, effect*/)
             //println("SPECS RETURN: "+res)
             return res
 
@@ -703,10 +703,10 @@ class Parser(private val lexer: Lexer) {
             val exp4 = parseEXP()
             val t8 = parseTerminal(Symbol.RPAREN)
             val t9 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
+            //val effect = parseEFFECT()
             val t10 = parseTerminal(Symbol.RCURLY)
 
-            var res = Line(tag, exp1, exp2, exp3, exp4, effect)
+            var res = Line(tag, exp1, exp2, exp3, exp4/*, effect*/)
             //println("SPECS RETURN: "+res)
             return res
 
@@ -719,10 +719,10 @@ class Parser(private val lexer: Lexer) {
             val polyargs = parsePOLYARGS()
             val t5 = parseTerminal(Symbol.RPAREN)
             val t6 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
+            //val effect = parseEFFECT()
             val t7 = parseTerminal(Symbol.RCURLY)
 
-            var res = Polygon(tag, polyargs, effect)
+            var res = Polygon(tag, polyargs/*, effect*/)
             //println("SPECS RETURN: "+res)
             return res
 
@@ -737,10 +737,10 @@ class Parser(private val lexer: Lexer) {
             val exp2 = parseEXP()
             val t6 = parseTerminal(Symbol.RPAREN)
             val t7 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
+            //val effect = parseEFFECT()
             val t8 = parseTerminal(Symbol.RCURLY)
 
-            var res = Circle(tag, exp1, exp2, effect)
+            var res = Circle(tag, exp1, exp2/*, effect*/)
             //println("SPECS RETURN: "+res)
             return res
 
@@ -757,10 +757,10 @@ class Parser(private val lexer: Lexer) {
             val exp3 = parseEXP()
             val t7 = parseTerminal(Symbol.RPAREN)
             val t8 = parseTerminal(Symbol.LCURLY)
-            val effect = parseEFFECT()
+            //val effect = parseEFFECT()
             val t9 = parseTerminal(Symbol.RCURLY)
 
-            var res = CircleLine(tag, exp1, exp2, exp3, effect)
+            var res = CircleLine(tag, exp1, exp2, exp3/*, effect*/)
             //println("SPECS RETURN: "+res)
             return res
 
@@ -903,7 +903,7 @@ class Parser(private val lexer: Lexer) {
         }
 
         else if(currentSymbol!!.symbol in setOf(Symbol.IF)){
-            println("If statement!!!")
+            //println("If statement!!!")
             val t1 = parseTerminal(Symbol.IF)
             val t2 = parseTerminal(Symbol.LPAREN)
             val exp = parseEXP()
@@ -943,7 +943,7 @@ class Parser(private val lexer: Lexer) {
             return res
         }
         else if(currentSymbol!!.symbol in setOf(Symbol.ELSE)){
-            println("Else!!!")
+            //println("Else!!!")
             val t1 = parseTerminal(Symbol.ELSE)
             val t2 = parseTerminal(Symbol.LCURLY)
             val components = parseCOMPONENTS()
@@ -1494,7 +1494,7 @@ class Parser(private val lexer: Lexer) {
 
         } else if (currentSymbol!!.symbol in setOf( Symbol.STRING)) {
             val string = parseTerminal(Symbol.STRING)
-            println("parsed a string!")
+            //println("parsed a string!")
 
             var res = StringExp(string)
             //println("PRIMARY RETURN: "+res)
