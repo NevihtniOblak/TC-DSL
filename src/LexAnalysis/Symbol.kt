@@ -3,6 +3,7 @@ package LexAnalysis
 enum class Symbol {
     EOF,
     SKIP,
+    //
     SCHEMA,
     PROCEDURE,
     LPAREN,
@@ -23,20 +24,26 @@ enum class Symbol {
     PARK,
     LANGLE,
     RANGLE,
+    //
     SET_LOCATION,
     SEMICOL,
+    //
     TRANSLATE,
+    //
     ROTATE,
+    //
     SET_MARKER,
     BOX,
     LINE,
     POLYGON,
+    //
     CIRCLE,
     VAR,
     EQUALS,
     FOR,
     PRINT,
     CALL,
+    //
     DISPLAY_MARKERS,
     LSQURE,
     RSQURE,
@@ -51,6 +58,7 @@ enum class Symbol {
     REAL,
     VARIABLE,
 
+    //
     CIRCLELINE,
 
     TRUE,
@@ -68,6 +76,7 @@ enum class Symbol {
 
     fun value(): String =
         when (this) {
+            //
             SCHEMA -> "SCHEMA"
             PROCEDURE -> "PROCEDURE"
             LPAREN -> "LPAREN"
@@ -88,20 +97,26 @@ enum class Symbol {
             PARK -> "PARK"
             LANGLE -> "LANGLE"
             RANGLE -> "RANGLE"
+            //
             SET_LOCATION -> "SET_LOCATION"
             SEMICOL -> "SEMICOL"
+            //
             TRANSLATE -> "TRANSLATE"
+            //
             ROTATE -> "ROTATE"
+            //
             SET_MARKER -> "SET_MARKER"
             BOX -> "BOX"
             LINE -> "LINE"
             POLYGON -> "POLYGON"
+            //
             CIRCLE -> "CIRCLE"
             VAR -> "VAR"
             EQUALS -> "EQUALS"
             FOR -> "FOR"
             PRINT -> "PRINT"
             CALL -> "CALL"
+            //
             DISPLAY_MARKERS -> "DISPLAY_MARKERS"
             LSQURE -> "LSQURE"
             RSQURE -> "RSQURE"
@@ -116,6 +131,7 @@ enum class Symbol {
             REAL -> "REAL"
             VARIABLE -> "VARIABLE"
 
+            //
             CIRCLELINE -> "CIRCLELINE"
 
             TRUE -> "TRUE"
